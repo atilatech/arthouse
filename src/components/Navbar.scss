@@ -1,0 +1,24 @@
+@import "../index";
+
+.Navbar {
+  font-size: 17px;
+  li {
+    display:inline;
+    padding: .5rem;
+  }
+  a {
+    color: $primary;
+  }
+}
+.nav-logo {
+  font-family: Cambria,"Times New Roman",serif;
+  font-size: 28px;
+}
+.search-input {
+  width: 300px;
+  display: inline;
+}
+
+.nav-item {
+  padding: 0.5rem;
+}

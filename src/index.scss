@@ -1,0 +1,140 @@
+$primary: #194F87;
+$secondary: #FEFEFE;
+$tertiary: #326396;
+$my-lighten:#4080ff;
+$serif-font: Palatino,Georgia,Cambria,"Times New Roman",Times,serif;
+// Bootstrap: https://getbootstrap.com/docs/4.0/layout/overview/#responsive-breakpoints
+$small-device-width: 576px;
+
+.vh-100-min {
+  min-height: 100vh !important;
+}
+
+body {
+  margin: 0;
+  font-family: $serif-font,
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  width: 90%;
+}
+
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+h1 {
+  text-align: center;
+  color: inherit;
+}
+
+a:hover {
+  color: #7cc7ff !important;
+  text-decoration: none;
+}
+
+.max-width-30 {
+  max-width: 30%;
+}
+.max-width-fit-content {
+  max-width: fit-content;
+}
+
+.max-width-md-30 {
+  h1 {
+    font-size: 25px;
+  }
+}
+@media (min-width: 768px) {
+  .max-width-md-30 {
+    max-width: 30%;
+  }
+}
+
+.font-size-xl {
+  font-size: x-large;
+}
+.font-size-40px {
+  font-size: 40px;
+}
+
+.list-style-type-none li {
+  list-style-type: none;
+}
+
+.chip {
+  display: inline-block;
+  height: 32px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(0,0,0,.6);
+  line-height: 32px;
+  padding: 0 12px;
+  border-radius: 16px;
+  background-color: #e4e4e4;
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+.chip > img {
+  float: left;
+  margin: 0 8px 0 -12px;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+}
+
+.sans-{
+  -webkit-font-smoothing: antialiased;
+}
+
+.cursor-pointer:hover {
+  cursor: pointer;
+}
+
+label {
+  color: #6c757d !important;
+}
+
+.content-detail {
+  img {
+    max-width: 100%;
+  }
+}
+
+.Toastify__toast-body a {
+  color: #b3d7ff;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.btn-text {
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+
+.content-detail {
+  h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    top: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  p, a {
+    line-height: 2.5rem;
+    font-size: 20px;
+  }
+}
+
+.ck-editor__editable {
+  width: 100%;
+}

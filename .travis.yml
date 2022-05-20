@@ -1,0 +1,30 @@
+language: node_js
+node_js:
+  - "stable"
+python:
+  - "3.5"
+cache:
+  directories:
+  - node_modules
+  - pip
+install:
+  # Install any dependencies required for building your site here.
+  # `awscli` is required for invalidation of CloudFront distributions.
+  - pip install --user awscli
+script:
+  - npm install
+  - npm test
+  - npm run build
+deploy:
+  provider: s3
+  access_key_id: $aws_access_key_id
+  secret_access_key: $aws_secret_access_key
+  bucket: "demo.atila.ca"
+  skip_cleanup: true
+  local_dir: build
+  on:
+    all_branches: true
+after_deploy:
+  - aws configure set preview.cloudfront true
+  - aws cloudfront create-invalidation --distribution-id E3BPZYNBZT54L5 --paths "/*";
+#  - test $TRAVIS_BRANCH -ne "staging" && aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_STAGING_DISTRIBUTION_ID --paths "/*"

@@ -1,0 +1,12 @@
+@import '../index.scss';
+
+ul.connect-links {
+  padding: 0;
+  li {
+    font-size: 20px;
+    display: inline;
+  }
+  .connect-links-icons li {
+    padding: .5rem;
+  }
+}

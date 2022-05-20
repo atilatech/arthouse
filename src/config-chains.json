@@ -1,0 +1,23 @@
+{
+    "80001": {
+        "NETWORK_NAME": "Mumbai",
+        "CHAIN_NAME": "Polygon",
+        "NFT_MARKETPLACE_ADDRESS": "",
+        "NFT_ADDRESS": "",
+        "IS_MAIN_NET": false
+    },
+    "localhost": {
+        "NETWORK_NAME": "Localhost",
+        "CHAIN_NAME": "Ethereum",
+        "NFT_MARKETPLACE_ADDRESS": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+        "NFT_ADDRESS": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+        "IS_MAIN_NET": false
+    },
+    "0xaef3": {
+        "name": "Alfajores",
+        "CHAIN_NAME": "Celo",
+        "NFT_MARKETPLACE_ADDRESS": "",
+        "NFT_ADDRESS": "",
+        "IS_MAIN_NET": false
+    }
+}
