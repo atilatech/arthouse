@@ -10,6 +10,17 @@
         "BLOCK_EXPLORER_URL": "",
         "RPC_PROVIDER_URL": ""
     },
+    "44787": {
+        "NETWORK_NAME": "Alfajores",
+        "CHAIN_NAME": "Celo",
+        "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
+        "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://docs.celo.org/img/color-logo.png",
+        "CHAIN_ID": "44787",
+        "BLOCK_EXPLORER_URL": "https://alfajores-blockscout.celo-testnet.org",
+        "RPC_PROVIDER_URL": "https://alfajores-forno.celo-testnet.org"
+    },
     "80001": {
         "NETWORK_NAME": "Mumbai",
         "CHAIN_NAME": "Polygon",
@@ -29,17 +40,6 @@
         "IS_MAIN_NET": false,
         "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
         "CHAIN_ID": null,
-        "BLOCK_EXPLORER_URL": "",
-        "RPC_PROVIDER_URL": ""
-    },
-    "0xaef3": {
-        "NETWORK_NAME": "Alfajores",
-        "CHAIN_NAME": "Celo",
-        "NFT_MARKETPLACE_ADDRESS": "",
-        "NFT_ADDRESS": "",
-        "IS_MAIN_NET": false,
-        "LOGO_URL": "https://docs.celo.org/img/color-logo.png",
-        "CHAIN_ID": "0xaef3",
         "BLOCK_EXPLORER_URL": "",
         "RPC_PROVIDER_URL": ""
     }

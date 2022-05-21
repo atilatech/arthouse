@@ -46,18 +46,26 @@ The backend for this project is a blockchain node. For development, you can run 
 
 ### Deploying to live Testnet or Mainnet
 
-1. Put your private keys for the account that will be deploying the smart contract in `.secrets`. This will NOT be included in your version control and run `source .secrets.txt`.
+1. Put your private keys for the account that will be deploying the smart contract in `.secrets`. This will NOT be included in your version control and run `source .secrets`.
 
 1. Go to `hardhat.config.js` and add the settings for your new chain
 
-1. Get an RPC URL for your desired blockchain
-    - https://datahub.figment.io
-    - TODO use Quicknode and Figment RPC URLS
+    1. Get an RPC URL for your desired blockchain
+        - https://datahub.figment.io
+        - TODO use Quicknode and Figment RPC URLS
+
+1. Add the chain information to `src/config-chains.json`
 
 1. Get some tokens to pay the gas fees for deploy the smart contracts. On testnets you can use a faucet:
+    1. Celo: https://celo.org/developers/faucet
     1. Polygon: https://faucet.polygon.technology/
 
+1. Load secrets to your environment variable `source .secrets`
+
+1. Change the chainID in `scrpts/deploy.js`
+
 1. Deploy the smart contract: `npx hardhat run scripts/deploy.js --network [network]`
+    - Celo Alfajores: `npx hardhat run scripts/deploy.js --network alfajores`
     - Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
 
 #### Troubleshooting
@@ -68,7 +76,7 @@ Invalid JSON-RPC response received: {
   "message":"Invalid authentication credentials"
 }
 ```
-### Loading Accounts in Metamask
+### Adding Chains to Metamask
 
 ### Localhost
 
@@ -78,7 +86,8 @@ Invalid JSON-RPC response received: {
 
 1. Use accounts #0-3 for making, selling and buying NFTs between accounts
 
-### 
+### Testnets and Main
+
 1. Open Metamask extension and go to settings > networks (TODO add a 1-click button for adding networks)
 
 Public RPCs may have traffic or rate-limits depending on usage.
@@ -89,6 +98,17 @@ Could not fetch chain ID. Is your RPC URL correct?
 ```
 
 If that happens, try a different URL or you can [get a free dedicated free RPC URLS](https://docs.polygon.technology/docs/develop/network-details/network/).
+
+
+[Celo Alfajores](https://docs.celo.org/getting-started/choosing-a-network)
+
+```
+Network Name: Celo (Alfajores Testnet)
+New RPC URL: https://alfajores-forno.celo-testnet.org
+Chain ID: 44787
+Currency Symbol (Optional): CELO
+Block Explorer URL (Optional): https://alfajores-blockscout.celo-testnet.org
+```
 
 [Polygon](https://docs.polygon.technology/docs/develop/network-details/network/):
 

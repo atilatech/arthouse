@@ -12,14 +12,15 @@ import {
 
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../../artifacts/contracts/Market.sol/NFTMarket.json'
-import { Button, Input, InputNumber } from 'antd'
+import { Alert, Button, Input, InputNumber } from 'antd'
 import './CreateNFT.scss';
 
 const { TextArea } = Input;
 
 console.log({NFT_ADDRESS, NFT_MARKETPLACE_ADDRESS});
 
-const client = (ipfsHttpClient as any)('https://ipfs.infura.io:5001/api/v0');
+const ipfsHostUrl = 'https://ipfs.infura.io:5001/api/v0';
+const client = (ipfsHttpClient as any)(ipfsHostUrl);
 // seems redundant because it doesn't add any new fields but doing this way makes it easier to add other fields in the future.
 interface CreateNFTProps extends RouteComponentProps {
 }
@@ -29,9 +30,12 @@ function CreateNFT(props: CreateNFTProps) {
   const { history } = props;
   const [fileUrl, setFileUrl] = useState<string|null>(null)
   const [formInput, updateFormInput] = useState({ price: 0, name: '', description: '' })
+  const [error, setError] = useState("");
 
   async function onChange(e: any) {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
+    // setFileUrl("https://atila.ca/static/media/atila-upway-logo-gradient-circle-border.bfe05867.png");
+    // return;
     try {
       const added = await client.add(
         file,
@@ -42,7 +46,8 @@ function CreateNFT(props: CreateNFTProps) {
       const url = `https://ipfs.infura.io/ipfs/${added.path}`
       setFileUrl(url)
     } catch (error) {
-      console.log('Error uploading file: ', error)
+      console.log('Error uploading file: ', error);
+      setError(JSON.stringify(error));
     }  
   }
   async function createMarket() {
@@ -55,8 +60,13 @@ function CreateNFT(props: CreateNFTProps) {
     try {
       const added = await client.add(data)
       const url = `https://ipfs.infura.io/ipfs/${added.path}`
-      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      createSale(url)
+      // const url = "https://bafybeicjitpyvkvqrm63pnfwv2e7wxkqb6meg3vemz6s7cyc4bpcuaz44y.ipfs.infura-ipfs.io/"
+      /* after file is uploaded to IPFS, pass the URL to save it on Network */
+      try {
+        createSale(url);
+      } catch {
+        setError(JSON.stringify(error));
+      }
     } catch (error) {
       console.log('Error uploading file: ', error)
     }  
@@ -125,6 +135,12 @@ function CreateNFT(props: CreateNFTProps) {
           {CONFIG_CHAINS[activeChainId].CHAIN_NAME} ({CONFIG_CHAINS[activeChainId].NETWORK_NAME})
           <img src={CONFIG_CHAINS[activeChainId].LOGO_URL} alt={CONFIG_CHAINS[activeChainId].CHAIN_NAME} width={50} />
         </div>
+
+        {error && <Alert
+          type="error"
+          message={error}
+          style={{maxWidth: '300px'}}
+        />}
       </div>
     </div>
   )
