@@ -2,13 +2,13 @@
     "4": {
         "NETWORK_NAME": "Rinkeby",
         "CHAIN_NAME": "Ethereum",
-        "NFT_MARKETPLACE_ADDRESS": "",
-        "NFT_ADDRESS": "",
+        "NFT_MARKETPLACE_ADDRESS": "0xe12C5D6F03938B530bbBA220a971dC2C3759f923",
+        "NFT_ADDRESS": "0x544FEc06fdfB423606d1C705D3105867B8Ff8148",
         "IS_MAIN_NET": false,
         "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
         "CHAIN_ID": "4",
-        "BLOCK_EXPLORER_URL": "",
-        "RPC_PROVIDER_URL": ""
+        "BLOCK_EXPLORER_URL": "https://rinkeby.etherscan.io",
+        "RPC_PROVIDER_URL": "https://rinkeby.infura.io/v3"
     },
     "44787": {
         "NETWORK_NAME": "Alfajores",

@@ -3,6 +3,7 @@ require("@nomiclabs/hardhat-waffle")
 const privateKey = process.env.privateKey;
 const rpcApiKeyMumbai = process.env.rpcApiKeyMumbai;
 const rpcApiKeyAlfajores= process.env.rpcApiKeyAlfajores;
+const rpcApiKeyRinkeby= process.env.rpcApiKeyRinkeby;
 
 module.exports = {
   solidity: {
@@ -31,6 +32,11 @@ module.exports = {
       url: `https://alfajores-forno.celo-testnet.org`,
       accounts: [`0x${privateKey}`],
       chainId: 44787
+    },
+    rinkeby: {
+      url: `https://rinkeby.infura.io/v3/${rpcApiKeyMumbai}`,
+      accounts: [`0x${privateKey}`],
+      chainId: 4
     }
   },
 }

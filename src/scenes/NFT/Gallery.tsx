@@ -39,9 +39,9 @@ export default function Gallery() {
     *  them as well as fetch their token metadata
     */
     const items = await Promise.all(data.map(async (i: any) => {
-      const tokenUri = await tokenContract.tokenURI(i.tokenId)
-      const meta = await axios.get(tokenUri)
-      let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
+      const tokenUri = await tokenContract.tokenURI(i.tokenId);
+      const meta = await axios.get(tokenUri);
+      let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
       let item = {
         price,
         itemId: i.itemId.toNumber(),

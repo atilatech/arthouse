@@ -53,12 +53,14 @@ The backend for this project is a blockchain node. For development, you can run 
     1. Get an RPC URL for your desired blockchain
         - https://datahub.figment.io
         - TODO use Quicknode and Figment RPC URLS
+    1. Add the apikey to `.secrets`
 
 1. Add the chain information to `src/config-chains.json`
 
-1. Get some tokens to pay the gas fees for deploy the smart contracts. On testnets you can use a faucet:
+1. Get some tokens to pay the gas fees for deploying the smart contracts. On testnets you can use a faucet:
     1. Celo: https://celo.org/developers/faucet
     1. Polygon: https://faucet.polygon.technology/
+    1. Rinkeby: https://rinkebyfaucet.com/
 
 1. Load secrets to your environment variable `source .secrets`
 
@@ -67,7 +69,9 @@ The backend for this project is a blockchain node. For development, you can run 
 1. Deploy the smart contract: `npx hardhat run scripts/deploy.js --network [network]`
     - Celo Alfajores: `npx hardhat run scripts/deploy.js --network alfajores`
     - Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
+    - Ethereum Rinkeby: `npx hardhat run scripts/deploy.js --network rinkeby`
 
+Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
 #### Troubleshooting
 
 If you see, the following doublecheck you set the correct credentials for your RPC URL:
@@ -112,6 +116,15 @@ Block Explorer URL (Optional): https://alfajores-blockscout.celo-testnet.org
 
 [Polygon](https://docs.polygon.technology/docs/develop/network-details/network/):
 
+```
+Network Name: Mumbai TestNet
+New RPC URL: https://rpc-mumbai.matic.today
+Chain ID: 80001
+Currency Symbol: Matic
+Block Explorer URL: https://mumbai.polygonscan.com/
+```
+
+[Rinkeby Ethereum]
 ```
 Network Name: Mumbai TestNet
 New RPC URL: https://rpc-mumbai.matic.today
