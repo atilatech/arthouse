@@ -46,7 +46,40 @@ The backend for this project is a blockchain node. For development, you can run 
 
 ### Deploying to live Testnet or Mainnet
 
-1. Add network settings to Metamask (TODO add a 1-click button for adding networks)
+1. Put your private keys for the account that will be deploying the smart contract in `.secrets`. This will NOT be included in your version control and run `source .secrets.txt`.
+
+1. Go to `hardhat.config.js` and add the settings for your new chain
+
+1. Get an RPC URL for your desired blockchain
+    - https://datahub.figment.io
+    - TODO use Quicknode and Figment RPC URLS
+
+1. Get some tokens to pay the gas fees for deploy the smart contracts. On testnets you can use a faucet:
+    1. Polygon: https://faucet.polygon.technology/
+
+1. Deploy the smart contract: `npx hardhat run scripts/deploy.js --network [network]`
+    - Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
+
+#### Troubleshooting
+
+If you see, the following doublecheck you set the correct credentials for your RPC URL:
+```
+Invalid JSON-RPC response received: {
+  "message":"Invalid authentication credentials"
+}
+```
+### Loading Accounts in Metamask
+
+### Localhost
+
+1. Switch to localhost 8545 in metamask
+
+1. Import private keys from `test-accounts.txt`
+
+1. Use accounts #0-3 for making, selling and buying NFTs between accounts
+
+### 
+1. Open Metamask extension and go to settings > networks (TODO add a 1-click button for adding networks)
 
 Public RPCs may have traffic or rate-limits depending on usage.
 
@@ -64,29 +97,8 @@ Network Name: Mumbai TestNet
 New RPC URL: https://rpc-mumbai.matic.today
 Chain ID: 80001
 Currency Symbol: Matic
-Block Explorer URL: 
+Block Explorer URL: https://mumbai.polygonscan.com/
 ```
-
-1. Go to `hardhat.config.js` and add the settings for your new chain
-
-    1. Polygon: https://faucet.polygon.technology/
-
-1. Get an RPC URL for your desired blockchain
-### Deploying a Smart Contract:
-
-1. Put your private keys for the account that will be deploying the smart contract in a `.secrets.txt`. This will NOT be included in your version control.
-
-1. Run `source .secrets.txt`
-
-### Loading Accounts in Metamask
-
-### Localhost
-
-1. Switch to localhost 8545 in metamask
-
-1. Import private keys from `test-accounts.txt`
-
-1. Use accounts #0-3 for making, selling and buying NFTs between accounts
 
 ## Running Tests
 

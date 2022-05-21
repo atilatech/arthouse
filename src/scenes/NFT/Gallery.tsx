@@ -4,25 +4,31 @@ import axios from 'axios'
 import Web3Modal from "web3modal"
 
 import {
+  activeChainId,
+  CONFIG_CHAINS,
   NFT_ADDRESS, NFT_MARKETPLACE_ADDRESS
 } from '../../config'
 
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../../artifacts/contracts/Market.sol/NFTMarket.json'
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Row, Spin } from 'antd';
 
 export default function Gallery() {
   const [nfts, setNfts] = useState<any[]>([])
-  const [loadingState, setLoadingState] = useState('not-loaded')
+  const [loadingState, setLoadingState] = useState('')
 
   useEffect(() => {
     loadNFTs()
   }, [])
 
   async function loadNFTs() {
+
+    setLoadingState('loading');
+
     /* create a generic provider and query for unsold market items */
-    const provider = new ethers.providers.JsonRpcProvider()
-    console.log("NFT.abi", NFT.abi);
+    const rpcProviderUrl = (CONFIG_CHAINS as any)[activeChainId].RPC_PROVIDER_URL;
+    const provider = new ethers.providers.JsonRpcProvider(rpcProviderUrl)
+    console.log({rpcProviderUrl, provider});
 
     const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT.abi, provider)
     const marketContract = new ethers.Contract(NFT_MARKETPLACE_ADDRESS, Market.abi, provider)
@@ -75,12 +81,17 @@ export default function Gallery() {
     <div className="flex justify-center">
         <h1>NFT Gallery</h1>
       <div className="px-4" style={{ maxWidth: '1600px' }}>
+        {loadingState === "loading" && <Spin size="large"  tip="Loading NFTs..."/>}
         <Row gutter={[24,24]}>
           {
-            nfts.map((nft, i) => (
-              <Col md={8} sm={24} key={i}>
+            nfts.map((nft, i) => {
+              const nftBlockExplorerUrl = `${(CONFIG_CHAINS as any)[activeChainId].BLOCK_EXPLORER_URL}/token/${(CONFIG_CHAINS as any)[activeChainId].NFT_ADDRESS}?a=${nft.tokenId}`;
+              const sellerBlockExplorerUrl = `${(CONFIG_CHAINS as any)[activeChainId].BLOCK_EXPLORER_URL}/address/${nft.seller}`;
+
+              return(
+                <Col md={8} sm={24} key={i}>
                   <div className="card shadow">
-                    <img src={nft.image}  alt={nft.name} width="auto" height="300"/>
+                    <img src={nft.image}  alt={nft.name} width="auto" height="300" className="m-3"/>
                     <div className="p-4">
                     <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
                     <div style={{ height: '70px', overflow: 'hidden' }}>
@@ -88,13 +99,22 @@ export default function Gallery() {
                     </div>
                     </div>
                     <div className="p-4 bg-black">
-                    <p className="text-2xl mb-4 font-bold">Seller: {nft.seller}</p>
-                    <p className="text-2xl mb-4 font-bold">{nft.price} ETH</p>
-                    <Button className="center block" onClick={() => buyNft(nft)}>Buy</Button>
+                      <p className="text-2xl mb-4 font-bold">  
+                        <a href={sellerBlockExplorerUrl} target="_blank" rel="noreferrer" className="ml-1">
+                          View Seller address
+                        </a>
+                      </p>
+                      <p className="text-2xl mb-4 font-bold">{nft.price} ETH</p>
+                      <Button className="center block" onClick={() => buyNft(nft)}>Buy</Button>
+                      <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="ml-1">
+                        View on Block Explorer
+                      </a>
                     </div>
                   </div>
               </Col>
-            ))
+              )
+
+            })
           }
         </Row>
       </div>

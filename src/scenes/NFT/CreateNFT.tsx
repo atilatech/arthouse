@@ -123,7 +123,7 @@ function CreateNFT(props: CreateNFTProps) {
         <div>
           This NFT will be created on{' '}
           {CONFIG_CHAINS[activeChainId].CHAIN_NAME} ({CONFIG_CHAINS[activeChainId].NETWORK_NAME})
-          <img src={CONFIG_CHAINS[activeChainId].LOGO_URL} alt={CONFIG_CHAINS[activeChainId].CHAIN_NAME} width={150} />
+          <img src={CONFIG_CHAINS[activeChainId].LOGO_URL} alt={CONFIG_CHAINS[activeChainId].CHAIN_NAME} width={50} />
         </div>
       </div>
     </div>

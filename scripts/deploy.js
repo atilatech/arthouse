@@ -7,7 +7,10 @@ const hre = require("hardhat");
 const fs = require('fs');
 
 // enter the CHAIN ID you want to deploy to here
-const chainID = "localhost";
+// TODO make this a task so it can be passed as a command line argument
+//  - https://stackoverflow.com/questions/69111785/hardhat-run-with-parameters
+// - https://hardhat.org/guides/create-task.html
+const chainID = "80001";
 
 async function main() {
 

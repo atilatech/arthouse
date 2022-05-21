@@ -1,6 +1,7 @@
 /* hardhat.config.js */
 require("@nomiclabs/hardhat-waffle")
 const privateKey = process.env.privateKey;
+const rpcApiKeyMumbai = process.env.rpcApiKeyMumbai;
 
 module.exports = {
   solidity: {
@@ -21,8 +22,9 @@ module.exports = {
       chainId: 1337
     },
     mumbai: {
-      url: "https://rpc-mumbai.matic.today",
+      url: `https://polygon-mumbai.infura.io/v3/${rpcApiKeyMumbai}`,
       accounts: [`0x${privateKey}`],
+      chainId: 80001
     }
   },
 }
