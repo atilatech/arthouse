@@ -5,6 +5,8 @@ import { create as ipfsHttpClient } from 'ipfs-http-client'
 import Web3Modal from 'web3modal'
 
 import {
+  activeChainId,
+    CONFIG_CHAINS,
     NFT_ADDRESS, NFT_MARKETPLACE_ADDRESS
   } from '../../config';
 
@@ -117,6 +119,12 @@ function CreateNFT(props: CreateNFTProps) {
         <Button className="center-block" type="primary" onClick={createMarket}>
           Create NFT
         </Button>
+
+        <div>
+          This NFT will be created on{' '}
+          {CONFIG_CHAINS[activeChainId].CHAIN_NAME} ({CONFIG_CHAINS[activeChainId].NETWORK_NAME})
+          <img src={CONFIG_CHAINS[activeChainId].LOGO_URL} alt={CONFIG_CHAINS[activeChainId].CHAIN_NAME} width={150} />
+        </div>
       </div>
     </div>
   )

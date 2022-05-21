@@ -4,20 +4,35 @@
         "CHAIN_NAME": "Polygon",
         "NFT_MARKETPLACE_ADDRESS": "",
         "NFT_ADDRESS": "",
-        "IS_MAIN_NET": false
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://i.pinimg.com/474x/9b/1e/97/9b1e977d00b5d887608b156705a10759.jpg",
+        "CHAIN_ID": "80001"
+    },
+    "4": {
+        "NETWORK_NAME": "Rinkeby",
+        "CHAIN_NAME": "Ethereum",
+        "NFT_MARKETPLACE_ADDRESS": "",
+        "NFT_ADDRESS": "",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
+        "CHAIN_ID": "4"
     },
     "localhost": {
         "NETWORK_NAME": "Localhost",
         "CHAIN_NAME": "Ethereum",
         "NFT_MARKETPLACE_ADDRESS": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
         "NFT_ADDRESS": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
-        "IS_MAIN_NET": false
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
+        "CHAIN_ID": null
     },
     "0xaef3": {
-        "name": "Alfajores",
+        "NETWORK_NAME": "Alfajores",
         "CHAIN_NAME": "Celo",
         "NFT_MARKETPLACE_ADDRESS": "",
         "NFT_ADDRESS": "",
-        "IS_MAIN_NET": false
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://docs.celo.org/img/color-logo.png",
+        "CHAIN_ID": "0xaef3"
     }
 }
