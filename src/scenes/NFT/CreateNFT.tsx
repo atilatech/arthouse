@@ -2,18 +2,21 @@ import React, { useState } from 'react'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
-import Web3Modal from 'web3modal'
+import Web3Modal from 'web3modal';
 
 import {
-  activeChainId,
+    activeChainId,
     CONFIG_CHAINS,
-    NFT_ADDRESS, NFT_MARKETPLACE_ADDRESS
+    NFT_ADDRESS,
+    NFT_MARKETPLACE_ADDRESS
   } from '../../config';
 
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../../artifacts/contracts/Market.sol/NFTMarket.json'
-import { Alert, Button, Input, InputNumber } from 'antd'
+import { Alert, Avatar, Button, Input, InputNumber, Select, Tooltip } from 'antd'
 import './CreateNFT.scss';
+
+const { Option } = Select;
 
 const { TextArea } = Input;
 
@@ -31,6 +34,7 @@ function CreateNFT(props: CreateNFTProps) {
   const [fileUrl, setFileUrl] = useState<string|null>(null)
   const [formInput, updateFormInput] = useState({ price: 0, name: '', description: '' })
   const [error, setError] = useState("");
+  const [selectedChains, setSelectedChains] = useState(Object.values(CONFIG_CHAINS).map(config=>config.CHAIN_ID));
 
   async function onChange(e: any) {
     const file = e.target.files[0];
@@ -70,6 +74,11 @@ function CreateNFT(props: CreateNFTProps) {
     } catch (error) {
       console.log('Error uploading file: ', error)
     }  
+  }
+
+  function handleChangeSelectedChains(value: any) {
+    console.log(`selected ${value}`);
+    setSelectedChains(value);
   }
 
   async function createSale(url: string) {
@@ -126,14 +135,38 @@ function CreateNFT(props: CreateNFTProps) {
             <img className="rounded mt-4" width="350" src={fileUrl} alt="User NFT Upload" />
           )
         }
+
+        <p>
+          Create NFT on the following chains:
+        </p>
+        <Select
+          mode="multiple"
+          className="mb-3"
+          style={{ width: '100%' }}
+          placeholder="Select chains"
+          defaultValue={Object.values(CONFIG_CHAINS).map(configChain=>configChain.CHAIN_ID)}
+          onChange={handleChangeSelectedChains}
+          optionLabelProp="label"
+        >
+          {Object.values(CONFIG_CHAINS).map (chainConfig => (
+            <Option value={chainConfig.CHAIN_ID} label={chainConfig.NETWORK_NAME}>
+              {chainConfig.CHAIN_NAME} ({chainConfig.NETWORK_NAME})
+              <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={25} />
+            </Option>
+          ))}
+        </Select>
         <Button className="center-block" type="primary" onClick={createMarket}>
           Create NFT
         </Button>
 
         <div>
-          This NFT will be created on{' '}
-          {CONFIG_CHAINS[activeChainId].CHAIN_NAME} ({CONFIG_CHAINS[activeChainId].NETWORK_NAME})
-          <img src={CONFIG_CHAINS[activeChainId].LOGO_URL} alt={CONFIG_CHAINS[activeChainId].CHAIN_NAME} width={50} />
+          <Avatar.Group>
+            {selectedChains.map(selectedChain => (
+              <Tooltip title={CONFIG_CHAINS[selectedChain].NETWORK_NAME} placement="top">
+                <Avatar src={CONFIG_CHAINS[selectedChain].LOGO_URL} />
+              </Tooltip>
+            ))}
+        </Avatar.Group>
         </div>
 
         {error && <Alert

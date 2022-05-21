@@ -8,7 +8,7 @@
         "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
         "CHAIN_ID": "4",
         "BLOCK_EXPLORER_URL": "https://rinkeby.etherscan.io",
-        "RPC_PROVIDER_URL": "https://rinkeby.infura.io/v3"
+        "RPC_PROVIDER_URL": "https://rinkeby.infura.io/v3/59b59e23bb7c44d799b5db4a1b83e4ee"
     },
     "44787": {
         "NETWORK_NAME": "Alfajores",
