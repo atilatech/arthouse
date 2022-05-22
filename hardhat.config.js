@@ -37,6 +37,11 @@ module.exports = {
       url: `https://rinkeby.infura.io/v3/${rpcApiKeyMumbai}`,
       accounts: [`0x${privateKey}`],
       chainId: 4
+    },
+    sokol: {
+      url: `https://sokol.poa.network`,
+      accounts: [`0x${privateKey}`],
+      chainId: 77
     }
   },
 }

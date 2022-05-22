@@ -18,6 +18,9 @@ type chainConfigType = {
 export const CONFIG_CHAINS: {[key: string]: chainConfigType} =  (configChains as any);
 
 delete CONFIG_CHAINS.localhost;
+// TODO figure out how to deploy smart contract to Gnosis chain sokol
+// currently getting ProviderError: FeeTooLow, EffectivePriorityFeePerGas too low 0 < 1000000000, BaseFee: 7
+delete CONFIG_CHAINS["77"];
 
 export const NFT_MARKETPLACE_ADDRESS = CONFIG_CHAINS[activeChainId].NFT_MARKETPLACE_ADDRESS;
 export const NFT_ADDRESS = CONFIG_CHAINS[activeChainId].NFT_ADDRESS;

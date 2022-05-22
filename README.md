@@ -67,6 +67,7 @@ The backend for this project is a blockchain node. For development, you can run 
     1. Celo: https://celo.org/developers/faucet
     1. Polygon: https://faucet.polygon.technology/
     1. Rinkeby: https://rinkebyfaucet.com/
+    1. Sokol: https://faucet.poa.network/
 
 1. Load secrets to your environment variable `source .secrets`
 
@@ -76,6 +77,7 @@ The backend for this project is a blockchain node. For development, you can run 
     - Celo Alfajores: `npx hardhat run scripts/deploy.js --network alfajores`
     - Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
     - Ethereum Rinkeby: `npx hardhat run scripts/deploy.js --network rinkeby`
+    - Gnosis Sokol: `npx hardhat run scripts/deploy.js --network sokol`
 
 Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
 
