@@ -72,6 +72,9 @@ The backend for this project is a blockchain node. For development, you can run 
     - Ethereum Rinkeby: `npx hardhat run scripts/deploy.js --network rinkeby`
 
 Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
+
+### Deployed Smart Contracts
+
 #### Troubleshooting
 
 If you see, the following doublecheck you set the correct credentials for your RPC URL:

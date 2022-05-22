@@ -5,10 +5,7 @@ import { create as ipfsHttpClient } from 'ipfs-http-client'
 import Web3Modal from 'web3modal';
 
 import {
-    activeChainId,
-    CONFIG_CHAINS,
-    NFT_ADDRESS,
-    NFT_MARKETPLACE_ADDRESS
+    CONFIG_CHAINS
   } from '../../config';
 
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
@@ -20,7 +17,7 @@ const { Option } = Select;
 
 const { TextArea } = Input;
 
-console.log({NFT_ADDRESS, NFT_MARKETPLACE_ADDRESS});
+console.log({CONFIG_CHAINS});
 
 const ipfsHostUrl = 'https://ipfs.infura.io:5001/api/v0';
 const client = (ipfsHttpClient as any)(ipfsHostUrl);
@@ -35,11 +32,13 @@ function CreateNFT(props: CreateNFTProps) {
   const [formInput, updateFormInput] = useState({ price: 0, name: '', description: '' })
   const [error, setError] = useState("");
   const [selectedChains, setSelectedChains] = useState(Object.values(CONFIG_CHAINS).map(config=>config.CHAIN_ID));
+  const [createdNFTs, setCreatedNFTs] = useState<any[]>([]);
+  const [nftMetadataUrl, setNftMetadataUrl] = useState("");
 
   async function onChange(e: any) {
     const file = e.target.files[0];
-    // setFileUrl("https://atila.ca/static/media/atila-upway-logo-gradient-circle-border.bfe05867.png");
-    // return;
+    setFileUrl("https://atila.ca/static/media/atila-upway-logo-gradient-circle-border.bfe05867.png");
+    return;
     try {
       const added = await client.add(
         file,
@@ -54,26 +53,39 @@ function CreateNFT(props: CreateNFTProps) {
       setError(JSON.stringify(error));
     }  
   }
-  async function createMarket() {
-    const { name, description, price } = formInput
-    if (!name || !description || !price || !fileUrl) return
-    /* first, upload to IPFS */
-    const data = JSON.stringify({
-      name, description, image: fileUrl
-    })
+  async function getNFTMetadataUrl () {
+
+    if (nftMetadataUrl) {
+      return nftMetadataUrl;
+    }
     try {
-      const added = await client.add(data)
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`
-      // const url = "https://bafybeicjitpyvkvqrm63pnfwv2e7wxkqb6meg3vemz6s7cyc4bpcuaz44y.ipfs.infura-ipfs.io/"
-      /* after file is uploaded to IPFS, pass the URL to save it on Network */
-      try {
-        createSale(url);
-      } catch {
-        setError(JSON.stringify(error));
-      }
+      let url;
+      const { name, description, price } = formInput
+      if (!name || !description || !price || !fileUrl) return
+        /* first, upload to IPFS */
+        const data = JSON.stringify({
+          name, description, image: fileUrl
+        })
+
+        const added = await client.add(data)
+        url = `https://ipfs.infura.io/ipfs/${added.path}`
+        url = "https://bafybeicjitpyvkvqrm63pnfwv2e7wxkqb6meg3vemz6s7cyc4bpcuaz44y.ipfs.infura-ipfs.io/"
+        /* after file is uploaded to IPFS, pass the URL to save it on Network */
+        setNftMetadataUrl(url);
+        return url;
+
     } catch (error) {
       console.log('Error uploading file: ', error)
-    }  
+    } 
+
+  };
+
+  async function createNFT(listNFT=true, activeChainId: string) {
+    try {
+      mintAndListNFT(listNFT, activeChainId);
+    } catch {
+      setError(JSON.stringify(error));
+    }
   }
 
   function handleChangeSelectedChains(value: any) {
@@ -81,29 +93,73 @@ function CreateNFT(props: CreateNFTProps) {
     setSelectedChains(value);
   }
 
-  async function createSale(url: string) {
+  async function mintAndListNFT(listNFT= true, activeChainId: string) {
+
+    const url = await getNFTMetadataUrl();
+    const activeChain = CONFIG_CHAINS[activeChainId];
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)    
     const signer = provider.getSigner()
 
-    /* next, create the item */
-    let contract = new ethers.Contract(NFT_ADDRESS, NFT.abi, signer)
-    let transaction = await contract.createToken(url)
-    let tx = await transaction.wait()
-    let event = tx.events[0]
-    let value = event.args[2]
-    let tokenId = value.toNumber()
-    const price = ethers.utils.parseUnits(formInput.price.toString(), 'ether')
+      if (window.ethereum.networkVersion != activeChainId) {
+        setError("Switch to the correct chain and try again");
+        // switch to the correct network
+        await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{
+            chainId: `0x${(Number.parseInt(activeChain.CHAIN_ID)).toString(16)}`,
+        }]
+      });
+        return;
+      } else {
+        setError("");
+      }
 
-    /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(NFT_MARKETPLACE_ADDRESS, Market.abi, signer)
-    let listingPrice = await contract.getListingPrice()
-    listingPrice = listingPrice.toString()
+      
+      const NFT_ADDRESS = activeChain.NFT_ADDRESS;
+      const NFT_MARKETPLACE_ADDRESS = activeChain.NFT_MARKETPLACE_ADDRESS;
 
-    transaction = await contract.createMarketItem(NFT_ADDRESS, tokenId, price, { value: listingPrice })
-    await transaction.wait()
-    history.push('/');
+      /* next, create the item */
+      let contract = new ethers.Contract(NFT_ADDRESS, NFT.abi, signer)
+      let mintTransactionPromise = await contract.createToken(url)
+      let mintTransaction = await mintTransactionPromise.wait()
+      let event = mintTransaction.events[0]
+      let value = event.args[2]
+      let tokenId = value.toNumber()
+      const price = ethers.utils.parseUnits(formInput.price.toString(), 'ether');
+      let listTransaction;
+
+      if (listNFT) {
+
+        /* then list the item for sale on the marketplace */
+        contract = new ethers.Contract(NFT_MARKETPLACE_ADDRESS, Market.abi, signer)
+        let listingPrice = await contract.getListingPrice()
+        listingPrice = listingPrice.toString()
+  
+        const listTransactionPromise = await contract.createMarketItem(NFT_ADDRESS, tokenId, price, { value: listingPrice })
+        listTransaction = await listTransactionPromise.wait()
+      }
+      const { name, description, price: nftPrice } = formInput
+      const createdNFT = {
+        name,
+        description,
+        price: nftPrice,
+        fileUrl,
+        url,
+        tokenId,
+        tokenAddress: activeChain.NFT_ADDRESS,
+        chainId: activeChain.CHAIN_ID,
+        chain: activeChain,
+        mintTransaction,
+        listTransaction,
+      }
+
+      createdNFTs.push(createdNFT);
+      setCreatedNFTs(createdNFTs);
+      console.log({createdNFTs});
+    
+    // history.push('/');
   }
 
   return (
@@ -151,13 +207,27 @@ function CreateNFT(props: CreateNFTProps) {
           {Object.values(CONFIG_CHAINS).map (chainConfig => (
             <Option value={chainConfig.CHAIN_ID} label={chainConfig.NETWORK_NAME}>
               {chainConfig.CHAIN_NAME} ({chainConfig.NETWORK_NAME})
-              <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={25} />
+              <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={100} />
             </Option>
           ))}
         </Select>
-        <Button className="center-block" type="primary" onClick={createMarket}>
+
+        {selectedChains.map(selectedChainId => {
+          const chainConfig = CONFIG_CHAINS[selectedChainId];
+
+          return (
+            <Button className="center-block my-2" type="primary" onClick={()=>createNFT(false, selectedChainId)}>
+              Mint on {' '} {chainConfig.CHAIN_NAME} ({chainConfig.NETWORK_NAME})
+                <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={25} />
+            </Button>
+          )
+        })}
+
+        
+        
+        {/* <Button className="center-block" type="primary" onClick={()=>createNFT(true)}>
           Create NFT
-        </Button>
+        </Button> */}
 
         <div>
           <Avatar.Group>

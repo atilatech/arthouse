@@ -27,7 +27,7 @@
         "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
         "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",
         "IS_MAIN_NET": false,
-        "LOGO_URL": "https://i.pinimg.com/474x/9b/1e/97/9b1e977d00b5d887608b156705a10759.jpg",
+        "LOGO_URL": "https://themarketperiodical.com/wp-content/uploads/2021/05/polygon.png",
         "CHAIN_ID": "80001",
         "BLOCK_EXPLORER_URL": "https://mumbai.polygonscan.com",
         "RPC_PROVIDER_URL": "https://matic-mumbai.chainstacklabs.com"
