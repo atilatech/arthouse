@@ -19,6 +19,10 @@ function Navbar() {
             key: "gallery",
             label: "Gallery",
         },
+        {
+            key: "buy-crypto",
+            label: "Buy Crypto",
+        },
     ];
 
     return (

@@ -36,9 +36,10 @@ This project consists of a React frontend and a blockchain backend.
 1. Click on Create NFT
 1. Make sure that you can see the created NFT in NFT gallery
 
-### Switching Between Chains
+## Build Frontend
 
-To switch between chains. Set `activeChainId` in local storage.
+1. `yarn build`
+1. 
 
 ## Backend
 ### Running Your Local Node
