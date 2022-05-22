@@ -1,25 +1,27 @@
 name: Deploy to Skynet
+
 on:
   pull_request:
   push:
     branches: [master]
+
 jobs:
   build:
-  runs-on: ubuntu-latest
-steps:
-  — uses: actions/checkout@v2
-  — name: Use Node.js
-    uses: actions/setup-node@v1
-    with:
-      node-version: 16.x
-  - name: Install dependencies
-    run: npm install
-  - name: Run unit tests
-    run: npm test
-  - name: Build
-    run: npm run build
-  — name: Deploy to Skynet
-    uses: kwypchlo/deploy-to-skynet-action@main
-    with:
-      upload-dir: build
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+
+      - run: yarn
+      - run: yarn build
+
+      - name: "Deploy to Skynet"
+        uses: SkynetLabs/deploy-to-skynet-action@v2
+        with:
+          upload-dir: build
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          registry-seed: ${{ secrets.SKYNET_REGISTRY_SEED || '' }}
