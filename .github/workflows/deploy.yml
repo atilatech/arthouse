@@ -16,7 +16,7 @@ jobs:
           node-version: 16.x
 
       - run: yarn
-      - run: yarn build
+      - run: CI="" yarn build
 
       - name: "Deploy to Skynet"
         uses: SkynetLabs/deploy-to-skynet-action@v2
