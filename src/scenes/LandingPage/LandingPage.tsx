@@ -11,7 +11,7 @@ function LandingPage() {
             </h1>
             <hr/>
             <div className="text-left">
-                Arthouse lets you easily create NFTs on multiple blockchains. <br/>
+                Create NFTs on multiple blockchains. <br/>
 
                 Supported Chains: <br/>
                 <ol>
