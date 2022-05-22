@@ -15,6 +15,10 @@ function Navbar() {
             key: "my-nfts",
             label: "My NFTs",
         },
+        {
+            key: "gallery",
+            label: "Gallery",
+        },
     ];
 
     return (
