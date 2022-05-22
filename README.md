@@ -2,7 +2,7 @@
 
 A marketplace for creating, buying and selling NFTs on Ethereum, Polygon and Binance Smart Chain.
 
-Inspired by Nader Dabit's [Building a Full Stack NFT Marketplace on Ethereum with Polygon](https://dev.to/dabit3/building-scalable-full-stack-apps-on-ethereum-with-polygon-2cfb).
+[![Add to Homescreen](https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d)](https://homescreen.hns.siasky.net/#/skylink/0000tbasl07ad1f4gmc2cpu5fbint53qfvgifgr51em1pvdtpplc2e8)
 
 ## Demos
 
@@ -46,9 +46,10 @@ This project consists of a React frontend and a blockchain backend.
 1. Click on Create NFT
 1. Make sure that you can see the created NFT in NFT gallery
 
-### Switching Between Chains
+## Build Frontend
 
-To switch between chains. Set `activeChainId` in local storage.
+1. `yarn build`
+1. 
 
 ## Backend
 ### Running Your Local Node
@@ -177,3 +178,7 @@ Block Explorer URL: https://explorer.pops.one/
 ## Deploying smart contracts
 1. Compile the smart contracts to get the most recent change: `npx hardhat compile`
 1. Load your environment variables using `shared.env` as a template
+
+## Resources
+
+Inspired by Nader Dabit's [Building a Full Stack NFT Marketplace on Ethereum with Polygon](https://dev.to/dabit3/building-scalable-full-stack-apps-on-ethereum-with-polygon-2cfb).

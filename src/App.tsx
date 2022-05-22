@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import CreateNFT from './scenes/NFT/CreateNFT';
 import MyNFTs from './scenes/NFT/MyNFTs';
 import LandingPage from './scenes/LandingPage/LandingPage';
+import About from './scenes/About/About';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route exact path="/" component={LandingPage} />
             <Route exact path="/gallery" component={Gallery} />
             <Route exact path="/create" component={CreateNFT} />
+            <Route exact path="/about" component={About} />
             <Route exact path="/my-nfts" component={MyNFTs} />
             <Footer />
         </div>
