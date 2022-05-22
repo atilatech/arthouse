@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Arthouse",
+  "name": "Arthouse NFT Platform",
+  "description": "Arthouse is a multi-chain NFT platform for deploying to multiple chains",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,7 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#194f87",
+  "background_color": "#ffffff",
+  "skylink": "AAAQ_qHouOtCY7xyiqCMPLwmNcbVSbTfx47t2BcQ44QgaA"
 }

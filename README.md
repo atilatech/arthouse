@@ -2,7 +2,7 @@
 
 A marketplace for creating, buying and selling NFTs on Ethereum, Polygon and Binance Smart Chain.
 
-[![Add to Homescreen](https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d)](https://homescreen.hns.siasky.net/#/skylink/0000tbasl07ad1f4gmc2cpu5fbint53qfvgifgr51em1pvdtpplc2e8)
+[![Add to Homescreen](https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d)](https://homescreen.hns.siasky.net/#/skylink/AAAQ_qHouOtCY7xyiqCMPLwmNcbVSbTfx47t2BcQ44QgaA)
 
 ## Demos
 
