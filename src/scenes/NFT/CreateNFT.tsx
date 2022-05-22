@@ -218,12 +218,12 @@ function CreateNFT(props: CreateNFTProps) {
 
         {selectedChains.map(selectedChainId => {
           const chainConfig = CONFIG_CHAINS[selectedChainId];
-          const nftBlockExplorerUrl = `${chainConfig.BLOCK_EXPLORER_URL}/token/${chainConfig.NFT_ADDRESS}`;
+          const nftBlockExplorerUrl = `${chainConfig.BLOCK_EXPLORER_URL}/${chainConfig.CHAIN_NAME !== "Harmony" ? "token": "address"}/${chainConfig.NFT_ADDRESS}`;
 
           const networkFullName = `${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME})`;
           return (
             <div>
-              <Button className="center-block my-2" type="primary" onClick={()=>createNFT(false, selectedChainId)}>
+              <Button className="center-block my-2" onClick={()=>createNFT(false, selectedChainId)}>
                 Mint on {' '} {networkFullName}
                   <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={25} />
               </Button>

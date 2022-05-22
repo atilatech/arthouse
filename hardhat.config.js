@@ -42,6 +42,11 @@ module.exports = {
       url: `https://sokol.poa.network`,
       accounts: [`0x${privateKey}`],
       chainId: 77
+    },
+    harmonytestnet: {
+      url: `https://api.s0.b.hmny.io`,
+      accounts: [`0x${privateKey}`],
+      chainId: 1666700000
     }
   },
 }

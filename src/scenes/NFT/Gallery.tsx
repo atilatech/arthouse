@@ -107,7 +107,7 @@ export default function Gallery() {
         <h1>NFT Gallery</h1>
 
         {Object.values(CONFIG_CHAINS).map(chainConfig => {
-          const nftBlockExplorerUrl = `${chainConfig.BLOCK_EXPLORER_URL}/token/${chainConfig.NFT_ADDRESS}`;
+          const nftBlockExplorerUrl = `${chainConfig.BLOCK_EXPLORER_URL}/${chainConfig.CHAIN_NAME !== "Harmony" ? "token": "address"}/${chainConfig.NFT_ADDRESS}`;
 
           const networkFullName = `${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME})`;
           return (

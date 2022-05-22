@@ -7,8 +7,7 @@ function NFTCard({nft, chainId}: {nft: NFTMetadata, chainId: string}) {
 
 const activeChain = CONFIG_CHAINS[chainId];
 
-const nftBlockExplorerUrl = `${activeChain.BLOCK_EXPLORER_URL}/token/${activeChain.NFT_ADDRESS}?a=${nft.tokenId}`;
-const sellerBlockExplorerUrl = `${activeChain.BLOCK_EXPLORER_URL}/address/${nft.seller}`;
+const nftBlockExplorerUrl = `${activeChain.BLOCK_EXPLORER_URL}/${activeChain.CHAIN_NAME !== "Harmony" ? "token": "address"}/${activeChain.NFT_ADDRESS}?a=${nft.tokenId}`;
 
   return (
     <div className="card shadow">

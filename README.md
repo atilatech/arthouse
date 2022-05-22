@@ -10,6 +10,8 @@ Inspired by Nader Dabit's [Building a Full Stack NFT Marketplace on Ethereum wit
 
 - [View  Celo (Alfajores)  NFT Contract on Block Explorer](https://alfajores-blockscout.celo-testnet.org/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
 - [View  Polygon (Mumbai)  NFT Contract on Block Explorer](https://mumbai.polygonscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
+
+- [View Harmony (Testnet) NFT Contract on Block Explorer](https://explorer.pops.one/address/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
 ## Quickstart
 
 This project consists of a React frontend and a blockchain backend.
@@ -68,6 +70,7 @@ The backend for this project is a blockchain node. For development, you can run 
     1. Polygon: https://faucet.polygon.technology/
     1. Rinkeby: https://rinkebyfaucet.com/
     1. Sokol: https://faucet.poa.network/
+    1. Harmony: https://faucet.pops.one/
 
 1. Load secrets to your environment variable `source .secrets`
 
@@ -78,6 +81,7 @@ The backend for this project is a blockchain node. For development, you can run 
     - Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
     - Ethereum Rinkeby: `npx hardhat run scripts/deploy.js --network rinkeby`
     - Gnosis Sokol: `npx hardhat run scripts/deploy.js --network sokol`
+    - Harmony Testnet: `npx hardhat run scripts/deploy.js --network harmonytestnet`
 
 Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
 
@@ -135,6 +139,7 @@ Currency Symbol: Matic
 Block Explorer URL: https://mumbai.polygonscan.com/
 ```
 
+TODO: Get correct Browser settings for Rinkeby (although it's included by default in Metamask)
 [Rinkeby Ethereum]
 ```
 Network Name: Mumbai TestNet
@@ -142,6 +147,16 @@ New RPC URL: https://rpc-mumbai.matic.today
 Chain ID: 80001
 Currency Symbol: Matic
 Block Explorer URL: https://mumbai.polygonscan.com/
+```
+
+[Harmony Testnet](https://docs.tranquil.finance/user-guides/how-to-use-the-testnet-app)
+
+```
+Network Name: Harmony Testnet
+RPC URL: https://api.s0.b.hmny.io
+Chain ID: 1666700000
+Currency Symbol: ONE
+Block Explorer URL: https://explorer.pops.one/
 ```
 
 ## Running Tests
