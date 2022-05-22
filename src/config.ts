@@ -1,7 +1,7 @@
 // this file is auto-generated each time scripts/deploy.js is run
 import configChains from './config-chains.json';
 
-export const activeChainId = localStorage.getItem("activeChainId") || "localhost";
+export const activeChainId = localStorage.getItem("activeChainId") || "44787"; // default to CELO
 
 type chainConfigType = {
     NETWORK_NAME: string,

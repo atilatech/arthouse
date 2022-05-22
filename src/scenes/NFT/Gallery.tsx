@@ -6,7 +6,6 @@ import Web3Modal from "web3modal"
 import {
   activeChainId,
   CONFIG_CHAINS,
-  NFT_ADDRESS, NFT_MARKETPLACE_ADDRESS
 } from '../../config'
 
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
@@ -78,17 +77,18 @@ export default function Gallery() {
     setLoadingState('loaded');
   }
 
-  async function buyNft(nft: any) {
+  async function buyNft(nft: NFTMetadata) {
     /* needs the user to sign the transaction, so will use Web3Provider and sign it */
+    const chainConfig = CONFIG_CHAINS[nft.chainId];
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)
     const signer = provider.getSigner()
-    const contract = new ethers.Contract(NFT_MARKETPLACE_ADDRESS, Market.abi, signer)
+    const contract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
 
     /* user will be prompted to pay the asking proces to complete the transaction */
     const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
-    const transaction = await contract.createMarketSale(NFT_ADDRESS, nft.itemId, {
+    const transaction = await contract.createMarketSale(chainConfig.NFT_ADDRESS, nft.itemId, {
       value: price
     })
     await transaction.wait()
