@@ -28,6 +28,7 @@ function LandingPage() {
         </div>
         <div className="col-md-6">
             <img src="https://i.pinimg.com/originals/5a/36/3f/5a363fc93fc6538900ae58da02d116d8.jpg" style={{width: "auto", height: "60vh"}} />
+            {/* <img src="https://us1.storj.io/4d61a7b4-2bde-45f6-a499-00e094e040f7" style={{width: "auto", height: "60vh"}} /> */}
             <p>
                 Source: <a href="https://www.pinterest.ie/pin/528328600017362380/" target ="_blank">
                     Tina Martini on Pinterest
