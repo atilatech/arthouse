@@ -12,12 +12,16 @@ function Navbar() {
             label: "Create NFT",
         },
         {
+            key: "gallery",
+            label: "Gallery",
+        },
+        {
             key: "my-nfts",
             label: "My NFTs",
         },
         {
-            key: "gallery",
-            label: "Gallery",
+            key: "about",
+            label: "About",
         }
     ];
 

@@ -3834,12 +3834,13 @@ axe-core@^4.3.5:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.4.1.tgz#7dbdc25989298f9ad006645cd396782443757413"
   integrity sha512-gd1kmb21kwNuWr6BQz8fv6GNECPBnUasepcoLbekws23NVBLODdsClRZ+bQ8+9Uomf3Sm3+Vwn0oYG9NvwnJCw==
 
-axios@^0.25.0:
-  version "0.25.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.25.0.tgz#349cfbb31331a9b4453190791760a8d35b093e0a"
-  integrity sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==
+axios@^0.27.2:
+  version "0.27.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
+  integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
   dependencies:
-    follow-redirects "^1.14.7"
+    follow-redirects "^1.14.9"
+    form-data "^4.0.0"
 
 axobject-query@^2.2.0:
   version "2.2.0"
@@ -7886,10 +7887,15 @@ follow-redirects@^1.0.0:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
   integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==
 
-follow-redirects@^1.12.1, follow-redirects@^1.14.7:
+follow-redirects@^1.12.1:
   version "1.14.8"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.8.tgz#016996fb9a11a100566398b1c6839337d7bfa8fc"
   integrity sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==
+
+follow-redirects@^1.14.9:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.0.tgz#06441868281c86d0dda4ad8bdaead2d02dca89d4"
+  integrity sha512-aExlJShTV4qOUOL7yF1U5tvLCB0xQuudbf6toyYA0E/acBNw71mvjFTnLaRp50aQaYocMR0a/RMMBIHeZnGyjQ==
 
 for-each@^0.3.3, for-each@~0.3.3:
   version "0.3.3"
@@ -13108,6 +13114,11 @@ printj@~1.3.1:
   resolved "https://registry.yarnpkg.com/printj/-/printj-1.3.1.tgz#9af6b1d55647a1587ac44f4c1654a4b95b8e12cb"
   integrity sha512-GA3TdL8szPK4AQ2YnOe/b+Y1jUFwmmGMMK/qbY7VcE3Z7FU8JstbKiKRzO6CIiAKPhTO8m01NoQ0V5f3jc4OGg==
 
+prismjs@^1.21.0:
+  version "1.28.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.28.0.tgz#0d8f561fa0f7cf6ebca901747828b149147044b6"
+  integrity sha512-8aaXdYvl1F7iC7Xm1spqSaY/OJBpYW3v+KJ+F17iYxvdc8sfjW194COK5wVhMZX45tGteiBQgdvD/nhxcRwylw==
+
 private@^0.1.6, private@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/private/-/private-0.1.8.tgz#2381edb3689f7a53d653190060fcf822d2f368ff"
@@ -13896,6 +13907,13 @@ react-native-fetch-api@^2.0.0:
   integrity sha512-GOA8tc1EVYLnHvma/TU9VTgLOyralO7eATRuCDchQveXW9Fr9vXygyq9iwqmM7YRZ8qRJfEt9xOS7OYMdJvRFw==
   dependencies:
     p-defer "^3.0.0"
+
+react-notion@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/react-notion/-/react-notion-0.10.0.tgz#d30876b681b09d91dc671b04c7f604adb4e2499e"
+  integrity sha512-i5lVAxzSs7GnTpIbKtivPQWxGZiKCO5xmCmMJyn6F91y8X1IIJqnypkK+31F2acb1l1Qd8Yv0ktuvXwz9g49NQ==
+  dependencies:
+    prismjs "^1.21.0"
 
 react-overlays@^5.1.1:
   version "5.1.1"
