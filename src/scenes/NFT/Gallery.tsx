@@ -13,9 +13,10 @@ import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../../artifacts/contracts/Market.sol/NFTMarket.json'
 import { Button, Col, Row, Spin } from 'antd';
 import NFTCard from '../../components/NFTCard';
+import { NFTMetadata } from '../../models/NFT';
 
 export default function Gallery() {
-  const [nfts, setNfts] = useState<any[]>([])
+  const [nfts, setNfts] = useState<{[key: string]: NFTMetadata[]}>({})
   const [loadingState, setLoadingState] = useState('')
 
   useEffect(() => {
@@ -24,15 +25,26 @@ export default function Gallery() {
 
   async function loadNFTs() {
 
-    setLoadingState('loading');
+
+    Object.keys(CONFIG_CHAINS).forEach( async (chainId) => {
+      await loadNFTsByChainID(chainId);
+    })
+  }
+
+  const loadNFTsByChainID = async (activeChainId: string)  => {
 
     /* create a generic provider and query for unsold market items */
     const rpcProviderUrl = (CONFIG_CHAINS as any)[activeChainId].RPC_PROVIDER_URL;
     const provider = new ethers.providers.JsonRpcProvider(rpcProviderUrl)
     console.log({rpcProviderUrl, provider});
+    const chainConfig = CONFIG_CHAINS[activeChainId];
+    const networkFullName = `${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME})`;
 
-    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT.abi, provider)
-    const marketContract = new ethers.Contract(NFT_MARKETPLACE_ADDRESS, Market.abi, provider)
+    setLoadingState(`Loading NFTs for ${networkFullName}`);
+
+    const tokenContract = new ethers.Contract(chainConfig.NFT_ADDRESS, NFT.abi, provider)
+    const marketContract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, provider)
+    // Get a function to return even NFTs not on smart contract network
     const data = await marketContract.fetchMarketItems()
 
     /*
@@ -43,7 +55,7 @@ export default function Gallery() {
       const tokenUri = await tokenContract.tokenURI(i.tokenId);
       const meta = await axios.get(tokenUri);
       let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-      let item = {
+      let item: NFTMetadata = {
         price,
         itemId: i.itemId.toNumber(),
         tokenId: i.tokenId.toNumber(),
@@ -52,12 +64,18 @@ export default function Gallery() {
         image: meta.data.image,
         name: meta.data.name,
         description: meta.data.description,
+        chainId: activeChainId,
       }
       return item
     }))
-    console.log({items});
-    setNfts(items)
-    setLoadingState('loaded') 
+    
+    console.log(chainConfig.NETWORK_NAME, {items});
+    const updatedNFTs = {...nfts};
+    updatedNFTs[activeChainId] = items;
+
+    setNfts(updatedNFTs);
+    console.log(chainConfig.NETWORK_NAME, {updatedNFTs});
+    setLoadingState('loaded');
   }
 
   async function buyNft(nft: any) {
@@ -77,15 +95,34 @@ export default function Gallery() {
     loadNFTs()
   }
 
-  if (loadingState === 'loaded' && !nfts.length) return (<h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>)
+  const nftArrays =  Object.values(nfts);
+  const allNFTs: NFTMetadata[] = [].concat.apply([] as NFTMetadata[], (nftArrays as any));
+
+  console.log({allNFTs, nfts, nftArrays});
+
+
+  if (loadingState === 'loaded' && !allNFTs.length) return (<h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>)
   return (
     <div className="flex justify-center">
         <h1>NFT Gallery</h1>
+
+        {Object.values(CONFIG_CHAINS).map(chainConfig => {
+          const nftBlockExplorerUrl = `${chainConfig.BLOCK_EXPLORER_URL}/token/${chainConfig.NFT_ADDRESS}`;
+
+          const networkFullName = `${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME})`;
+          return (
+            <div>
+              <Button className="center-block my-2" type="primary" onClick={()=>loadNFTsByChainID(chainConfig.CHAIN_ID)}>
+                Load NFTs on {networkFullName}
+              </Button>
+            </div>
+          )
+        })}
       <div className="px-4" style={{ maxWidth: '1600px' }}>
-        {loadingState === "loading" && <Spin size="large"  tip="Loading NFTs..."/>}
+        {loadingState?.toLowerCase().includes("loading") && <Spin size="large"  tip={loadingState}/>}
         <Row gutter={[24,24]}>
           {
-            nfts.map((nft, i) => {
+            allNFTs.map((nft, i) => {
 
               return(
                 <Col md={8} sm={24} key={i}>

@@ -3,7 +3,10 @@ export interface NFTMetadata {
     image: string,
     description: string,
     price: string,
-    seller: string,
     tokenId: string,
     chainId: string,
+    // following properties only exist if the NFT is listed for sale
+    seller: string,
+    itemId?: string,
+    owner?: string,
 }
