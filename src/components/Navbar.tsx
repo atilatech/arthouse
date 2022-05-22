@@ -15,6 +15,10 @@ function Navbar() {
             key: "my-nfts",
             label: "My NFTs",
         },
+        {
+            key: "gallery",
+            label: "Gallery",
+        },
     ];
 
     return (
@@ -24,7 +28,7 @@ function Navbar() {
                 <h2 id="logo"
                     className="text-center" onClick={(e) => setCurrentKey("")}>
                     <Link to="/">
-                        <span>Atila</span>
+                        <span>Arthouse</span>
                     </Link>
                 </h2>
                 </Col>

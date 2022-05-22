@@ -12,8 +12,8 @@ function Footer() {
                 <div className="row">
                     <div className="col-lg-8 col-sm-12">
                         <p className="grey-text text-lighten-4">
-                        <a href="https://atila.ca" target="_blank" rel="noreferrer" >Atila</a>{' '} 
-                        is a plattform for starting and getting scholarships using fiat or cryptocurrencies.
+                        Arthouse was created by <a href="https://atila.ca" target="_blank" rel="noreferrer" >Atila.ca</a>{' '}, 
+                        a plattform for starting and getting scholarships using fiat and crypto.
                         </p>
 
                     </div>

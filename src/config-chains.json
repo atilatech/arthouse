@@ -1,23 +1,68 @@
 {
+    "4": {
+        "NETWORK_NAME": "Rinkeby",
+        "CHAIN_NAME": "Ethereum",
+        "NFT_MARKETPLACE_ADDRESS": "0xe12C5D6F03938B530bbBA220a971dC2C3759f923",
+        "NFT_ADDRESS": "0x544FEc06fdfB423606d1C705D3105867B8Ff8148",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
+        "CHAIN_ID": "4",
+        "BLOCK_EXPLORER_URL": "https://rinkeby.etherscan.io",
+        "RPC_PROVIDER_URL": "https://rinkeby.infura.io/v3/59b59e23bb7c44d799b5db4a1b83e4ee"
+    },
+    "77": {
+        "NETWORK_NAME": "Sokol",
+        "CHAIN_NAME": "Gnosis Chain",
+        "NFT_MARKETPLACE_ADDRESS": "",
+        "NFT_ADDRESS": "",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://agave.finance/images/gnosis-chain.svg",
+        "CHAIN_ID": "77",
+        "BLOCK_EXPLORER_URL": "https://blockscout.com/poa/sokol",
+        "RPC_PROVIDER_URL": "https://sokol.poa.network"
+    },
+    "44787": {
+        "NETWORK_NAME": "Alfajores",
+        "CHAIN_NAME": "Celo",
+        "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
+        "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://docs.celo.org/img/color-logo.png",
+        "CHAIN_ID": "44787",
+        "BLOCK_EXPLORER_URL": "https://alfajores-blockscout.celo-testnet.org",
+        "RPC_PROVIDER_URL": "https://celo-alfajores--rpc.datahub.figment.io/apikey/9bb896aa7d9e0050154dc5d7a49cd832"
+    },
     "80001": {
         "NETWORK_NAME": "Mumbai",
         "CHAIN_NAME": "Polygon",
-        "NFT_MARKETPLACE_ADDRESS": "",
-        "NFT_ADDRESS": "",
-        "IS_MAIN_NET": false
+        "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
+        "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://brandlogovector.com/wp-content/uploads/2021/12/Polygon-Crypto-Icon-Logo-Small.png",
+        "CHAIN_ID": "80001",
+        "BLOCK_EXPLORER_URL": "https://mumbai.polygonscan.com",
+        "RPC_PROVIDER_URL": "https://matic-mumbai.chainstacklabs.com"
+    },
+    "1666700000": {
+        "NETWORK_NAME": "Testnet",
+        "CHAIN_NAME": "Harmony",
+        "NFT_MARKETPLACE_ADDRESS": "0xe12C5D6F03938B530bbBA220a971dC2C3759f923",
+        "NFT_ADDRESS": "0x544FEc06fdfB423606d1C705D3105867B8Ff8148",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://s2.coinmarketcap.com/static/img/coins/200x200/3945.png",
+        "CHAIN_ID": "1666700000",
+        "BLOCK_EXPLORER_URL": "https://explorer.pops.one",
+        "RPC_PROVIDER_URL": "https://api.s0.b.hmny.io"
     },
     "localhost": {
         "NETWORK_NAME": "Localhost",
         "CHAIN_NAME": "Ethereum",
         "NFT_MARKETPLACE_ADDRESS": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
         "NFT_ADDRESS": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
-        "IS_MAIN_NET": false
-    },
-    "0xaef3": {
-        "name": "Alfajores",
-        "CHAIN_NAME": "Celo",
-        "NFT_MARKETPLACE_ADDRESS": "",
-        "NFT_ADDRESS": "",
-        "IS_MAIN_NET": false
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
+        "CHAIN_ID": null,
+        "BLOCK_EXPLORER_URL": "",
+        "RPC_PROVIDER_URL": ""
     }
 }

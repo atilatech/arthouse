@@ -30,6 +30,7 @@ coverage
 coverage.json
 typechain
 .secrets
+.privateKey
 
 #Hardhat files
 cache
