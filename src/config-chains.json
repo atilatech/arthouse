@@ -30,7 +30,7 @@
         "LOGO_URL": "https://docs.celo.org/img/color-logo.png",
         "CHAIN_ID": "44787",
         "BLOCK_EXPLORER_URL": "https://alfajores-blockscout.celo-testnet.org",
-        "RPC_PROVIDER_URL": "https://alfajores-forno.celo-testnet.org"
+        "RPC_PROVIDER_URL": "https://celo-alfajores--rpc.datahub.figment.io/apikey/9bb896aa7d9e0050154dc5d7a49cd832"
     },
     "80001": {
         "NETWORK_NAME": "Mumbai",
