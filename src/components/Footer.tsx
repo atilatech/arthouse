@@ -12,8 +12,8 @@ function Footer() {
                 <div className="row">
                     <div className="col-lg-8 col-sm-12">
                         <p className="grey-text text-lighten-4">
-                        Arthouse by <a href="https://atila.ca" target="_blank" rel="noreferrer" >Atila</a>{' '} 
-                        is a plattform for creating NFTs on multiple chains.
+                        Arthouse was created by <a href="https://atila.ca" target="_blank" rel="noreferrer" >Atila</a>{' '}, 
+                        a plattform for starting and getting scholarships using fiat and crypto.
                         </p>
 
                     </div>
