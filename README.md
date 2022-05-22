@@ -5,6 +5,11 @@ A marketplace for creating, buying and selling NFTs on Ethereum, Polygon and Bin
 Inspired by Nader Dabit's [Building a Full Stack NFT Marketplace on Ethereum with Polygon](https://dev.to/dabit3/building-scalable-full-stack-apps-on-ethereum-with-polygon-2cfb).
 
 ## Demos
+
+### Live Demo
+- https://0000tbasl07ad1f4gmc2cpu5fbint53qfvgifgr51em1pvdtpplc2e8.siasky.net/
+
+### Video Demos
 - https://www.loom.com/share/c4205883b8fd4e499eadf1e349c8ace6
 - https://www.loom.com/share/8c690cf68d4a4cbd8b4111d8730cdf75
 - https://www.loom.com/share/f2551e83622742bc8963fc4fb25e3f0c
