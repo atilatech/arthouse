@@ -10,8 +10,10 @@ import {
 
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../../artifacts/contracts/Market.sol/NFTMarket.json'
-import { Alert, Avatar, Button, Input, InputNumber, Select, Tooltip } from 'antd'
+import { Alert, Button, Col, Input, InputNumber, Row, Select } from 'antd'
 import './CreateNFT.scss';
+import NFTCard from '../../components/NFTCard';
+import { NFTMetadata } from '../../models/NFT';
 
 const { Option } = Select;
 
@@ -32,13 +34,13 @@ function CreateNFT(props: CreateNFTProps) {
   const [formInput, updateFormInput] = useState({ price: 0, name: '', description: '' })
   const [error, setError] = useState("");
   const [selectedChains, setSelectedChains] = useState(Object.values(CONFIG_CHAINS).map(config=>config.CHAIN_ID));
-  const [createdNFTs, setCreatedNFTs] = useState<any[]>([]);
+  const [createdNFTs, setCreatedNFTs] = useState<NFTMetadata[]>([]);
   const [nftMetadataUrl, setNftMetadataUrl] = useState("");
 
   async function onChange(e: any) {
     const file = e.target.files[0];
-    setFileUrl("https://atila.ca/static/media/atila-upway-logo-gradient-circle-border.bfe05867.png");
-    return;
+    // setFileUrl("https://atila.ca/static/media/atila-upway-logo-gradient-circle-border.bfe05867.png");
+    // return;
     try {
       const added = await client.add(
         file,
@@ -69,7 +71,7 @@ function CreateNFT(props: CreateNFTProps) {
 
         const added = await client.add(data)
         url = `https://ipfs.infura.io/ipfs/${added.path}`
-        url = "https://bafybeicjitpyvkvqrm63pnfwv2e7wxkqb6meg3vemz6s7cyc4bpcuaz44y.ipfs.infura-ipfs.io/"
+        // url = "https://bafybeicjitpyvkvqrm63pnfwv2e7wxkqb6meg3vemz6s7cyc4bpcuaz44y.ipfs.infura-ipfs.io/"
         /* after file is uploaded to IPFS, pass the URL to save it on Network */
         setNftMetadataUrl(url);
         return url;
@@ -141,23 +143,25 @@ function CreateNFT(props: CreateNFTProps) {
         listTransaction = await listTransactionPromise.wait()
       }
       const { name, description, price: nftPrice } = formInput
-      const createdNFT = {
+      const createdNFT: NFTMetadata = {
         name,
         description,
-        price: nftPrice,
-        fileUrl,
-        url,
+        price: nftPrice.toString(),
+        image: fileUrl || "",
+        // url,
         tokenId,
-        tokenAddress: activeChain.NFT_ADDRESS,
+        // tokenAddress: activeChain.NFT_ADDRESS,
         chainId: activeChain.CHAIN_ID,
-        chain: activeChain,
-        mintTransaction,
-        listTransaction,
+        // chain: activeChain,
+        // mintTransaction,
+        seller: listTransaction?.to || "",
       }
 
-      createdNFTs.push(createdNFT);
-      setCreatedNFTs(createdNFTs);
-      console.log({createdNFTs});
+      const updatedCreatedNFTs = [...createdNFTs];
+
+      updatedCreatedNFTs.push(createdNFT);
+      setCreatedNFTs(updatedCreatedNFTs);
+      console.log({updatedCreatedNFTs});
     
     // history.push('/');
   }
@@ -207,19 +211,26 @@ function CreateNFT(props: CreateNFTProps) {
           {Object.values(CONFIG_CHAINS).map (chainConfig => (
             <Option value={chainConfig.CHAIN_ID} label={chainConfig.NETWORK_NAME}>
               {chainConfig.CHAIN_NAME} ({chainConfig.NETWORK_NAME})
-              <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={100} />
+              <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
             </Option>
           ))}
         </Select>
 
         {selectedChains.map(selectedChainId => {
           const chainConfig = CONFIG_CHAINS[selectedChainId];
+          const nftBlockExplorerUrl = `${chainConfig.BLOCK_EXPLORER_URL}/token/${chainConfig.NFT_ADDRESS}`;
 
+          const networkFullName = `${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME})`;
           return (
-            <Button className="center-block my-2" type="primary" onClick={()=>createNFT(false, selectedChainId)}>
-              Mint on {' '} {chainConfig.CHAIN_NAME} ({chainConfig.NETWORK_NAME})
-                <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={25} />
-            </Button>
+            <div>
+              <Button className="center-block my-2" type="primary" onClick={()=>createNFT(false, selectedChainId)}>
+                Mint on {' '} {networkFullName}
+                  <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={25} />
+              </Button>
+              <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="center-block text-center">
+                View {networkFullName} NFT Contract on Block Explorer
+              </a>
+            </div>
           )
         })}
 
@@ -229,15 +240,27 @@ function CreateNFT(props: CreateNFTProps) {
           Create NFT
         </Button> */}
 
+        {createdNFTs.length > 0 && 
         <div>
-          <Avatar.Group>
-            {selectedChains.map(selectedChain => (
-              <Tooltip title={CONFIG_CHAINS[selectedChain].NETWORK_NAME} placement="top">
-                <Avatar src={CONFIG_CHAINS[selectedChain].LOGO_URL} />
-              </Tooltip>
-            ))}
-        </Avatar.Group>
+          <h3>
+            Created NFTs
+          </h3>
+          <Row gutter={[24,24]}>
+          {
+            createdNFTs.map((nft, i) => {
+
+              return(
+                <Col md={8} sm={24} key={i}>
+                  <NFTCard nft={nft} chainId={nft.chainId} />
+                </Col>
+              )
+
+            })
+          }
+        </Row>
         </div>
+        
+        }
 
         {error && <Alert
           type="error"

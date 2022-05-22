@@ -12,6 +12,7 @@ import {
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../../artifacts/contracts/Market.sol/NFTMarket.json'
 import { Button, Col, Row, Spin } from 'antd';
+import NFTCard from '../../components/NFTCard';
 
 export default function Gallery() {
   const [nfts, setNfts] = useState<any[]>([])
@@ -85,33 +86,11 @@ export default function Gallery() {
         <Row gutter={[24,24]}>
           {
             nfts.map((nft, i) => {
-              const nftBlockExplorerUrl = `${(CONFIG_CHAINS as any)[activeChainId].BLOCK_EXPLORER_URL}/token/${(CONFIG_CHAINS as any)[activeChainId].NFT_ADDRESS}?a=${nft.tokenId}`;
-              const sellerBlockExplorerUrl = `${(CONFIG_CHAINS as any)[activeChainId].BLOCK_EXPLORER_URL}/address/${nft.seller}`;
 
               return(
                 <Col md={8} sm={24} key={i}>
-                  <div className="card shadow">
-                    <img src={nft.image}  alt={nft.name} width="auto" height="300" className="m-3"/>
-                    <div className="p-4">
-                    <p style={{ height: '64px' }} className="text-2xl font-semibold">{nft.name}</p>
-                    <div style={{ height: '70px', overflow: 'hidden' }}>
-                        <p className="text-gray-400">{nft.description}</p>
-                    </div>
-                    </div>
-                    <div className="p-4 bg-black">
-                      <p className="text-2xl mb-4 font-bold">  
-                        <a href={sellerBlockExplorerUrl} target="_blank" rel="noreferrer" className="ml-1">
-                          View Seller address
-                        </a>
-                      </p>
-                      <p className="text-2xl mb-4 font-bold">{nft.price} ETH</p>
-                      <Button className="center block" onClick={() => buyNft(nft)}>Buy</Button>
-                      <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="ml-1">
-                        View on Block Explorer
-                      </a>
-                    </div>
-                  </div>
-              </Col>
+                  <NFTCard nft={nft} chainId={activeChainId} />
+                </Col>
               )
 
             })
