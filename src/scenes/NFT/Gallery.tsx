@@ -87,7 +87,7 @@ export default function Gallery() {
     const contract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
 
     /* user will be prompted to pay the asking proces to complete the transaction */
-    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')   
+    const price = ethers.utils.parseUnits(nft.price!.toString(), 'ether')   
     const transaction = await contract.createMarketSale(chainConfig.NFT_ADDRESS, nft.itemId, {
       value: price
     })

@@ -24,3 +24,6 @@ export const NFT_ADDRESS = CONFIG_CHAINS[activeChainId].NFT_ADDRESS;
 
 export const REACT_APP_MORALIS_SERVER_URL = process.env.REACT_APP_MORALIS_SERVER_URL;
 export const REACT_APP_MORALIS_APP_ID = process.env.REACT_APP_MORALIS_APP_ID;
+
+
+export const MORALIS_SUPPORTED_CHAINS = ["4", "80001", "97"]
