@@ -2,6 +2,7 @@ import { Button, Tag } from 'antd';
 import React from 'react'
 import { CONFIG_CHAINS } from '../config';
 import { NFTMetadata } from '../models/NFT';
+import "./NFTCard.scss";
 
 function NFTCard({nft, chainId}: {nft: NFTMetadata, chainId: string}) {
 
@@ -10,14 +11,14 @@ const activeChain = CONFIG_CHAINS[chainId];
 const nftBlockExplorerUrl = `${activeChain.BLOCK_EXPLORER_URL}/${activeChain.CHAIN_NAME !== "Harmony" ? "token": "address"}/${activeChain.NFT_ADDRESS}?a=${nft.tokenId}`;
 
   return (
-    <div className="card shadow">
+    <div className="NFTCard card shadow">
     <img src={nft.image}  alt={nft.name} width="auto" height="300" className="m-3"/>
     <div className="p-4">
     <h3 className="text-2xl font-semibold">{nft.name}</h3>
     <hr/>
 
     <div>
-        <p className="text-gray-400">{nft.description}</p>
+        <p className="description">{nft.description}</p>
     </div>
     <hr/>
 
