@@ -10,7 +10,7 @@ const fs = require('fs');
 // TODO make this a task so it can be passed as a command line argument
 //  - https://stackoverflow.com/questions/69111785/hardhat-run-with-parameters
 // - https://hardhat.org/guides/create-task.html
-const chainID = "1666700000";
+const chainID = "97";
 
 async function main() {
 

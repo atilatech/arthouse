@@ -47,6 +47,11 @@ module.exports = {
       url: `https://api.s0.b.hmny.io`,
       accounts: [`0x${privateKey}`],
       chainId: 1666700000
+    },
+    bsctestnet: {
+      url: `https://data-seed-prebsc-1-s1.binance.org:8545`,
+      accounts: [`0x${privateKey}`],
+      chainId: 97
     }
   },
 }

@@ -19,8 +19,6 @@ const { Option } = Select;
 
 const { TextArea } = Input;
 
-console.log({CONFIG_CHAINS});
-
 const ipfsHostUrl = 'https://ipfs.infura.io:5001/api/v0';
 const client = (ipfsHttpClient as any)(ipfsHostUrl);
 // seems redundant because it doesn't add any new fields but doing this way makes it easier to add other fields in the future.
@@ -91,7 +89,6 @@ function CreateNFT(props: CreateNFTProps) {
   }
 
   function handleChangeSelectedChains(value: any) {
-    console.log(`selected ${value}`);
     setSelectedChains(value);
   }
 
@@ -161,7 +158,6 @@ function CreateNFT(props: CreateNFTProps) {
 
       updatedCreatedNFTs.push(createdNFT);
       setCreatedNFTs(updatedCreatedNFTs);
-      console.log({updatedCreatedNFTs});
     
     // history.push('/');
   }
@@ -217,8 +213,8 @@ function CreateNFT(props: CreateNFTProps) {
           optionLabelProp="label"
         >
           {Object.values(CONFIG_CHAINS).map (chainConfig => (
-            <Option value={chainConfig.CHAIN_ID} label={chainConfig.NETWORK_NAME}>
-              {chainConfig.CHAIN_NAME} ({chainConfig.NETWORK_NAME})
+            <Option value={chainConfig.CHAIN_ID} label={chainConfig.CHAIN_NAME}>
+              {chainConfig.CHAIN_NAME}
               <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
             </Option>
           ))}

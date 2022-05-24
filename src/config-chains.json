@@ -21,6 +21,17 @@
         "BLOCK_EXPLORER_URL": "https://blockscout.com/poa/sokol",
         "RPC_PROVIDER_URL": "https://sokol.poa.network"
     },
+    "97": {
+        "NETWORK_NAME": "Testnet",
+        "CHAIN_NAME": "Binance Smart Chain",
+        "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
+        "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",
+        "IS_MAIN_NET": false,
+        "LOGO_URL": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Binance-coin-bnb-logo.png/800px-Binance-coin-bnb-logo.png",
+        "CHAIN_ID": "97",
+        "BLOCK_EXPLORER_URL": "https://testnet.bscscan.com",
+        "RPC_PROVIDER_URL": "https://data-seed-prebsc-1-s1.binance.org:8545"
+    },
     "44787": {
         "NETWORK_NAME": "Alfajores",
         "CHAIN_NAME": "Celo",
