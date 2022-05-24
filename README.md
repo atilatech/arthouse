@@ -18,10 +18,9 @@ A marketplace for creating, buying and selling NFTs on Ethereum, Polygon and Bin
 
 - [View  Ethereum (Rinkeby)  NFT Contract on Block Explorer](https://rinkeby.etherscan.io/token/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
     - Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
-
-- [View  Celo (Alfajores)  NFT Contract on Block Explorer](https://alfajores-blockscout.celo-testnet.org/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
+- [View  Binance Smart Chain (Testnet)  NFT Contract on Block Explorer](https://testnet.bscscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
 - [View  Polygon (Mumbai)  NFT Contract on Block Explorer](https://mumbai.polygonscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
-
+- [View  Celo (Alfajores)  NFT Contract on Block Explorer](https://alfajores-blockscout.celo-testnet.org/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
 - [View Harmony (Testnet) NFT Contract on Block Explorer](https://explorer.pops.one/address/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
 ## Quickstart
 
@@ -86,21 +85,20 @@ The backend for this project is a blockchain node. For development, you can run 
     1. Binance: https://testnet.binance.org/faucet-smart
     1. Polygon: https://faucet.polygon.technology
     1. Celo: https://celo.org/developers/faucet
-    1. Sokol: https://faucet.poa.network
     1. Harmony: https://faucet.pops.one
 
 1. Load secrets to your environment variable `source .secrets`
 
 1. Deploy the smart contract: `npx hardhat run scripts/deploy.js --network [network]`
-    - Celo Alfajores: `npx hardhat run scripts/deploy.js --network alfajores`
-    - Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
-    - Ethereum Rinkeby: `npx hardhat run scripts/deploy.js --network rinkeby`
-    - Gnosis Sokol: `npx hardhat run scripts/deploy.js --network sokol`
-    - Harmony Testnet: `npx hardhat run scripts/deploy.js --network harmonytestnet`
-    - Binance Smart Testnet: `npx hardhat run scripts/deploy.js --network bsctestnet`
+    1. Celo Alfajores: `npx hardhat run scripts/deploy.js --network alfajores`
+    1. Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
+    1. Ethereum Rinkeby: `npx hardhat run scripts/deploy.js --network rinkeby`
+    1. Harmony Testnet: `npx hardhat run scripts/deploy.js --network harmonytestnet`
+    1. Binance Smart Testnet: `npx hardhat run scripts/deploy.js --network bsctestnet`
 
 1. Add the new chain information to `README.md`, see these commits below for examples of what to change:
     1. [Ethereum](https://github.com/atilatech/art-house/commit/d97572f9d730a3a469a712dec04fc3ea6dc97eb8)
+    1. [Binance](https://github.com/atilatech/art-house/commit/274ff640c116d6637add521e7eae7fe9de2fbe92)
     1. [Polygon](https://github.com/atilatech/art-house/commit/a211ac1bc50d52ffd266b5eb5fd47bf4b232d366)
     1. [Celo](https://github.com/atilatech/art-house/commit/af8ab520fe80c3a148e45a963ead9270e2710a80)
 

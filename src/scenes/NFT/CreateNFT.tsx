@@ -192,14 +192,6 @@ function CreateNFT(props: CreateNFTProps) {
           )
         }
 
-        <Button style={{height: "50px"}}>
-            <a href="https://staging-global.transak.com/?apiKey=bec60cf8-dab5-4d3c-9f5f-fa45bc2c6514&exchangeScreenTitle=Arthouse&redirectURL=https://art.atila.ca/create" target="_blank">
-            {/* <a href="https://staging-global.transak.com/?apiKey=bec60cf8-dab5-4d3c-9f5f-fa45bc2c6514&exchangeScreenTitle=Arthouse&networks=ethereum,polygon,harmony" target="_blank"> */}
-                Buy Crypto with Transak
-                <img src="https://www.gitbook.com/cdn-cgi/image/width=40,height=40,fit=contain,dpr=1,format=auto/https%3A%2F%2F2568214732-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FyKT7ulakWzij4PDiIp6U%252Ficon%252FTbk5OkyEAiidHiC1yXpm%252FsK_Kgoxa_400x400.jpeg%3Falt%3Dmedia%26token%3Dacdf28e9-2036-4d48-93ce-dbd0eb6f5714" />
-            </a>
-        </Button>
-
         <p>
           Create NFT on the following chains:
         </p>
