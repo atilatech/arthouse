@@ -17,7 +17,7 @@ function LandingPage() {
                 <ol>
                 {Object.values(CONFIG_CHAINS).map (chainConfig => {
                     return (
-                        <li key={chainConfig.NETWORK_NAME}>
+                        <li key={chainConfig.CHAIN_ID}>
                         {chainConfig.CHAIN_NAME} ({chainConfig.NETWORK_NAME})
                         <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
                         </li>

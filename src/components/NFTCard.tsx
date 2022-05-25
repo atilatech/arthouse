@@ -16,7 +16,6 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
     const raribleUrl = RARIBLE_SUPPORTED_CHAINS.includes(chainId) ? `https://${activeChain.IS_MAIN_NET? "" : "rinkeby."}rarible.com/token/${activeChain.NFT_ADDRESS.toLowerCase()}:${nft.tokenId}`: "";
     const looksrareUrl = LOOKSRARE_SUPPORTED_CHAINS.includes(chainId) ? `https://${activeChain.IS_MAIN_NET? "" : "rinkeby."}looksrare.org/collections/${activeChain.NFT_ADDRESS.toLowerCase()}/${nft.tokenId}`: "";
 
-    console.log({openSeaUrl, OPENSEA_SUPPORTED_CHAINS, chainId});
     return (
         <div className="NFTCard card shadow">
         <img src={nft.image}  alt={nft.name} width="auto" height="300" className="m-3"/>
@@ -36,7 +35,7 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
             </Tag>
         </div>
         <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="ml-1">
-            View NFT in Block Explorer
+            View NFT on Block Explorer
         </a>
         {/* TODO make this code less repetitve, iterate over a dictionary/list of NFT marketplaces */}
         {openSeaUrl && 
