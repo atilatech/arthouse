@@ -247,7 +247,7 @@ function CreateNFT(props: CreateNFTProps) {
 
               return(
                 <Col md={8} sm={24} key={i}>
-                  <NFTCard nft={nft} chainId={nft.chainId} />
+                  <NFTCard nft={nft} />
                 </Col>
               )
 

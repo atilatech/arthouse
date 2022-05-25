@@ -126,7 +126,7 @@ export default function Gallery() {
 
               return(
                 <Col md={8} sm={24} key={i}>
-                  <NFTCard nft={nft} chainId={activeChainId} />
+                  <NFTCard nft={nft} />
                 </Col>
               )
 

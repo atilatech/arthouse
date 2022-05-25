@@ -1,21 +1,11 @@
 // this file is auto-generated each time scripts/deploy.js is run
 import configChains from './config-chains.json';
+import { Chain } from './models/Chain';
 
 export const activeChainId = localStorage.getItem("activeChainId") || "44787"; // default to CELO
 
-type chainConfigType = {
-    NETWORK_NAME: string,
-    CHAIN_NAME: string,
-    NFT_MARKETPLACE_ADDRESS: string,
-    NFT_ADDRESS: string,
-    IS_MAIN_NE: string,
-    LOGO_URL: string,
-    CHAIN_ID: string,
-    BLOCK_EXPLORER_URL: string,
-    RPC_PROVIDER_URL: string
-}
 
-export const CONFIG_CHAINS: {[key: string]: chainConfigType} =  (configChains as any);
+export const CONFIG_CHAINS: {[key: string]: Chain} =  (configChains as any);
 
 delete CONFIG_CHAINS.localhost;
 
@@ -26,4 +16,10 @@ export const REACT_APP_MORALIS_SERVER_URL = process.env.REACT_APP_MORALIS_SERVER
 export const REACT_APP_MORALIS_APP_ID = process.env.REACT_APP_MORALIS_APP_ID;
 
 
-export const MORALIS_SUPPORTED_CHAINS = ["4", "80001", "97"]
+export const MORALIS_SUPPORTED_CHAINS = ["4", "80001", "97"];
+
+
+// TODO change this to a dictionary where each marketplace is a key with a SUPPORTED_CHAINS key
+export const OPENSEA_SUPPORTED_CHAINS = ["4", "80001", "97"];
+export const RARIBLE_SUPPORTED_CHAINS = ["4"];
+export const LOOKSRARE_SUPPORTED_CHAINS = ["4"];
