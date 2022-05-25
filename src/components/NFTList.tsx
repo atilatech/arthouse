@@ -1,13 +1,13 @@
+import React, { useEffect, useState } from 'react'
 import { Row, Col, Spin } from 'antd';
 import Moralis from 'moralis';
 import { components } from 'moralis/types/generated/web3Api';
-import React, { useEffect, useState } from 'react'
 import { CONFIG_CHAINS } from '../config';
 import { Chain } from '../models/Chain';
 import { NFTMetadata } from '../models/NFT';
 import NFTCard from './NFTCard';
 
-function NFTList({address, chainId} : {address: string, chainId: string}) {
+function NFTList({address, chainId, getAllTokensForContract = false} : {address: string, chainId: string, getAllTokensForContract?: boolean}) {
 
     const chainConfig = new Chain({...CONFIG_CHAINS[chainId]});
     const [nfts, setNfts] = useState<NFTMetadata[]>([]);
@@ -30,8 +30,13 @@ function NFTList({address, chainId} : {address: string, chainId: string}) {
         chain: `0x${(Number.parseInt(chainId)).toString(16)}` as components["schemas"]["chainList"],
         address: address,
       };
-      const data = await Moralis.Web3API.account.getNFTs(options);
-  
+      let data;
+      if (getAllTokensForContract) {
+        data = await Moralis.Web3API.token.getAllTokenIds(options);
+      } else {
+        data = await Moralis.Web3API.account.getNFTs(options);
+      }
+
       const items = data.result!.filter(nft => nft.metadata).map((token) => {
         const metadata = JSON.parse(token.metadata || "{}");
         const { name, description, image } = metadata;
@@ -40,7 +45,7 @@ function NFTList({address, chainId} : {address: string, chainId: string}) {
           // price,
           tokenId: token.token_id,
           // seller: token.seller,
-          owner: token.owner_of,
+          owner: (token as any).owner_of,
           name,
           description,
           image,

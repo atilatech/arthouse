@@ -2,6 +2,10 @@ import { Button, Tag } from 'antd';
 import React from 'react'
 import { CONFIG_CHAINS, LOOKSRARE_SUPPORTED_CHAINS, OPENSEA_SUPPORTED_CHAINS, RARIBLE_SUPPORTED_CHAINS } from '../config';
 import { NFTMetadata } from '../models/NFT';
+import Web3Modal from 'web3modal';
+import { ethers } from 'ethers';
+import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
+
 import "./NFTCard.scss";
 
 function NFTCard({nft}: {nft: NFTMetadata}) {
@@ -15,6 +19,24 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
     const openSeaUrl = OPENSEA_SUPPORTED_CHAINS.includes(chainId) ? `https://${activeChain.IS_MAIN_NET? "" : "testnets."}opensea.io/assets/${activeChain.NETWORK_NAME.toLowerCase()}/${activeChain.NFT_ADDRESS}/${nft.tokenId}`: "";
     const raribleUrl = RARIBLE_SUPPORTED_CHAINS.includes(chainId) ? `https://${activeChain.IS_MAIN_NET? "" : "rinkeby."}rarible.com/token/${activeChain.NFT_ADDRESS.toLowerCase()}:${nft.tokenId}`: "";
     const looksrareUrl = LOOKSRARE_SUPPORTED_CHAINS.includes(chainId) ? `https://${activeChain.IS_MAIN_NET? "" : "rinkeby."}looksrare.org/collections/${activeChain.NFT_ADDRESS.toLowerCase()}/${nft.tokenId}`: "";
+
+
+    async function buyNft(nft: NFTMetadata) {
+        /* needs the user to sign the transaction, so will use Web3Provider and sign it */
+        const chainConfig = CONFIG_CHAINS[nft.chainId];
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
+
+        /* user will be prompted to pay the asking proces to complete the transaction */
+        const price = ethers.utils.parseUnits(nft.price!.toString(), 'ether')   
+        const transaction = await contract.createMarketSale(chainConfig.NFT_ADDRESS, nft.itemId, {
+        value: price
+        })
+        await transaction.wait();
+    }
 
     return (
         <div className="NFTCard card shadow">
@@ -71,8 +93,7 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
             </a> */}
             </p>
             <p className="text-2xl mb-4 font-bold">{nft.price} ETH</p>
-            <Button className="center block">Buy</Button>
-            {/* <Button className="center block" onClick={() => buyNft(nft)}>Buy</Button> */}
+            <Button className="center block" onClick={() => buyNft(nft)}>Buy</Button>
         </div>
         </div>
     )

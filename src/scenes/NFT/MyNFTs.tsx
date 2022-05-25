@@ -32,7 +32,7 @@ export default function MyNFTs() {
   return (
     <div className="MyNFTs card shadow container p-5">
       <h1>My NFTs</h1>
-      <Radio.Group onChange={onChangeActiveChainId} value={activeChainId} optionType="button" className="mb-2">
+      <Radio.Group onChange={onChangeActiveChainId} value={activeChainId} optionType="button" className="my-3">
       {
         MORALIS_SUPPORTED_CHAINS.map(chainId => {
           const chain = new Chain({...CONFIG_CHAINS[chainId]});
