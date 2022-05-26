@@ -11,9 +11,15 @@ function LandingPage() {
             </h1>
             <hr/>
             <div className="text-left">
-                Create NFTs on multiple blockchains. <br/>
+                Arthouse is a multi-chain NFT platform. Create NFTs on multiple blockchains. <br/>
 
-                Supported Chains: <br/>
+                <hr/>
+                <h2>
+                    Supported Chains: 
+                </h2>
+                <h3>
+                    Main Net
+                </h3>
                 <ol>
                 {Object.values(CONFIG_CHAINS).map (chainConfig => {
                     return (
@@ -24,6 +30,19 @@ function LandingPage() {
                     );
                 })}
                 </ol>
+                <h3>
+                    Testnets
+                </h3>
+
+                {Object.values(CONFIG_CHAINS).map (chainConfig => {
+                    return (
+                        <li key={chainConfig.CHAIN_ID}>
+                        {chainConfig.CHAIN_NAME}
+                        <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
+                        </li>
+                    );
+                })}
+
             </div>
         </div>
         <div className="col-md-6 card shadow p-3">
