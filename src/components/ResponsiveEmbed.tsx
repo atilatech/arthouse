@@ -1,14 +1,14 @@
 import React from 'react';
 
-function ResponsiveEmbed({srcUrl=''}) {
+function ResponsiveEmbed({srcUrl='', title = ''}) {
 
     return (
-        <div className="embed-responsive  embed-responsive-16by9 my-3">
+        <div className="responsive-embed  responsive-embed-16by9 my-3">
             <iframe 
                     allowFullScreen
                     src={srcUrl}
-                    title={srcUrl}
-                    className="embed-responsive-item">
+                    title={title|| srcUrl}
+                    className="responsive-embed-item">
             </iframe>
         </div>
     );

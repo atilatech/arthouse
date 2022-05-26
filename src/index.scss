@@ -17,3 +17,18 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.responsive-embed {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Ratio */
+  height: 0;
+  overflow: hidden;
+}
+.responsive-embed iframe {
+  border: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}

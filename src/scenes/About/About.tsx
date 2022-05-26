@@ -4,8 +4,8 @@ import ResponsiveEmbed from '../../components/ResponsiveEmbed'
 
 function About() {
   return (
-    <div>
-        <h1>
+    <div className="container">
+        <h1 className='text-center'>
             About Art House
         </h1>
 
@@ -13,11 +13,10 @@ function About() {
             <NotionPage pageId="37ec10d7c96b4bd1b77f3ac42115dbda" showTableOfContents={false} className="p-2" />
         </div>
 
-
-        <div className="section card shadow m-5 p-5 responsive-google-slides">
-            <iframe 
-                title="Arthouse Presentation"
-                src="https://docs.google.com/presentation/d/e/2PACX-1vS-k9mCJsoNLKiPlqSCz01SUxlCZvHZAWfn3ahgZGSXLMZB1bqIrj-NcB2pZ38-Ik4sdd73QNWoJJJ1/embed?start=false&loop=false&delayms=3000" frameBorder="0" width="960" height="569" allowFullScreen={true} ></iframe>
+        <div className="section card shadow m-5 p-5">
+            <ResponsiveEmbed 
+            srcUrl="https://docs.google.com/presentation/d/e/2PACX-1vS-k9mCJsoNLKiPlqSCz01SUxlCZvHZAWfn3ahgZGSXLMZB1bqIrj-NcB2pZ38-Ik4sdd73QNWoJJJ1/embed?start=false&loop=false&delayms=3000"
+            title="Arthouse Presentation" />
         </div>
 
         <div className="section card shadow m-5 p-5">
