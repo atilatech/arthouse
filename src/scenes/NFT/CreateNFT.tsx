@@ -10,7 +10,7 @@ import {
 
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
 import Market from '../../artifacts/contracts/Market.sol/NFTMarket.json'
-import { Alert, Button, Col, Input, InputNumber, Row, Select } from 'antd'
+import { Alert, Button, Col, Input, Row, Select } from 'antd'
 import './CreateNFT.scss';
 import NFTCard from '../../components/NFTCard';
 import { NFTMetadata } from '../../models/NFT';
@@ -176,12 +176,6 @@ function CreateNFT(props: CreateNFTProps) {
           placeholder="Description"
           onChange={e => updateFormInput({ ...formInput, description: e.target.value })}
         />
-        <InputNumber
-          placeholder="Price"
-          className="w-100"
-          addonBefore="ETH"
-          onChange={(value: number) => updateFormInput({ ...formInput, price: value })}
-        />
         <Input
           type="file"
           name="NFT"
@@ -226,12 +220,6 @@ function CreateNFT(props: CreateNFTProps) {
             </div>
           )
         })}
-
-        
-        
-        {/* <Button className="center-block" type="primary" onClick={()=>createNFT(true)}>
-          Create NFT
-        </Button> */}
 
         {createdNFTs.length > 0 && 
         <div>

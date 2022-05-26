@@ -3,7 +3,6 @@ import NotionPage from '../../components/NotionPage'
 import ResponsiveEmbed from '../../components/ResponsiveEmbed'
 import { ALL_CONFIG_CHAINS } from '../../config';
 import { Chain } from '../../models/Chain';
-import { NFTMetadata } from '../../models/NFT';
 
 function About() {
   return (
@@ -15,8 +14,6 @@ function About() {
         <div className="section card shadow m-5 p-5">
             <NotionPage pageId="37ec10d7c96b4bd1b77f3ac42115dbda" showTableOfContents={false} className="p-2" />
         </div>
-
-
 
         <div className="section card shadow m-5 p-5">
             
