@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Row, Col, Spin } from 'antd';
 import Moralis from 'moralis';
 import { components } from 'moralis/types/generated/web3Api';
@@ -9,17 +9,23 @@ import NFTCard from './NFTCard';
 
 function NFTList({address, chainId, getAllTokensForContract = false} : {address: string, chainId: string, getAllTokensForContract?: boolean}) {
 
-    const chainConfig = new Chain({...CONFIG_CHAINS[chainId]});
     const [nfts, setNfts] = useState<NFTMetadata[]>([]);
     const [loadingState, setLoadingState] = useState('not-loaded');
   
-    useEffect(() => {
-      if (address) {
-        loadNFTsByChainId()
-      }
-    }, [address, chainId]);
-  
-    async function loadNFTsByChainId() {
+    /**
+       * If we weant to pass a function to useEffect we must memoize the function to prevent an infinite loop re-render.
+       * This is because functions change their reference each time a component is re-rendered.
+       * Instead, we only want to rerender when the userProfileLoggedIn.user reference inside the getWallets() function is changed
+       * see: https://stackoverflow.com/a/62601621
+    */
+     const loadNFTsByChainId = useCallback(
+      async () => {
+
+        if (!address) {
+          return
+        }
+
+      const chainConfig = new Chain({...CONFIG_CHAINS[chainId]});
   
       setLoadingState(`Loading NFTs for ${chainConfig.getChainFullName()}`);
       const options = {
@@ -53,12 +59,16 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
         }
         return item
       });
-      
-      console.log({items, chainId})
+
       setNfts(items);
       setLoadingState('loaded');
   
-    }
+    }, [address, chainId, getAllTokensForContract]);
+
+    useEffect(() => {
+      loadNFTsByChainId();
+    }, [ loadNFTsByChainId]);
+
   
     return (
       <div className="NFTList">

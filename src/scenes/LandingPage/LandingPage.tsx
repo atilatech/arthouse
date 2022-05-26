@@ -27,10 +27,10 @@ function LandingPage() {
             </div>
         </div>
         <div className="col-md-6 card shadow p-3">
-            <img src="https://i.imgur.com/qfG9S0L.jpg" style={{width: "auto", height: "60vh"}} />
+            <img src="https://i.imgur.com/qfG9S0L.jpg" style={{width: "auto", height: "60vh"}} alt="Anime style artist" />
             {/* <img src="https://us1.storj.io/4d61a7b4-2bde-45f6-a499-00e094e040f7" style={{width: "auto", height: "60vh"}} /> */}
             <p className="p-3">
-                Source: <a href="https://www.pinterest.ie/pin/528328600017362380/" target ="_blank">
+                Source: <a href="https://www.pinterest.ie/pin/528328600017362380/" target ="_blank" rel='noreferrer'>
                     Tina Martini
                 </a>
             </p>

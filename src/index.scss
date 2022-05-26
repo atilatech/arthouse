@@ -32,3 +32,9 @@ body {
   width: 100% !important;
   height: 100% !important;
 }
+
+.ant-menu-title-content {
+  a:hover {
+    text-decoration: none;
+  }
+}
