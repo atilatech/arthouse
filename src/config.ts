@@ -5,9 +5,17 @@ import { Chain } from './models/Chain';
 export const activeChainId = localStorage.getItem("activeChainId") || "44787"; // default to CELO
 
 
-export const CONFIG_CHAINS: {[key: string]: Chain} =  (configChains as any);
+export const ALL_CONFIG_CHAINS: {[key: string]: Chain} =  (configChains as any);
 
-delete CONFIG_CHAINS.localhost;
+delete ALL_CONFIG_CHAINS.localhost;
+export let CONFIG_CHAINS: {[key: string]: Chain} = {};
+
+// if the URL starts with art.atila.ca' then only show mainnet chains
+Object.values(ALL_CONFIG_CHAINS).filter(chain =>
+     window.location.host.startsWith('art.atila.ca') ? chain.IS_MAIN_NET : !chain.IS_MAIN_NET)
+.forEach(chain => {
+    CONFIG_CHAINS[chain.CHAIN_ID] = chain;
+})
 
 export const NFT_MARKETPLACE_ADDRESS = CONFIG_CHAINS[activeChainId].NFT_MARKETPLACE_ADDRESS;
 export const NFT_ADDRESS = CONFIG_CHAINS[activeChainId].NFT_ADDRESS;

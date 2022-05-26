@@ -14,6 +14,6 @@ export class Chain {
     }
 
     getChainFullName = () => {
-        return `${this.CHAIN_NAME} (${this.NETWORK_NAME})`
+        return `${this.CHAIN_NAME}${this.IS_MAIN_NET ? "" : ' ('+this.NETWORK_NAME + ')'}`
     }
 }

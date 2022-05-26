@@ -14,6 +14,7 @@ import { Alert, Button, Col, Input, InputNumber, Row, Select } from 'antd'
 import './CreateNFT.scss';
 import NFTCard from '../../components/NFTCard';
 import { NFTMetadata } from '../../models/NFT';
+import { Chain } from '../../models/Chain';
 
 const { Option } = Select;
 
@@ -161,6 +162,8 @@ function CreateNFT(props: CreateNFTProps) {
     // history.push('/');
   }
 
+  console.log({CONFIG_CHAINS});
+
   return (
     <div className="CreateNFT card shadow container p-5">
         <h1 className="mb-3">Create NFT</h1>
@@ -196,6 +199,7 @@ function CreateNFT(props: CreateNFTProps) {
         </p>
         <Select
           mode="multiple"
+          allowClear
           className="mb-3"
           style={{ width: '100%' }}
           placeholder="Select chains"
@@ -204,7 +208,7 @@ function CreateNFT(props: CreateNFTProps) {
           optionLabelProp="label"
         >
           {Object.values(CONFIG_CHAINS).map (chainConfig => (
-            <Option value={chainConfig.CHAIN_ID} label={chainConfig.CHAIN_NAME}>
+            <Option value={chainConfig.CHAIN_ID} label={chainConfig.CHAIN_NAME} key={chainConfig.CHAIN_ID}>
               {chainConfig.CHAIN_NAME}
               <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
             </Option>
@@ -212,19 +216,13 @@ function CreateNFT(props: CreateNFTProps) {
         </Select>
 
         {selectedChains.map(selectedChainId => {
-          const chainConfig = CONFIG_CHAINS[selectedChainId];
-          const nftBlockExplorerUrl = `${chainConfig.BLOCK_EXPLORER_URL}/${chainConfig.CHAIN_NAME !== "Harmony" ? "token": "address"}/${chainConfig.NFT_ADDRESS}`;
-
-          const networkFullName = `${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME})`;
+          const chain =  new Chain({...CONFIG_CHAINS[selectedChainId]});
           return (
             <div>
               <Button className="center-block my-2" onClick={()=>createNFT(false, selectedChainId)}>
-                Mint on {' '} {networkFullName}
-                  <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={25} />
+                Mint on {' '} {chain.getChainFullName()}
+                  <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={25} />
               </Button>
-              <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="center-block text-center">
-                View {networkFullName} NFT Contract on Block Explorer
-              </a>
             </div>
           )
         })}

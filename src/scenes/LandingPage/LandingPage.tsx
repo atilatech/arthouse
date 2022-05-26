@@ -1,5 +1,6 @@
 import React from 'react'
-import { CONFIG_CHAINS } from '../../config'
+import { ALL_CONFIG_CHAINS } from '../../config'
+import { Chain } from '../../models/Chain';
 
 function LandingPage() {
   return (
@@ -21,11 +22,12 @@ function LandingPage() {
                     Main Net
                 </h3>
                 <ol>
-                {Object.values(CONFIG_CHAINS).map (chainConfig => {
+                {Object.values(ALL_CONFIG_CHAINS).filter(chain => chain.IS_MAIN_NET).map (chain => {
+                    chain =  new Chain({...chain});
                     return (
-                        <li key={chainConfig.CHAIN_ID}>
-                        {chainConfig.CHAIN_NAME}
-                        <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
+                        <li key={chain.CHAIN_ID}>
+                        {chain.getChainFullName()}
+                        <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={50} />
                         </li>
                     );
                 })}
@@ -34,11 +36,12 @@ function LandingPage() {
                     Testnets
                 </h3>
 
-                {Object.values(CONFIG_CHAINS).map (chainConfig => {
+                {Object.values(ALL_CONFIG_CHAINS).filter(chain => !chain.IS_MAIN_NET).map (chain => {
+                    chain =  new Chain({...chain});
                     return (
-                        <li key={chainConfig.CHAIN_ID}>
-                        {chainConfig.CHAIN_NAME}
-                        <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
+                        <li key={chain.CHAIN_ID}>
+                        {chain.getChainFullName()}
+                        <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={50} />
                         </li>
                     );
                 })}
