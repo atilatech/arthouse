@@ -27,7 +27,6 @@ interface CreateNFTProps extends RouteComponentProps {
 
 function CreateNFT(props: CreateNFTProps) {
   
-  const { history } = props;
   const [fileUrl, setFileUrl] = useState<string|null>(null)
   const [formInput, updateFormInput] = useState({ price: 0, name: '', description: '' })
   const [error, setError] = useState("");
@@ -101,7 +100,7 @@ function CreateNFT(props: CreateNFTProps) {
     const provider = new ethers.providers.Web3Provider(connection)    
     const signer = provider.getSigner()
 
-      if (window.ethereum.networkVersion != activeChainId) {
+      if (window.ethereum.networkVersion !== activeChainId) {
         setError("Switch to the correct chain and try again");
         // switch to the correct network
         await window.ethereum.request({

@@ -18,7 +18,7 @@ function LandingPage() {
                 {Object.values(CONFIG_CHAINS).map (chainConfig => {
                     return (
                         <li key={chainConfig.CHAIN_ID}>
-                        {chainConfig.CHAIN_NAME} ({chainConfig.NETWORK_NAME})
+                        {chainConfig.CHAIN_NAME}
                         <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
                         </li>
                     );
@@ -26,12 +26,12 @@ function LandingPage() {
                 </ol>
             </div>
         </div>
-        <div className="col-md-6">
-            <img src="https://i.pinimg.com/originals/5a/36/3f/5a363fc93fc6538900ae58da02d116d8.jpg" style={{width: "auto", height: "60vh"}} />
+        <div className="col-md-6 card shadow p-3">
+            <img src="https://i.imgur.com/qfG9S0L.jpg" style={{width: "auto", height: "60vh"}} />
             {/* <img src="https://us1.storj.io/4d61a7b4-2bde-45f6-a499-00e094e040f7" style={{width: "auto", height: "60vh"}} /> */}
-            <p>
+            <p className="p-3">
                 Source: <a href="https://www.pinterest.ie/pin/528328600017362380/" target ="_blank">
-                    Tina Martini on Pinterest
+                    Tina Martini
                 </a>
             </p>
         </div>

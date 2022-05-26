@@ -7,6 +7,7 @@ function ResponsiveEmbed({srcUrl=''}) {
             <iframe 
                     allowFullScreen
                     src={srcUrl}
+                    title={srcUrl}
                     className="embed-responsive-item">
             </iframe>
         </div>
