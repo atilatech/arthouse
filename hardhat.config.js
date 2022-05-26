@@ -47,6 +47,11 @@ module.exports = {
       url: `https://data-seed-prebsc-1-s1.binance.org:8545`,
       accounts: [`0x${privateKey}`],
       chainId: 97
+    },
+    binance: {
+      url: `https://bsc-dataseed.binance.org`,
+      accounts: [`0x${privateKey}`],
+      chainId: 56
     }
   },
 }

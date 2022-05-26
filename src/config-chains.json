@@ -10,6 +10,17 @@
         "BLOCK_EXPLORER_URL": "https://rinkeby.etherscan.io",
         "RPC_PROVIDER_URL": "https://rinkeby.infura.io/v3/59b59e23bb7c44d799b5db4a1b83e4ee"
     },
+    "56": {
+        "NETWORK_NAME": "",
+        "CHAIN_NAME": "Binance Smart Chain",
+        "NFT_MARKETPLACE_ADDRESS": "0x9863F06D4f22F01c853eAc3d3BfEf26Af7e70Bd8",
+        "NFT_ADDRESS": "0x84521fF6d5D97325258bab11f9ac1abF7ebF8C86",
+        "IS_MAIN_NET": true,
+        "LOGO_URL": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Binance-coin-bnb-logo.png/800px-Binance-coin-bnb-logo.png",
+        "CHAIN_ID": "56",
+        "BLOCK_EXPLORER_URL": "https://bscscan.com",
+        "RPC_PROVIDER_URL": "https://bsc-dataseed.binance.org"
+    },
     "97": {
         "NETWORK_NAME": "Testnet",
         "CHAIN_NAME": "Binance Smart Chain",

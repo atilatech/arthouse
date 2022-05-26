@@ -16,7 +16,7 @@ export const REACT_APP_MORALIS_SERVER_URL = process.env.REACT_APP_MORALIS_SERVER
 export const REACT_APP_MORALIS_APP_ID = process.env.REACT_APP_MORALIS_APP_ID;
 
 
-export const MORALIS_SUPPORTED_CHAINS = ["4", "80001", "97"];
+export const MORALIS_SUPPORTED_CHAINS = ["4", "80001", "97", "56"];
 
 
 // TODO change this to a dictionary where each marketplace is a key with a SUPPORTED_CHAINS key
