@@ -32,6 +32,7 @@ contract NFTMarket is ReentrancyGuard {
   }
 
   mapping(uint256 => MarketItem) private idToMarketItem;
+  mapping(address => uint) credits;
 
   event MarketItemCreated (
     uint indexed itemId,
@@ -99,6 +100,25 @@ contract NFTMarket is ReentrancyGuard {
 
   }
 
+  function allowForPull(address receiver, uint amount) private {
+      credits[receiver] += amount;
+  }
+
+  function withdrawCredits() public {
+      uint amount = credits[msg.sender];
+
+      require(amount != 0);
+      require(address(this).balance >= amount);
+
+      credits[msg.sender] = 0;
+
+      payable(msg.sender).transfer(amount);
+  }
+
+  function getAddressCredits(address receiver) public view returns (uint) {
+    return credits[receiver];
+  }
+
   /* Creates the sale of a marketplace item */
   /* Transfers ownership of the item, as well as funds between parties */
   function createMarketSale(
@@ -115,7 +135,9 @@ contract NFTMarket is ReentrancyGuard {
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
-    payable(owner).transfer(listingPrice);
+    // credit the owner address, using a "pull" payment strategy
+    // https://fravoll.github.io/solidity-patterns/pull_over_push.html
+    allowForPull(payable(owner), listingPrice);
   }
 
   /* Returns all unsold market items */
