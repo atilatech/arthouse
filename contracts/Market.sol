@@ -29,7 +29,6 @@ contract NFTMarket is ReentrancyGuard {
     address payable owner;
     uint256 price;
     bool sold;
-    bool forSale;
   }
 
   mapping(uint256 => MarketItem) private idToMarketItem;
@@ -70,8 +69,7 @@ contract NFTMarket is ReentrancyGuard {
     address seller,
     address owner,
     uint256 price,
-    bool sold,
-    bool forSale
+    bool sold
   );
 
   /* Places an item for sale on the marketplace */
@@ -92,8 +90,7 @@ contract NFTMarket is ReentrancyGuard {
       payable(msg.sender),
       payable(address(0)),
       price,
-      false,
-      true
+      false
     );
 
     IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
@@ -105,8 +102,7 @@ contract NFTMarket is ReentrancyGuard {
       msg.sender,
       address(0),
       price,
-      false,
-      true
+      false
     );
 
     return itemId;
@@ -120,8 +116,8 @@ contract NFTMarket is ReentrancyGuard {
 
     require(msg.sender == idToMarketItem[itemId].seller, "Only seller may unlist an item");
     uint tokenId = idToMarketItem[itemId].tokenId;
-    idToMarketItem[itemId].forSale = false;
     IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+    idToMarketItem[itemId].owner = payable(msg.sender);
 
   }
 
@@ -138,7 +134,7 @@ contract NFTMarket is ReentrancyGuard {
     // pay marketplace last
     // https://fravoll.github.io/solidity-patterns/checks_effects_interactions.html
 
-    require(idToMarketItem[itemId].forSale, "This item is not available for sale");
+    require(idToMarketItem[itemId].owner == address(0), "This item is not available for sale");
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
     address seller = idToMarketItem[itemId].seller;
@@ -157,19 +153,39 @@ contract NFTMarket is ReentrancyGuard {
     allowForPull(payable(owner), marketPayment);
   }
 
-  /* Returns all unsold market items */
+  /* Returns all market items */
   function fetchMarketItems() public view returns (MarketItem[] memory) {
     uint itemCount = _itemIds.current();
-    uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
     uint currentIndex = 0;
+
+    MarketItem[] memory items = new MarketItem[](itemCount);
+    for (uint i = 0; i < itemCount; i++) {
+      uint currentId = i + 1;
+      MarketItem storage currentItem = idToMarketItem[currentId];
+      items[currentIndex] = currentItem;
+      currentIndex += 1;
+    }
+    return items;
+  }
+
+  /* Returns all unsold market items */
+  function fetchUnSoldMarketItems() public view returns (MarketItem[] memory) {
+    uint itemCount = _itemIds.current();
+    uint unsoldItemCount = 0;
+    uint currentIndex = 0;
+
+    for (uint i = 0; i < itemCount; i++) {
+      if (!idToMarketItem[i + 1].sold && idToMarketItem[i + 1].owner == address(0)) {
+        unsoldItemCount += 1;
+      }
+    }
 
     MarketItem[] memory items = new MarketItem[](unsoldItemCount);
     for (uint i = 0; i < itemCount; i++) {
-      if (idToMarketItem[i + 1].owner == address(0)) {
-        uint currentId = i + 1;
+      uint currentId = i + 1;
+      if (idToMarketItem[currentId].owner == address(0)) {
         MarketItem storage currentItem = idToMarketItem[currentId];
         items[currentIndex] = currentItem;
-        currentIndex += 1;
       }
     }
     return items;

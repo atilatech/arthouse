@@ -4,6 +4,7 @@ const { ethers } = require("hardhat");
 
 const { BigNumber } = ethers;
 
+const auctionPrice = ethers.utils.parseUnits('1.5', 'ether');
 /* test/nft-test.js */
 describe("NFTMarket", function() {
 
@@ -28,81 +29,129 @@ describe("NFTMarket", function() {
     
   })
 
-  it("Should create and execute market sales", async function() {
+  describe("createMarketSale", function() {
+    it("Should create and execute market sales", async function() {
 
-    /* create two tokens */
-    let sellerCreateNFTPromise = nft.connect(sellerSigner).createToken("https://www.mytokenlocation.com");
-    const sellerTokenId = await getTokenIdOrItemIdFromTransaction(sellerCreateNFTPromise);
-
-    let ownerCreateNFTPromise = nft.connect(ownerSigner).createToken("https://www.mytokenlocation2.com");
-    const ownerTokenId = await getTokenIdOrItemIdFromTransaction(ownerCreateNFTPromise);
-
-    /* put both tokens for sale */
-    const auctionPrice = ethers.utils.parseUnits('1', 'ether');
-
-    const createMarketItemPromise = market.connect(sellerSigner).createMarketItem(nftContractAddress, sellerTokenId, auctionPrice);
-    const sellerItemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
-    await market.createMarketItem(nftContractAddress, ownerTokenId, auctionPrice);
-
-    /* execute sale of token to another user */
-    await market.connect(buyerSigner).createMarketSale(nftContractAddress, sellerItemId, { value: auctionPrice});
-
-    // withdraw credits so that credit balance goes back to zero
-    await market.connect(sellerSigner).withdrawCredits();
-    await market.connect(ownerSigner).withdrawCredits();
-
-    /* query for and return the unsold items */
-    let unsoldItems = await market.fetchMarketItems()
-    unsoldItems = await Promise.all(unsoldItems.map(async i => {
-      const tokenUri = await nft.tokenURI(i.tokenId)
-      let item = {
-        price: i.price.toString(),
-        tokenId: i.tokenId.toString(),
-        seller: i.seller,
-        owner: i.owner,
-        tokenUri
-      }
-      return item
-    }));
-    expect(unsoldItems.length).to.equal(1);
-
+      /* create two tokens */
+      const { itemId: sellerItemId } = await createTokenAndMarketItem(sellerSigner);
+      await createTokenAndMarketItem(ownerSigner);
+  
+      /* execute sale of token to another user */
+      await market.connect(buyerSigner).createMarketSale(nftContractAddress, sellerItemId, { value: auctionPrice});
+  
+      // withdraw credits so that credit balance goes back to zero
+      await market.connect(sellerSigner).withdrawCredits();
+      await market.connect(ownerSigner).withdrawCredits();
+  
+      /* query for and return the unsold items */
+      let unsoldItems = await market.fetchUnSoldMarketItems()
+      unsoldItems = await Promise.all(unsoldItems.map(async i => {
+        const tokenUri = await nft.tokenURI(i.tokenId)
+        let item = {
+          price: i.price.toString(),
+          tokenId: i.tokenId.toString(),
+          seller: i.seller,
+          owner: i.owner,
+          tokenUri
+        }
+        return item
+      }));
+      expect(unsoldItems.length).to.equal(1);
+  
+    })
   })
 
-  it ("Should give users the correct credits on item sale", async function() {
-    const auctionPrice = ethers.utils.parseUnits('1.5', 'ether');
+  describe("withdrawCredits", function() {
 
-    let sellerCreateNFTPromise = nft.connect(sellerSigner).createToken("https://www.mytokenlocation.com");
-    const sellerTokenId = await getTokenIdOrItemIdFromTransaction(sellerCreateNFTPromise);
+    it ("Should give users the correct credits on item sale", async function() {
+  
+      let sellerCreateNFTPromise = nft.connect(sellerSigner).createToken("https://www.mytokenlocation.com");
+      const sellerTokenId = await getTokenIdOrItemIdFromTransaction(sellerCreateNFTPromise);
+  
+      const createMarketItemPromise = market.connect(sellerSigner).createMarketItem(nftContractAddress, sellerTokenId, auctionPrice);
+      const sellerItemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+  
+      /* execute sale of token to another user */
+      await market.connect(buyerSigner).createMarketSale(nftContractAddress, sellerItemId, { value: auctionPrice})
+  
+      const expectedSalesFeeBasisPoints = 250;
+      const basisPointsTotal = 10000;
+      const salesFeeBasisPoints = await market.getSalesFeeBasisPoints(); // 2.5% in basis points (parts per 10,000) 250/100000
+  
+      const sellerAddressCredit = await market.getAddressCredits(sellerSigner.address);
+      const buyerAddressCredit = await market.getAddressCredits(buyerSigner.address);
+      const marketOwnerAddressCredit = await market.getAddressCredits(ownerSigner.address);
+  
+  
+      expect(sellerAddressCredit.add(marketOwnerAddressCredit)).to.equal(auctionPrice);
+      expect(buyerAddressCredit).to.equal(0);
+      expect(salesFeeBasisPoints).to.equal(expectedSalesFeeBasisPoints);
+  
+  
+      const expectedMarketPayment = (auctionPrice.mul(expectedSalesFeeBasisPoints)).div(basisPointsTotal);
+      const expectedSellerPayment = auctionPrice.sub(expectedMarketPayment);
+      expect(expectedSellerPayment).to.equal(sellerAddressCredit);
+      expect(expectedMarketPayment).to.equal(marketOwnerAddressCredit);
+  
+      // changeEtherBalance ignores transaction fees by default:
+      // https://ethereum-waffle.readthedocs.io/en/latest/matchers.html#change-ether-balance
+      await expect(() => market.connect(ownerSigner).withdrawCredits()).to.changeEtherBalance(ownerSigner, marketOwnerAddressCredit);
+      await expect(() => market.connect(sellerSigner).withdrawCredits()).to.changeEtherBalance(sellerSigner, sellerAddressCredit);
+    })
 
-    const createMarketItemPromise = market.connect(sellerSigner).createMarketItem(nftContractAddress, sellerTokenId, auctionPrice);
-    const sellerItemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+  })
+  
+  describe("unListMarketItem", function() {
+    let sellerTokenId, sellerItemId;
 
-    /* execute sale of token to another user */
-    await market.connect(buyerSigner).createMarketSale(nftContractAddress, sellerItemId, { value: auctionPrice})
+    beforeEach(async function() { 
 
-    const expectedSalesFeeBasisPoints = 250;
-    const basisPointsTotal = 10000;
-    const salesFeeBasisPoints = await market.getSalesFeeBasisPoints(); // 2.5% in basis points (parts per 10,000) 250/100000
+      let { tokenId, itemId } = await createTokenAndMarketItem(sellerSigner);
+      sellerTokenId = tokenId;
+      sellerItemId = itemId;
+      
+    });
 
-    const sellerAddressCredit = await market.getAddressCredits(sellerSigner.address);
-    const buyerAddressCredit = await market.getAddressCredits(buyerSigner.address);
-    const marketOwnerAddressCredit = await market.getAddressCredits(ownerSigner.address);
+    it ("should not allow buying of unlisted item", async function() {
+      // ownerSigner is connected by default, .connect(ownerSigner) is used just to be explicit
+      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, sellerItemId);
+      await expect(market.connect(buyerSigner).createMarketSale(nftContractAddress, sellerItemId, { value: auctionPrice}))
+      .to.be.revertedWith("This item is not available for sale");
+    });
 
+    it ("should not allow non-seller to unlist", async function() {
+      // ownerSigner is connected by default, .connect(ownerSigner) is used just to be explicit
+      await expect(market.connect(ownerSigner).unListMarketItem(nftContractAddress, sellerItemId))
+      .to.be.revertedWith("Only seller may unlist an item");
+    });
 
-    expect(sellerAddressCredit.add(marketOwnerAddressCredit)).to.equal(auctionPrice);
-    expect(buyerAddressCredit).to.equal(0);
-    expect(salesFeeBasisPoints).to.equal(expectedSalesFeeBasisPoints);
+    it ("should remove unlisted item from list of market items", async function() {
 
+      const { itemId } = await createTokenAndMarketItem(sellerSigner);
+      let unsoldItems = await market.fetchUnSoldMarketItems();
+      const originalUnsoldItemsCount = unsoldItems.length;
 
-    const expectedMarketPayment = (auctionPrice.mul(expectedSalesFeeBasisPoints)).div(basisPointsTotal);
-    const expectedSellerPayment = auctionPrice.sub(expectedMarketPayment);
-    expect(expectedSellerPayment).to.equal(sellerAddressCredit);
-    expect(expectedMarketPayment).to.equal(marketOwnerAddressCredit);
+      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, itemId);
 
-    // changeEtherBalance ignores transaction fees by default:
-    // https://ethereum-waffle.readthedocs.io/en/latest/matchers.html#change-ether-balance
-    await expect(() => market.connect(ownerSigner).withdrawCredits()).to.changeEtherBalance(ownerSigner, marketOwnerAddressCredit);
-    await expect(() => market.connect(sellerSigner).withdrawCredits()).to.changeEtherBalance(sellerSigner, sellerAddressCredit);
+      unsoldItems = await market.fetchUnSoldMarketItems();
+
+      expect(originalUnsoldItemsCount-1).to.equal(unsoldItems.length);
+
+    });
+
+    it ("should allow relisting item", async function() {
+
+      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, sellerItemId);
+      let unsoldItems = await market.fetchUnSoldMarketItems();
+      const originalUnsoldItemsCount = unsoldItems.length;
+
+      const createMarketItemPromise = market.connect(sellerSigner).createMarketItem(nftContractAddress, sellerTokenId, auctionPrice);
+      await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+
+      unsoldItems = await market.fetchUnSoldMarketItems();
+
+      expect(originalUnsoldItemsCount+1).to.equal(unsoldItems.length);
+    });
   })
 
   /**
@@ -118,5 +167,19 @@ describe("NFTMarket", function() {
     value = BigNumber.from(value)
     // We usually shouldn't convert BigNumber toNumber() but this is okay since we don't expect the tokenId or itemId to be very large in our tests
     return value.toNumber()
+  }
+
+  async function createTokenAndMarketItem(signer) {
+
+    let createNFTPromise = nft.connect(signer).createToken("https://www.mytokenlocation.com");
+    const tokenId = await getTokenIdOrItemIdFromTransaction(createNFTPromise);
+
+    const createMarketItemPromise = market.connect(signer).createMarketItem(nftContractAddress, tokenId, auctionPrice);
+    const itemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+
+      return {
+        tokenId,
+        itemId
+      }
   }
 })

@@ -27,6 +27,8 @@ This project consists of a React frontend and a blockchain backend.
 
 `npx hardhat test`
 
+Test a specific feature: `npx hardhat test --grep unListMarketItem`
+
 ## Run Hardhat in Console
 
 To quickly run commands you can use the interactive hardhat console

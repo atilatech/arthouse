@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 16.x
-      - run: yarn
+      - run: NODE_ENV="production" yarn
       - run: CI="" yarn build
       - name: Deploy to netlify
         uses: netlify/actions/cli@master
