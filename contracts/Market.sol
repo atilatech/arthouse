@@ -14,8 +14,8 @@ contract NFTMarket is ReentrancyGuard {
   Counters.Counter private _itemsSold;
 
   address payable owner;
-  uint256 salesFeeBasisPoints = 250; // 2.5% in basis points (parts per 10,000) 250/100000
-  uint256 basisPointsTotal = 10000;
+  uint256 private salesFeeBasisPoints = 250; // 2.5% in basis points (parts per 10,000) 250/100000
+  uint256 private basisPointsTotal = 10000;
 
   constructor() {
     owner = payable(msg.sender);
@@ -33,7 +33,7 @@ contract NFTMarket is ReentrancyGuard {
   }
 
   mapping(uint256 => MarketItem) private idToMarketItem;
-  mapping(address => uint) credits;
+  mapping(address => uint) private credits;
 
   /**
     Credit the address owner, using a "pull" payment strategy.
@@ -59,6 +59,10 @@ contract NFTMarket is ReentrancyGuard {
     return credits[receiver];
   }
 
+  function getSalesFeeBasisPoints() public view returns (uint) {
+    return salesFeeBasisPoints;
+  }
+
   event MarketItemCreated (
     uint indexed itemId,
     address indexed nftContract,
@@ -75,7 +79,7 @@ contract NFTMarket is ReentrancyGuard {
     address nftContract,
     uint256 tokenId,
     uint256 price
-  ) public payable nonReentrant {
+  ) public payable nonReentrant returns (uint) {
     require(price > 0, "Price must be at least 1 wei");
 
     _itemIds.increment();
@@ -104,6 +108,8 @@ contract NFTMarket is ReentrancyGuard {
       false,
       true
     );
+
+    return itemId;
   }
 
   /* Unlists an item previously listed for sale and transfer back to the seller */
@@ -127,23 +133,28 @@ contract NFTMarket is ReentrancyGuard {
     ) public payable nonReentrant {
     uint price = idToMarketItem[itemId].price;
     uint tokenId = idToMarketItem[itemId].tokenId;
+
+    // uses the check-effects-interactions design patter. Check if sale can be made. Do the effects of the sale, then perform the sale interactions.
+    // pay marketplace last
+    // https://fravoll.github.io/solidity-patterns/checks_effects_interactions.html
+
     require(idToMarketItem[itemId].forSale, "This item is not available for sale");
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
-    idToMarketItem[itemId].seller.transfer(msg.value);
+    address seller = idToMarketItem[itemId].seller;
+    // use basis points and multiply first before dividng because solidity does not support decimals
+    // https://ethereum.stackexchange.com/a/55702/92254
+    // https://stackoverflow.com/a/53775815/5405197
+    uint marketPayment = (price * salesFeeBasisPoints)/basisPointsTotal;
+    uint sellerPayment = price - marketPayment;
+
+    allowForPull(seller, sellerPayment);
     IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
 
-    // use basis points and multiply first before dividng because solidity does not support decimals
-    // https://ethereum.stackexchange.com/a/55702/92254
-    // https://stackoverflow.com/a/53775815/5405197
-    uint marketPayment = (price * salesFeeBasisPoints)/basisPointsTotal;
-    uint ownerPayment = price - marketPayment;
-
-    allowForPull(payable(owner), ownerPayment);
-    allowForPull(address(this), marketPayment);
+    allowForPull(payable(owner), marketPayment);
   }
 
   /* Returns all unsold market items */

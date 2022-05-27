@@ -4,37 +4,11 @@ A marketplace for creating, buying and selling NFTs on Ethereum, Polygon and Bin
 
 - https://art.atila.ca
 
-## Demos
-
-### Video Demos
-- https://www.loom.com/share/c4205883b8fd4e499eadf1e349c8ace6
-- https://www.loom.com/share/8c690cf68d4a4cbd8b4111d8730cdf75
-- https://www.loom.com/share/f2551e83622742bc8963fc4fb25e3f0c
-
-## Smart Contract Addresses
-
-- [View  Ethereum (Rinkeby)  NFT Contract on Block Explorer](https://rinkeby.etherscan.io/token/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
-    - Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
-- [View  Binance Smart Chain (Testnet)  NFT Contract on Block Explorer](https://testnet.bscscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
-- [View  Polygon (Mumbai)  NFT Contract on Block Explorer](https://mumbai.polygonscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
-- [View  Celo (Alfajores)  NFT Contract on Block Explorer](https://alfajores-blockscout.celo-testnet.org/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
-- [View Harmony (Testnet) NFT Contract on Block Explorer](https://explorer.pops.one/address/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
 ## Quickstart
 
 This project consists of a React frontend and a blockchain backend.
 
 `yarn install`
-### Set up your Backend
-
-1. If you won't be deploying to a test net or mainnet, go to `hardhat.config.js` and comment out `privateKey` and all the networks  except for `networks.hardhat`
-
-1. Put your private keys for the account that will be deploying the smart contract in a `.secrets` file. This will NOT be included in your version control. You can get the key from `shared.secrets` and run `cp shared.secrets .secrets` and replace the private key.
-
-1. Load the secret key `source .secrets`
-
-1. Compile the smart contracts to get the most recent change: `npx hardhat compile`
-
-1. Run your own local blockchain node using: `npx hardhat node`
 
 ## Frontend
 
@@ -46,7 +20,35 @@ This project consists of a React frontend and a blockchain backend.
 ## Build Frontend
 
 1. `yarn build`
-1. 
+
+## Running Tests
+
+### Testing Smart Contracts
+
+`npx hardhat test`
+
+## Run Hardhat in Console
+
+To quickly run commands you can use the interactive hardhat console
+
+`npx hardhat console`
+
+```bash
+const [ownerSigner, signer1, signer2] = await ethers.getSigners();
+const ownerBalance = await ethers.provider.getBalance(ownerSigner.address);
+```
+
+### Set up your Backend
+
+1. If you won't be deploying to a test net or mainnet, go to `hardhat.config.js` and comment out `privateKey` and all the networks  except for `networks.hardhat`
+
+1. Put your private keys for the account that will be deploying the smart contract in a `.secrets` file. This will NOT be included in your version control. You can get the key from `shared.secrets` and run `cp shared.secrets .secrets` and replace the private key.
+
+1. Load the secret key `source .secrets`
+
+1. Compile the smart contracts to get the most recent change: `npx hardhat compile`
+
+1. Run your own local blockchain node using: `npx hardhat node`
 
 ## Backend
 ### Running Your Local Node
@@ -101,7 +103,14 @@ The backend for this project is a blockchain node. For development, you can run 
     1. [Polygon](https://github.com/atilatech/art-house/commit/a211ac1bc50d52ffd266b5eb5fd47bf4b232d366)
     1. [Celo](https://github.com/atilatech/art-house/commit/af8ab520fe80c3a148e45a963ead9270e2710a80)
 
-### Deployed Smart Contracts
+## Smart Contract Addresses
+
+- [View  Ethereum (Rinkeby)  NFT Contract on Block Explorer](https://rinkeby.etherscan.io/token/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
+    - Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
+- [View  Binance Smart Chain (Testnet)  NFT Contract on Block Explorer](https://testnet.bscscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
+- [View  Polygon (Mumbai)  NFT Contract on Block Explorer](https://mumbai.polygonscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
+- [View  Celo (Alfajores)  NFT Contract on Block Explorer](https://alfajores-blockscout.celo-testnet.org/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
+- [View Harmony (Testnet) NFT Contract on Block Explorer](https://explorer.pops.one/address/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
 
 #### Troubleshooting
 

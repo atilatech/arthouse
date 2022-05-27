@@ -2,8 +2,6 @@
 require("@nomiclabs/hardhat-waffle")
 const privateKey = process.env.privateKey;
 const rpcApiKeyMumbai = process.env.rpcApiKeyMumbai;
-const rpcApiKeyAlfajores= process.env.rpcApiKeyAlfajores;
-const rpcApiKeyRinkeby= process.env.rpcApiKeyRinkeby;
 
 module.exports = {
   solidity: {
