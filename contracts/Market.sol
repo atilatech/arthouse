@@ -14,7 +14,8 @@ contract NFTMarket is ReentrancyGuard {
   Counters.Counter private _itemsSold;
 
   address payable owner;
-  uint256 listingPrice = 0.025 ether;
+  uint256 salesFeeBasisPoints = 250; // 2.5% in basis points (parts per 10,000) 250/100000
+  uint256 basisPointsTotal = 10000;
 
   constructor() {
     owner = payable(msg.sender);
@@ -45,11 +46,6 @@ contract NFTMarket is ReentrancyGuard {
     bool forSale
   );
 
-  /* Returns the listing price of the contract */
-  function getListingPrice() public view returns (uint256) {
-    return listingPrice;
-  }
-
   /* Places an item for sale on the marketplace */
   function createMarketItem(
     address nftContract,
@@ -57,7 +53,6 @@ contract NFTMarket is ReentrancyGuard {
     uint256 price
   ) public payable nonReentrant {
     require(price > 0, "Price must be at least 1 wei");
-    require(msg.value == listingPrice, "Price must be equal to listing price");
 
     _itemIds.increment();
     uint256 itemId = _itemIds.current();
@@ -100,6 +95,11 @@ contract NFTMarket is ReentrancyGuard {
 
   }
 
+  /**
+    Credit the address owner, using a "pull" payment strategy
+    https://fravoll.github.io/solidity-patterns/pull_over_push.html
+    https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment 
+  */
   function allowForPull(address receiver, uint amount) private {
       credits[receiver] += amount;
   }
@@ -107,8 +107,8 @@ contract NFTMarket is ReentrancyGuard {
   function withdrawCredits() public {
       uint amount = credits[msg.sender];
 
-      require(amount != 0);
-      require(address(this).balance >= amount);
+      require(amount > 0, "There are no credits in this recipeint address");
+      require(address(this).balance >= amount, "There are no credits in this contract address");
 
       credits[msg.sender] = 0;
 
@@ -135,9 +135,15 @@ contract NFTMarket is ReentrancyGuard {
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
-    // credit the owner address, using a "pull" payment strategy
-    // https://fravoll.github.io/solidity-patterns/pull_over_push.html
-    allowForPull(payable(owner), listingPrice);
+
+    // use basis points and multiply first before dividng because solidity does not support decimals
+    // https://ethereum.stackexchange.com/a/55702/92254
+    // https://stackoverflow.com/a/53775815/5405197
+    uint marketPayment = (price * salesFeeBasisPoints)/basisPointsTotal;
+    uint ownerPayment = price - marketPayment;
+
+    allowForPull(payable(owner), ownerPayment);
+    allowForPull(address(this), marketPayment);
   }
 
   /* Returns all unsold market items */
