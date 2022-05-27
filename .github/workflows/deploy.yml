@@ -10,13 +10,25 @@ env:
   REACT_APP_MORALIS_APP_ID: ${{ secrets.REACT_APP_MORALIS_APP_ID }}
 
 jobs:
+
+  test:
+    name: 'Test Smart Contracts'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - name: Run Hardhat tests
+        run: npx hardhat test
   deploy:
     name: 'Deploy'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16.x
       - run: NODE_ENV="production" yarn
