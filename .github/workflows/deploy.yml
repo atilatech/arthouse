@@ -27,6 +27,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
+      - run: yarn install hardhat
       - name: Run Hardhat tests
         run: npx hardhat test
   deploy:
