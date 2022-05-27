@@ -38,15 +38,25 @@ module.exports = {
       accounts: [`0x${privateKey}`],
       chainId: 4
     },
-    sokol: {
-      url: `https://sokol.poa.network`,
-      accounts: [`0x${privateKey}`],
-      chainId: 77
-    },
     harmonytestnet: {
       url: `https://api.s0.b.hmny.io`,
       accounts: [`0x${privateKey}`],
       chainId: 1666700000
+    },
+    bsctestnet: {
+      url: `https://data-seed-prebsc-1-s1.binance.org:8545`,
+      accounts: [`0x${privateKey}`],
+      chainId: 97
+    },
+    binance: {
+      url: `https://bsc-dataseed.binance.org`,
+      accounts: [`0x${privateKey}`],
+      chainId: 56
+    },
+    polygon: {
+      url: `https://polygon-rpc.com`,
+      accounts: [`0x${privateKey}`],
+      chainId: 137
     }
   },
 }

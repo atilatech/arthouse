@@ -1,5 +1,6 @@
 import React from 'react'
-import { CONFIG_CHAINS } from '../../config'
+import { ALL_CONFIG_CHAINS } from '../../config'
+import { Chain } from '../../models/Chain';
 
 function LandingPage() {
   return (
@@ -11,27 +12,48 @@ function LandingPage() {
             </h1>
             <hr/>
             <div className="text-left">
-                Create NFTs on multiple blockchains. <br/>
+                Arthouse is a multi-chain NFT platform. Create NFTs on multiple blockchains. <br/>
 
-                Supported Chains: <br/>
+                <hr/>
+                <h2>
+                    Supported Chains: 
+                </h2>
+                <h3>
+                    Main Net
+                </h3>
                 <ol>
-                {Object.values(CONFIG_CHAINS).map (chainConfig => {
+                {Object.values(ALL_CONFIG_CHAINS).filter(chain => chain.IS_MAIN_NET).map (chain => {
+                    chain =  new Chain({...chain});
                     return (
-                        <li key={chainConfig.NETWORK_NAME}>
-                        {chainConfig.CHAIN_NAME} ({chainConfig.NETWORK_NAME})
-                        <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
+                        <li key={chain.CHAIN_ID}>
+                        {chain.getChainFullName()}
+                        <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={50} />
                         </li>
                     );
                 })}
                 </ol>
+                <h3>
+                    Testnets
+                </h3>
+
+                {Object.values(ALL_CONFIG_CHAINS).filter(chain => !chain.IS_MAIN_NET).map (chain => {
+                    chain =  new Chain({...chain});
+                    return (
+                        <li key={chain.CHAIN_ID}>
+                        {chain.getChainFullName()}
+                        <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={50} />
+                        </li>
+                    );
+                })}
+
             </div>
         </div>
-        <div className="col-md-6">
-            <img src="https://i.pinimg.com/originals/5a/36/3f/5a363fc93fc6538900ae58da02d116d8.jpg" style={{width: "auto", height: "60vh"}} />
+        <div className="col-md-6 card shadow p-3">
+            <img src="https://i.imgur.com/qfG9S0L.jpg" style={{width: "auto", height: "60vh"}} alt="Anime style artist" />
             {/* <img src="https://us1.storj.io/4d61a7b4-2bde-45f6-a499-00e094e040f7" style={{width: "auto", height: "60vh"}} /> */}
-            <p>
-                Source: <a href="https://www.pinterest.ie/pin/528328600017362380/" target ="_blank">
-                    Tina Martini on Pinterest
+            <p className="p-3">
+                Source: <a href="https://www.pinterest.ie/pin/528328600017362380/" target ="_blank" rel='noreferrer'>
+                    Tina Martini
                 </a>
             </p>
         </div>

@@ -9,6 +9,14 @@ import MyNFTs from './scenes/NFT/MyNFTs';
 import LandingPage from './scenes/LandingPage/LandingPage';
 import About from './scenes/About/About';
 
+import {
+  REACT_APP_MORALIS_APP_ID,
+  REACT_APP_MORALIS_SERVER_URL} from './config';
+
+import Moralis from 'moralis';
+
+// TODO move this too App.tsx so it doesn't have to call oral
+Moralis.start({ serverUrl: REACT_APP_MORALIS_SERVER_URL, appId: REACT_APP_MORALIS_APP_ID });
 
 function App() {
   return (
