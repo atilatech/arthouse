@@ -40,18 +40,18 @@ jobs:
           node-version: 16.x
       - run: CI="" yarn build
       - name: Deploy to netlify prod environment
-        if: ${{GITHUB_REF_NAME}} == "master"
+        if: ${{github.ref_name}} == "master"
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-          args: deploy --dir=./build --prod -m "${{GITHUB_REF_NAME}} ${{GITHUB_SHA}}"
+          args: deploy --dir=./build --prod -m "${{github.ref_name}} ${{github.sha}}"
       - name: Deploy to netlify test environment
-        if: ${{GITHUB_REF_NAME}} != "master"
+        if: ${{github.ref_name}} != "master"
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_TEST }}
         with:
-          args: deploy --dir=./build --prod -m "${{GITHUB_REF_NAME}} ${{GITHUB_SHA}}"
+          args: deploy --dir=./build --prod -m "${{github.ref_name}} ${{github.sha}}"
