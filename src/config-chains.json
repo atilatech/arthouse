@@ -11,7 +11,7 @@
         "RPC_PROVIDER_URL": "https://rinkeby.infura.io/v3/59b59e23bb7c44d799b5db4a1b83e4ee"
     },
     "56": {
-        "NETWORK_NAME": "",
+        "NETWORK_NAME": "Mainnet",
         "CHAIN_NAME": "Binance Smart Chain",
         "NFT_MARKETPLACE_ADDRESS": "0x9863F06D4f22F01c853eAc3d3BfEf26Af7e70Bd8",
         "NFT_ADDRESS": "0x84521fF6d5D97325258bab11f9ac1abF7ebF8C86",
@@ -33,7 +33,7 @@
         "RPC_PROVIDER_URL": "https://data-seed-prebsc-1-s1.binance.org:8545"
     },
     "137": {
-        "NETWORK_NAME": "",
+        "NETWORK_NAME": "Mainnet",
         "CHAIN_NAME": "Polygon",
         "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
         "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",

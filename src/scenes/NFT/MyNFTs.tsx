@@ -3,12 +3,12 @@ import React, { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import Web3Modal from "web3modal"
 import { Radio, RadioChangeEvent } from 'antd';
-import { CONFIG_CHAINS, MORALIS_SUPPORTED_CHAINS } from '../../config';
+import { ALL_CONFIG_CHAINS, CONFIG_CHAINS, MORALIS_SUPPORTED_CHAINS } from '../../config';
 import { Chain } from '../../models/Chain';
 import NFTList from '../../components/NFTList';
 
 export default function MyNFTs() {
-  const [activeChainId, setActiveChainId] = useState(MORALIS_SUPPORTED_CHAINS[0]);
+  const [activeChainId, setActiveChainId] = useState(Object.keys(CONFIG_CHAINS)[0]);
   const [activeAddress, setActiveAddress] = useState("");
 
   useEffect(() => {
@@ -29,17 +29,21 @@ export default function MyNFTs() {
     setActiveChainId(event.target.value);
   }
 
+  console.log({CONFIG_CHAINS});
+
   return (
     <div className="MyNFTs card shadow container p-5">
       <h1 className='text-center'>My NFTs</h1>
       <Radio.Group onChange={onChangeActiveChainId} value={activeChainId} optionType="button" className="my-3">
       {
-        MORALIS_SUPPORTED_CHAINS.map(chainId => {
+        MORALIS_SUPPORTED_CHAINS
+        .filter(chainId =>Object.keys(CONFIG_CHAINS).includes(chainId))
+        .map(chainId => {
           const chain = new Chain({...CONFIG_CHAINS[chainId]});
           return (
-          <Radio.Button value={chain.CHAIN_ID} key={chain.CHAIN_ID}>
-            {chain.getChainFullName()}
-          </Radio.Button> 
+              <Radio.Button value={chain.CHAIN_ID} key={chain.CHAIN_ID}>
+                {chain.getChainFullName()}
+              </Radio.Button> 
             )
         }
           

@@ -73,7 +73,7 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
     return (
       <div className="NFTList">
       {loadingState === 'loaded' && !nfts.length &&
-       <h1 className="py-10 px-20 text-3xl">No assets owned</h1>
+       <h1 className="py-10 px-20 text-3xl">No assets found</h1>
       }
       {loadingState?.toLowerCase().includes("loading") && <Spin size="large"  tip={loadingState}/>}
         <Row gutter={[24,24]}>

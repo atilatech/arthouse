@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import Web3Modal from 'web3modal';
@@ -22,11 +22,8 @@ const { TextArea } = Input;
 
 const ipfsHostUrl = 'https://ipfs.infura.io:5001/api/v0';
 const client = (ipfsHttpClient as any)(ipfsHostUrl);
-// seems redundant because it doesn't add any new fields but doing this way makes it easier to add other fields in the future.
-interface CreateNFTProps extends RouteComponentProps {
-}
 
-function CreateNFT(props: CreateNFTProps) {
+function CreateNFT() {
   
   const [fileUrl, setFileUrl] = useState<string|null>(null)
   const [formInput, updateFormInput] = useState({ price: 0, name: '', description: '' })

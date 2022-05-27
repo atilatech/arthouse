@@ -10,7 +10,7 @@ import NFTList from '../../components/NFTList';
 import { Chain } from '../../models/Chain';
 
 export default function Gallery() {
-  const [activeChainId, setActiveChainId] = useState(MORALIS_SUPPORTED_CHAINS[0]);
+  const [activeChainId, setActiveChainId] = useState(Object.keys(CONFIG_CHAINS)[0]);
 
 
   const onChangeActiveChainId = (updatedChainId: string) => {
@@ -24,7 +24,9 @@ export default function Gallery() {
         <h1>NFT Gallery</h1>
         <Radio.Group onChange={event => onChangeActiveChainId(event.target.value)} value={activeChainId} optionType="button" className="my-3">
         {
-          MORALIS_SUPPORTED_CHAINS.map(chainId => {
+          MORALIS_SUPPORTED_CHAINS
+          .filter(chainId =>Object.keys(CONFIG_CHAINS).includes(chainId))
+          .map(chainId => {
             const chain = new Chain({...CONFIG_CHAINS[chainId]});
             return (
             <Radio.Button value={chain.CHAIN_ID}>
