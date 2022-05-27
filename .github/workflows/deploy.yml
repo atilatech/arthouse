@@ -41,6 +41,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
+      - run: NODE_ENV="production" yarn
       - run: CI="" yarn build
       - name: Deploy to netlify prod environment
         if: ${{github.ref_name}} == "master"
