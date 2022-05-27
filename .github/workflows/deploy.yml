@@ -40,7 +40,7 @@ jobs:
           node-version: 16.x
       - run: CI="" yarn build
       - name: Deploy to netlify prod environment
-        if: $GITHUB_REF_NAME == "master"
+        if: ${{GITHUB_REF_NAME}} == "master"
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -48,7 +48,7 @@ jobs:
         with:
           args: deploy --dir=./build --prod -m "${{GITHUB_REF_NAME}} ${{GITHUB_SHA}}"
       - name: Deploy to netlify test environment
-        if: $GITHUB_REF_NAME != "master"
+        if: ${{GITHUB_REF_NAME}} != "master"
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
