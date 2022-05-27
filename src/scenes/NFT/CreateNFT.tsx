@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
 import Web3Modal from 'web3modal';
@@ -274,7 +274,9 @@ function CreateNFT() {
         {createdNFTs.length > 0 && 
         <div>
           <h3>
-            Created NFTs
+            Created NFTs (<Link to="/my-nfts">
+                        <span>View all my NFTs</span>
+                    </Link>)
           </h3>
           <Row gutter={[24,24]}>
           {

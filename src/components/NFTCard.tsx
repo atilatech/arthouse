@@ -23,45 +23,45 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
         <h3 className="text-2xl font-semibold">{nft.name}</h3>
         <hr/>
 
-        <div>
-            <p className="description">{nft.description}</p>
+        <div className="description">
+            <p>{nft.description}</p>
         </div>
         <hr/>
 
-        <div className="mb-2">
-            <Tag color="blue">
+        <div className="mb-2 metadata">
+            <Tag color="blue" className='mb-2'>
                     {activeChain.CHAIN_NAME}
                     <img src={activeChain.LOGO_URL} alt={activeChain.CHAIN_NAME} width={25} />
-            </Tag>
+            </Tag><br/>
+            <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="ml-1">
+                View NFT on Block Explorer
+            </a>
+            {/* TODO make this code less repetitve, iterate over a dictionary/list of NFT marketplaces */}
+            {openSeaUrl && 
+                <>
+                    <br/>
+                    <a href={openSeaUrl} target="_blank" rel="noreferrer" className="ml-1">
+                        View NFT on OpenSea
+                    </a>
+                </>
+            }
+            {raribleUrl && 
+                <>
+                    <br/>
+                    <a href={raribleUrl} target="_blank" rel="noreferrer" className="ml-1">
+                        View NFT on Rarible
+                    </a>
+                </>
+            }
+            {looksrareUrl && 
+                <>
+                    <br/>
+                    <a href={looksrareUrl} target="_blank" rel="noreferrer" className="ml-1">
+                        View NFT on Looks Rare
+                    </a>
+                </>
+            }
         </div>
-        <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="ml-1">
-            View NFT on Block Explorer
-        </a>
-        {/* TODO make this code less repetitve, iterate over a dictionary/list of NFT marketplaces */}
-        {openSeaUrl && 
-            <>
-                <br/>
-                <a href={openSeaUrl} target="_blank" rel="noreferrer" className="ml-1">
-                    View NFT on OpenSea
-                </a>
-            </>
-        }
-        {raribleUrl && 
-            <>
-                <br/>
-                <a href={raribleUrl} target="_blank" rel="noreferrer" className="ml-1">
-                    View NFT on Rarible
-                </a>
-            </>
-        }
-        {looksrareUrl && 
-            <>
-                <br/>
-                <a href={looksrareUrl} target="_blank" rel="noreferrer" className="ml-1">
-                    View NFT on Looks Rare
-                </a>
-            </>
-        }
         </div>
         {/* TODO: add support for buying and selling NFTs */}
         {/* <Button className="center block" onClick={() => buyNft(nft)}>Buy</Button> */}
