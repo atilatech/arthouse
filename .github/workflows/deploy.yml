@@ -1,12 +1,17 @@
-name: Deploy to Skynet
+name: 'Netlify Deploy'
 
 on:
   pull_request:
   push:
     branches: [master]
 
+env:
+  REACT_APP_MORALIS_SERVER_URL: ${{ secrets.REACT_APP_MORALIS_SERVER_URL }}
+  REACT_APP_MORALIS_APP_ID: ${{ secrets.REACT_APP_MORALIS_APP_ID }}
+
 jobs:
-  build:
+  deploy:
+    name: 'Deploy'
     runs-on: ubuntu-latest
 
     steps:
@@ -14,14 +19,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 16.x
-
       - run: yarn
       - run: CI="" yarn build
-
-      - name: "Deploy to Skynet"
-        uses: SkynetLabs/deploy-to-skynet-action@v2
+      - name: Deploy to netlify
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-          upload-dir: build
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-          registry-seed: ${{ secrets.SKYNET_REGISTRY_SEED || '' }}
+          args: deploy --dir=./build --prod -m "${{github.ref_name}} ${{github.sha}}"

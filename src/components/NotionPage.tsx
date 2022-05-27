@@ -36,7 +36,7 @@ function NotionPage(props: NotionPageProps) {
             setLoading(undefined);
         })
     },
-    [props.pageId, props.showTableOfContents]
+    [props.pageId]
   );
 
   useEffect(() => {

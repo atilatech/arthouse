@@ -2,12 +2,9 @@
 
 A marketplace for creating, buying and selling NFTs on Ethereum, Polygon and Binance Smart Chain.
 
-[![Add to Homescreen](https://img.shields.io/badge/Skynet-Add%20To%20Homescreen-00c65e?logo=skynet&labelColor=0d0d0d)](https://homescreen.hns.siasky.net/#/skylink/AAAQ_qHouOtCY7xyiqCMPLwmNcbVSbTfx47t2BcQ44QgaA)
+- https://art.atila.ca
 
 ## Demos
-
-### Live Demo
-- https://0000tbasl07ad1f4gmc2cpu5fbint53qfvgifgr51em1pvdtpplc2e8.siasky.net/
 
 ### Video Demos
 - https://www.loom.com/share/c4205883b8fd4e499eadf1e349c8ace6
@@ -17,10 +14,10 @@ A marketplace for creating, buying and selling NFTs on Ethereum, Polygon and Bin
 ## Smart Contract Addresses
 
 - [View  Ethereum (Rinkeby)  NFT Contract on Block Explorer](https://rinkeby.etherscan.io/token/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
-
-- [View  Celo (Alfajores)  NFT Contract on Block Explorer](https://alfajores-blockscout.celo-testnet.org/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
+    - Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
+- [View  Binance Smart Chain (Testnet)  NFT Contract on Block Explorer](https://testnet.bscscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
 - [View  Polygon (Mumbai)  NFT Contract on Block Explorer](https://mumbai.polygonscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
-
+- [View  Celo (Alfajores)  NFT Contract on Block Explorer](https://alfajores-blockscout.celo-testnet.org/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
 - [View Harmony (Testnet) NFT Contract on Block Explorer](https://explorer.pops.one/address/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
 ## Quickstart
 
@@ -65,36 +62,44 @@ The backend for this project is a blockchain node. For development, you can run 
 
 ### Deploying to live Testnet or Mainnet
 
+### Adding a New Chain
+
 1. Put your private keys for the account that will be deploying the smart contract in `.secrets`. This will NOT be included in your version control and run `source .secrets`.
 
 1. Go to `hardhat.config.js` and add the settings for your new chain
-
-    1. Get an RPC URL for your desired blockchain
-        - https://datahub.figment.io
-        - TODO use Quicknode and Figment RPC URLS
+    1. Get Chain ID from:
+        1. https://chainlist.org/
+    1. Get an RPC URL for your desired blockchain (TODO: where to get good RPC urls)
+        1. Binance: https://docs.binance.org/smart-chain/developer/rpc.html (TODO: add other chains)
     1. Add the apikey to `.secrets`
 
 1. Add the chain information to `src/config-chains.json`
 
+1. Change the chainID in `scrpts/deploy.js`
+
 1. Get some tokens to pay the gas fees for deploying the smart contracts. On testnets you can use a faucet:
+    1. Ethereum Rinkeby: https://rinkebyfaucet.com
+    1. Binance: https://testnet.binance.org/faucet-smart
+    1. Polygon: https://faucet.polygon.technology
     1. Celo: https://celo.org/developers/faucet
-    1. Polygon: https://faucet.polygon.technology/
-    1. Rinkeby: https://rinkebyfaucet.com/
-    1. Sokol: https://faucet.poa.network/
-    1. Harmony: https://faucet.pops.one/
+    1. Harmony: https://faucet.pops.one
 
 1. Load secrets to your environment variable `source .secrets`
 
-1. Change the chainID in `scrpts/deploy.js`
-
 1. Deploy the smart contract: `npx hardhat run scripts/deploy.js --network [network]`
-    - Celo Alfajores: `npx hardhat run scripts/deploy.js --network alfajores`
-    - Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
-    - Ethereum Rinkeby: `npx hardhat run scripts/deploy.js --network rinkeby`
-    - Gnosis Sokol: `npx hardhat run scripts/deploy.js --network sokol`
-    - Harmony Testnet: `npx hardhat run scripts/deploy.js --network harmonytestnet`
+    1. Celo Alfajores: `npx hardhat run scripts/deploy.js --network alfajores`
+    1. Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
+    1. Ethereum Rinkeby: `npx hardhat run scripts/deploy.js --network rinkeby`
+    1. Harmony Testnet: `npx hardhat run scripts/deploy.js --network harmonytestnet`
+    1. Binance Smart Chain Testnet: `npx hardhat run scripts/deploy.js --network bsctestnet`
+    1. Binance Smart Chain: `npx hardhat run scripts/deploy.js --network binance`
+    1. Binance Smart Chain: `npx hardhat run scripts/deploy.js --network polygon`
 
-Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
+1. Add the new chain information to `README.md`, see these commits below for examples of what to change:
+    1. [Ethereum](https://github.com/atilatech/art-house/commit/d97572f9d730a3a469a712dec04fc3ea6dc97eb8)
+    1. [Binance](https://github.com/atilatech/art-house/commit/274ff640c116d6637add521e7eae7fe9de2fbe92)
+    1. [Polygon](https://github.com/atilatech/art-house/commit/a211ac1bc50d52ffd266b5eb5fd47bf4b232d366)
+    1. [Celo](https://github.com/atilatech/art-house/commit/af8ab520fe80c3a148e45a963ead9270e2710a80)
 
 ### Deployed Smart Contracts
 

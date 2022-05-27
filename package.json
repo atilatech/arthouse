@@ -24,6 +24,7 @@
     "ipfs-http-client": "50.1.2",
     "jquery": "^3.5.0",
     "moment": "^2.24.0",
+    "moralis": "^1.7.0",
     "node-sass": "^7.0.1",
     "react": "^16.9.0",
     "react-bootstrap": "^1.0.0-beta.12",
@@ -38,7 +39,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && echo '/*    /index.html   200' > build/_redirects",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

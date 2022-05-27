@@ -9,7 +9,7 @@ function Navbar() {
     const menuItems = [
         {
             key: "create",
-            label: "Create NFT",
+            label: "Create",
         },
         {
             key: "gallery",
