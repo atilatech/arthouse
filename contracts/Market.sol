@@ -28,6 +28,7 @@ contract NFTMarket is ReentrancyGuard {
     address payable owner;
     uint256 price;
     bool sold;
+    bool forSale;
   }
 
   mapping(uint256 => MarketItem) private idToMarketItem;
@@ -39,7 +40,8 @@ contract NFTMarket is ReentrancyGuard {
     address seller,
     address owner,
     uint256 price,
-    bool sold
+    bool sold,
+    bool forSale
   );
 
   /* Returns the listing price of the contract */
@@ -66,7 +68,8 @@ contract NFTMarket is ReentrancyGuard {
       payable(msg.sender),
       payable(address(0)),
       price,
-      false
+      false,
+      true
     );
 
     IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
@@ -78,8 +81,22 @@ contract NFTMarket is ReentrancyGuard {
       msg.sender,
       address(0),
       price,
-      false
+      false,
+      true
     );
+  }
+
+  /* Unlists an item previously listed for sale and transfer back to the seller */
+  function unListMarketItem(
+    address nftContract,
+    uint256 itemId
+  ) public payable nonReentrant {
+
+    require(msg.sender == idToMarketItem[itemId].seller, "Only seller may unlist an item");
+    uint tokenId = idToMarketItem[itemId].tokenId;
+    idToMarketItem[itemId].forSale = false;
+    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+
   }
 
   /* Creates the sale of a marketplace item */
@@ -90,6 +107,7 @@ contract NFTMarket is ReentrancyGuard {
     ) public payable nonReentrant {
     uint price = idToMarketItem[itemId].price;
     uint tokenId = idToMarketItem[itemId].tokenId;
+    require(idToMarketItem[itemId].forSale, "This item is not available for sale");
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
     idToMarketItem[itemId].seller.transfer(msg.value);
