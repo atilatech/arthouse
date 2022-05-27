@@ -19,11 +19,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 16.x
-      - uses: jsmrcaga/action-netlify-deploy@master
-        with:
+      - run: yarn
+      - run: CI="" yarn build
+      - name: Deploy to netlify
+        uses: netlify/actions/cli@master
+        env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          NETLIFY_DEPLOY_MESSAGE: "Prod deploy v${{ github.ref }}"
-          NETLIFY_DEPLOY_TO_PROD: true
-          install_command: yarn
-          build_command: CI="" yarn build
+        with:
+          args: deploy --dir=./build -m "${{github.ref_name}} ${{github.sha}}"
