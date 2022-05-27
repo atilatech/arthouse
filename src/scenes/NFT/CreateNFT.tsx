@@ -60,8 +60,8 @@ function CreateNFT(props: CreateNFTProps) {
     }
     try {
       let url;
-      const { name, description, price } = formInput
-      if (!name || !description || !price || !fileUrl) return
+      const { name, description } = formInput
+      if (!name || !description || !fileUrl) return
         /* first, upload to IPFS */
         const data = JSON.stringify({
           name, description, image: fileUrl
@@ -119,6 +119,7 @@ function CreateNFT(props: CreateNFTProps) {
       const NFT_ADDRESS = activeChain.NFT_ADDRESS;
       const NFT_MARKETPLACE_ADDRESS = activeChain.NFT_MARKETPLACE_ADDRESS;
 
+      console.log({url, NFT}, NFT.abi);
       /* next, create the item */
       let contract = new ethers.Contract(NFT_ADDRESS, NFT.abi, signer)
       let mintTransactionPromise = await contract.createToken(url)
@@ -126,11 +127,13 @@ function CreateNFT(props: CreateNFTProps) {
       let event = mintTransaction.events[0]
       let value = event.args[2]
       let tokenId = value.toNumber()
-      const price = ethers.utils.parseUnits(formInput.price.toString(), 'ether');
       let listTransaction;
+
+      console.log({mintTransaction, url});
 
       if (listNFT) {
 
+        const price = ethers.utils.parseUnits(formInput.price.toString(), 'ether');
         /* then list the item for sale on the marketplace */
         contract = new ethers.Contract(NFT_MARKETPLACE_ADDRESS, Market.abi, signer)
         let listingPrice = await contract.getListingPrice()

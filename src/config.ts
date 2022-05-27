@@ -11,8 +11,8 @@ delete ALL_CONFIG_CHAINS.localhost;
 export let CONFIG_CHAINS: {[key: string]: Chain} = {};
 
 // if the URL starts with art.atila.ca' then only show mainnet chains
-Object.values(ALL_CONFIG_CHAINS).filter(chain =>
-     window.location.host.startsWith('art.atila.ca') ? chain.IS_MAIN_NET : !chain.IS_MAIN_NET)
+Object.values(ALL_CONFIG_CHAINS)
+// .filter(chain => window.location.host.startsWith('art.atila.ca') ? chain.IS_MAIN_NET : !chain.IS_MAIN_NET)
 .forEach(chain => {
     CONFIG_CHAINS[chain.CHAIN_ID] = chain;
 })

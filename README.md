@@ -93,6 +93,7 @@ The backend for this project is a blockchain node. For development, you can run 
     1. Harmony Testnet: `npx hardhat run scripts/deploy.js --network harmonytestnet`
     1. Binance Smart Chain Testnet: `npx hardhat run scripts/deploy.js --network bsctestnet`
     1. Binance Smart Chain: `npx hardhat run scripts/deploy.js --network binance`
+    1. Binance Smart Chain: `npx hardhat run scripts/deploy.js --network polygon`
 
 1. Add the new chain information to `README.md`, see these commits below for examples of what to change:
     1. [Ethereum](https://github.com/atilatech/art-house/commit/d97572f9d730a3a469a712dec04fc3ea6dc97eb8)

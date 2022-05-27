@@ -52,6 +52,11 @@ module.exports = {
       url: `https://bsc-dataseed.binance.org`,
       accounts: [`0x${privateKey}`],
       chainId: 56
+    },
+    polygon: {
+      url: `https://polygon-rpc.com`,
+      accounts: [`0x${privateKey}`],
+      chainId: 137
     }
   },
 }
