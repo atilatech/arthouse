@@ -10,9 +10,6 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
     const { chainId } = nft;
 
     const activeChain = CONFIG_CHAINS[chainId];
-
-    console.log({chainId, nft, activeChain});
-
     const nftBlockExplorerUrl = `${activeChain.BLOCK_EXPLORER_URL}/${activeChain.CHAIN_NAME !== "Harmony" ? "token": "address"}/${activeChain.NFT_ADDRESS}?a=${nft.tokenId}`;
 
     const openSeaUrl = OPENSEA_SUPPORTED_CHAINS.includes(chainId) ? `https://${activeChain.IS_MAIN_NET? "" : "testnets."}opensea.io/assets/${activeChain.NETWORK_NAME.toLowerCase()}/${activeChain.NFT_ADDRESS}/${nft.tokenId}`: "";

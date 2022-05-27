@@ -3,7 +3,7 @@ import React, { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import Web3Modal from "web3modal"
 import { Radio, RadioChangeEvent } from 'antd';
-import { ALL_CONFIG_CHAINS, CONFIG_CHAINS, MORALIS_SUPPORTED_CHAINS } from '../../config';
+import { CONFIG_CHAINS, MORALIS_SUPPORTED_CHAINS } from '../../config';
 import { Chain } from '../../models/Chain';
 import NFTList from '../../components/NFTList';
 
