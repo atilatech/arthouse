@@ -35,6 +35,30 @@ contract NFTMarket is ReentrancyGuard {
   mapping(uint256 => MarketItem) private idToMarketItem;
   mapping(address => uint) credits;
 
+  /**
+    Credit the address owner, using a "pull" payment strategy.
+    https://fravoll.github.io/solidity-patterns/pull_over_push.html
+    https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment 
+  */
+  function allowForPull(address receiver, uint amount) private {
+      credits[receiver] += amount;
+  }
+
+  function withdrawCredits() public {
+      uint amount = credits[msg.sender];
+
+      require(amount > 0, "There are no credits in this recipient address");
+      require(address(this).balance >= amount, "There are no credits in this contract address");
+
+      credits[msg.sender] = 0;
+
+      payable(msg.sender).transfer(amount);
+  }
+
+  function getAddressCredits(address receiver) public view returns (uint) {
+    return credits[receiver];
+  }
+
   event MarketItemCreated (
     uint indexed itemId,
     address indexed nftContract,
@@ -93,30 +117,6 @@ contract NFTMarket is ReentrancyGuard {
     idToMarketItem[itemId].forSale = false;
     IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
 
-  }
-
-  /**
-    Credit the address owner, using a "pull" payment strategy
-    https://fravoll.github.io/solidity-patterns/pull_over_push.html
-    https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment 
-  */
-  function allowForPull(address receiver, uint amount) private {
-      credits[receiver] += amount;
-  }
-
-  function withdrawCredits() public {
-      uint amount = credits[msg.sender];
-
-      require(amount > 0, "There are no credits in this recipeint address");
-      require(address(this).balance >= amount, "There are no credits in this contract address");
-
-      credits[msg.sender] = 0;
-
-      payable(msg.sender).transfer(amount);
-  }
-
-  function getAddressCredits(address receiver) public view returns (uint) {
-    return credits[receiver];
   }
 
   /* Creates the sale of a marketplace item */
