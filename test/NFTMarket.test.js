@@ -76,24 +76,30 @@ describe("NFTMarket", function() {
       expect(originalBalance+1).to.eq(await nft.balanceOf(firstBuyerSigner.address));
 
       /** New owner relists item */
-      nft.connect(firstBuyerSigner).setApprovalForAll(marketAddress, true);
-      let createMarketItemPromise = market.connect(firstBuyerSigner).createMarketItem(nftContractAddress, tokenId, auctionPrice);
-      let resaleItemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+      await nft.connect(firstBuyerSigner).setApprovalForAll(marketAddress, true);
+      await market.connect(firstBuyerSigner).createMarketItem(nftContractAddress, tokenId, auctionPrice);
+      // for some reason createMarketItem() returns the itemId of a different item (usuallly 1) so we will get the resale item id from
+      // the marketplace smart contract
+      let marketItems = (await market.fetchMarketItems());
+      let resaleItem = marketItems.find(item=> !item.sold && BigNumber.from(tokenId).eq(item.tokenId));
 
       /** Second buyer buys relisted item */
       originalBalance = await nft.balanceOf(secondBuyerSigner.address);
-      await market.connect(secondBuyerSigner).createMarketSale(nftContractAddress, resaleItemId, { value: auctionPrice});
+      await market.connect(secondBuyerSigner).createMarketSale(nftContractAddress, resaleItem.itemId, { value: auctionPrice});
       expect(originalBalance+1).to.eq(await nft.balanceOf(secondBuyerSigner.address));
 
       /** Repeat process of listing and buying item. This second buyer increases the auction price */
       const resaleAuctionPrice = ethers.utils.parseUnits('2.25', 'ether');
-      nft.connect(secondBuyerSigner).setApprovalForAll(marketAddress, true);
-      createMarketItemPromise = market.connect(secondBuyerSigner).createMarketItem(nftContractAddress, tokenId, resaleAuctionPrice);
-      resaleItemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+      await nft.connect(secondBuyerSigner).setApprovalForAll(marketAddress, true);
+      await market.connect(secondBuyerSigner).createMarketItem(nftContractAddress, tokenId, resaleAuctionPrice);
+      // for some reason createMarketItem() returns the itemId of a different item (usuallly 1) so we will get the resale item id from
+      // the marketplace smart contract
+      marketItems = (await market.fetchMarketItems());
+      resaleItem = marketItems.find(item=> !item.sold && BigNumber.from(tokenId).eq(item.tokenId));
 
       /** Second buyer buys relisted item */
       originalBalance = await nft.balanceOf(thirdBuyerSigner.address);
-      await market.connect(thirdBuyerSigner).createMarketSale(nftContractAddress, resaleItemId, { value: resaleAuctionPrice});
+      await market.connect(thirdBuyerSigner).createMarketSale(nftContractAddress, resaleItem.itemId, { value: resaleAuctionPrice});
       expect(originalBalance+1).to.eq(await nft.balanceOf(thirdBuyerSigner.address));
 
   
@@ -104,14 +110,11 @@ describe("NFTMarket", function() {
 
     it ("Should give users the correct credits on item sale", async function() {
   
-      let sellerCreateNFTPromise = nft.connect(sellerSigner).createToken("https://www.mytokenlocation.com");
-      const sellerTokenId = await getTokenIdOrItemIdFromTransaction(sellerCreateNFTPromise);
-  
-      const createMarketItemPromise = market.connect(sellerSigner).createMarketItem(nftContractAddress, sellerTokenId, auctionPrice);
-      const sellerItemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+      const { tokenId } = await createTokenAndMarketItem(sellerSigner);
+      const marketItem = await getMarketItemIdFromTokenId(tokenId);
   
       /* execute sale of token to another user */
-      await market.connect(buyerSigner).createMarketSale(nftContractAddress, sellerItemId, { value: auctionPrice})
+      await market.connect(buyerSigner).createMarketSale(nftContractAddress, marketItem.itemId, { value: auctionPrice})
   
       const sellerAddressCredit = await market.getAddressCredits(sellerSigner.address);
       const buyerAddressCredit = await market.getAddressCredits(buyerSigner.address);
@@ -128,26 +131,26 @@ describe("NFTMarket", function() {
   })
   
   describe("unListMarketItem", function() {
-    let sellerTokenId, sellerItemId;
+    let marketItem;
 
     beforeEach(async function() { 
 
-      let { tokenId, itemId } = await createTokenAndMarketItem(sellerSigner);
-      sellerTokenId = tokenId;
-      sellerItemId = itemId;
+      let { tokenId } = await createTokenAndMarketItem(sellerSigner);
+      marketItem = await getMarketItemIdFromTokenId(tokenId);
       
     });
 
     it ("should not allow buying of unlisted item", async function() {
       // ownerSigner is connected by default, .connect(ownerSigner) is used just to be explicit
-      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, sellerItemId);
-      await expect(market.connect(buyerSigner).createMarketSale(nftContractAddress, sellerItemId, { value: auctionPrice}))
+
+      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, marketItem.itemId);
+      await expect(market.connect(buyerSigner).createMarketSale(nftContractAddress, marketItem.itemId, { value: auctionPrice}))
       .to.be.revertedWith("This item is not available for sale");
     });
 
     it ("should not allow non-seller to unlist", async function() {
       // ownerSigner is connected by default, .connect(ownerSigner) is used just to be explicit
-      await expect(market.connect(ownerSigner).unListMarketItem(nftContractAddress, sellerItemId))
+      await expect(market.connect(ownerSigner).unListMarketItem(nftContractAddress, marketItem.itemId))
       .to.be.revertedWith("Only seller may unlist an item");
     });
 
@@ -167,13 +170,14 @@ describe("NFTMarket", function() {
 
     it ("should allow relisting item after unlisting", async function() {
 
-      let { itemId } = await createTokenAndMarketItem(sellerSigner);
-      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, itemId);
+      let { tokenId } = await createTokenAndMarketItem(sellerSigner);
+      marketItem = await getMarketItemIdFromTokenId(tokenId);
+      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, marketItem.itemId);
       let unsoldItems = await market.fetchUnSoldMarketItems();
       const originalUnsoldItemsCount = unsoldItems.length;
 
       await nft.connect(sellerSigner).setApprovalForAll(marketAddress, true);
-      await market.connect(sellerSigner).createMarketItem(nftContractAddress, sellerTokenId, auctionPrice);
+      await market.connect(sellerSigner).createMarketItem(nftContractAddress, tokenId, auctionPrice);
 
       unsoldItems = await market.fetchUnSoldMarketItems();
 
@@ -213,6 +217,19 @@ describe("NFTMarket", function() {
     value = BigNumber.from(value)
     // We usually shouldn't convert BigNumber toNumber() but this is okay since we don't expect the tokenId or itemId to be very large in our tests
     return value.toNumber()
+  }
+
+  /**
+   * Reading the itemId from the transaction result is causing potential race conditions where tests pass in isolation
+   * but fail when run together in the test suite.
+   * To solve this, this helper function was created to get the item ID from the smart contract when it's needed.
+   * @param {*} tokenId 
+   * @param {*} returnSoldItems 
+   * @returns 
+   */
+  async function getMarketItemIdFromTokenId(tokenId, returnSoldItems = false) {
+    let marketItems = (await market.fetchMarketItems());
+    return marketItems.find(item=> returnSoldItems ? item.sold : !item.sold && BigNumber.from(tokenId).eq(item.tokenId));
   }
 
   async function createTokenAndMarketItem(signer) {
