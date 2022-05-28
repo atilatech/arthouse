@@ -6,7 +6,7 @@
 // const hre = require("hardhat");
 const { task } = require("hardhat/config");
 const fs = require('fs');
-const { getAvailableChains, chainConfigFilePath } = require("./helpers");
+const { getAvailableChains, chainConfigFilePath, getAccount } = require("./helpers");
 
 
 task("deploy:nft", "Deploys the NFT.sol contract")
@@ -26,7 +26,14 @@ task("deploy:nft", "Deploys the NFT.sol contract")
     console.error("\x1b[31m%s\x1b[0m", `Invalid chainId: ${chainId}.\nPlease select one of the following:\n${chainsForPrinting}`);
     process.exit(1);
   }
-  const NFT = await hre.ethers.getContractFactory("NFT");
+  const account = getAccount(chainId);
+  let NFT;
+  if (account) {
+    NFT = await hre.ethers.getContractFactory("NFT", account);
+  } else {
+    NFT = await hre.ethers.getContractFactory("NFT");
+  }
+  
   const nft = await NFT.deploy();
   await nft.deployed();
 
@@ -35,7 +42,7 @@ task("deploy:nft", "Deploys the NFT.sol contract")
 
   const chainConfig = availableChains[chainId];
   console.log("\x1b[32m%s\x1b[0m", `NFT deployed to ${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME}): ${chainConfig.NFT_ADDRESS}`);
-  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_ADDRESS}`);
+  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_ADDRESS.toLowerCase()}`);
 
 });
 
@@ -55,7 +62,13 @@ task("deploy:market", "Deploys the Market.sol contract")
     process.exit(1);
   }
 
-  const NFTMarket = await hre.ethers.getContractFactory("NFTMarket");
+  const account = getAccount(chainId);
+  let NFTMarket;
+  if (account) {
+    NFTMarket = await hre.ethers.getContractFactory("NFTMarket", account);
+  } else {
+    NFTMarket = await hre.ethers.getContractFactory("NFTMarket");
+  }
   const nftMarket = await NFTMarket.deploy();
   await nftMarket.deployed();
 
@@ -65,7 +78,7 @@ task("deploy:market", "Deploys the Market.sol contract")
 
   const chainConfig = availableChains[chainId];
   console.log("\x1b[32m%s\x1b[0m", `NFTMarket deployed to ${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME}): ${chainConfig.NFT_MARKETPLACE_ADDRESS}`);
-  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_MARKETPLACE_ADDRESS}`);
+  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_MARKETPLACE_ADDRESS.toLowerCase()}`);
 
 });
 
