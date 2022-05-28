@@ -2,8 +2,8 @@
     "4": {
         "NETWORK_NAME": "Rinkeby",
         "CHAIN_NAME": "Ethereum",
-        "NFT_MARKETPLACE_ADDRESS": "0xe12C5D6F03938B530bbBA220a971dC2C3759f923",
-        "NFT_ADDRESS": "0x544FEc06fdfB423606d1C705D3105867B8Ff8148",
+        "NFT_MARKETPLACE_ADDRESS": "0x093ded22697313310c4fcDd1A75EDF8fACbA8F90",
+        "NFT_ADDRESS": "0x090D4622AE91acdCFb7354872A934F4e8A1e21A9",
         "IS_MAIN_NET": false,
         "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
         "CHAIN_ID": "4",
