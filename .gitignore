@@ -34,3 +34,6 @@ typechain
 
 #Hardhat files
 cache
+
+# Smart Contract Artifacts
+src/artifacts/build-info/
