@@ -1,6 +1,8 @@
 # Art House
 
-A marketplace for creating, buying and selling NFTs on Ethereum, Polygon and Binance Smart Chain.
+A marketplace for creating an NFT and deploying it to multiple blockchains in one click.
+
+
 
 - https://art.atila.ca
 
@@ -10,24 +12,25 @@ This project consists of a React frontend and a blockchain backend.
 
 `yarn install`
 
-## Frontend
-
 1. `yarn start`
 1. Go to http://localhost:3000/
 1. Click on Create NFT
 1. Make sure that you can see the created NFT in NFT gallery
 
-## Build Frontend
+To build the project: `yarn build`
 
-1. `yarn build`
+## How it Works
 
-## Running Tests
+Arthouse can do 4 things:
+1. Mint an NFT
+1. List an NFT for sale
+1. Buy an NFT
+1. Unlist an NFT
 
-### Testing Smart Contracts
-
-`npx hardhat test`
-
-Test a specific feature: `npx hardhat test --grep unListMarketItem`
+1. Everytime a new NFT is minted it gets deployed to the provided smart contract on the relevant chain ID in `config-chains.json`
+1. When it gets listed for sale, approval is given by the account to the Market contract, the NFT is transferred to the address of the contract which will list the item for sale.
+1. When the account buys a listed item, the marketplace receives a commission of `salesFeeBasisPoints` (currently 250 basis points or 2.50%) and the seller receives the rest.
+1. The seller may choose to unlist an item at which point the ownership of the NFT will be transferred back to the seller and become unavailable for purchase in the market.
 
 ## Run Hardhat in Console
 
@@ -105,7 +108,7 @@ The backend for this project is a blockchain node. For development, you can run 
     1. [Polygon](https://github.com/atilatech/art-house/commit/a211ac1bc50d52ffd266b5eb5fd47bf4b232d366)
     1. [Celo](https://github.com/atilatech/art-house/commit/af8ab520fe80c3a148e45a963ead9270e2710a80)
 
-## Smart Contract Addresses
+### Smart Contract Addresses
 
 - [View  Ethereum (Rinkeby)  NFT Contract on Block Explorer](https://rinkeby.etherscan.io/token/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
     - Note: We use Ethereum Rinkeby because that's what Opensea uses, so our testnet NFTs will also be visible on Opensea.
@@ -191,6 +194,11 @@ Block Explorer URL: https://explorer.pops.one/
 ###  Testing Smart Contracts
 
 `npx hardhat test`
+
+Test a specific feature: `npx hardhat test --grep unListMarketItem`
+
+Sometimes you might try to run a test or a piece of code and find that a function is undefined. This might be due to an outdated artifacts build. Run `npx hardhat compile --force` to force a recompilation.
+
 ## Deploying smart contracts
 1. Compile the smart contracts to get the most recent change: `npx hardhat compile`
 1. Load your environment variables using `shared.env` as a template

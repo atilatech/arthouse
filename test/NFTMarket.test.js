@@ -5,7 +5,7 @@ const { ethers } = require("hardhat");
 const { BigNumber } = ethers;
 
 const auctionPrice = ethers.utils.parseUnits('1.5', 'ether');
-/* test/nft-test.js */
+
 describe("NFTMarket", function() {
 
   // todo find a way for Market, market, NFT, nft to be initialized as const
@@ -154,6 +154,25 @@ describe("NFTMarket", function() {
     });
   })
 
+  describe("fetchMarketItems", function() {
+
+    it ("should have all created items", async function() {
+      
+    
+      const originalMarketItems = await market.fetchMarketItems();
+      const {itemId: sellerItemId} = await createTokenAndMarketItem(sellerSigner);
+      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, sellerItemId);
+      await createTokenAndMarketItem(buyerSigner);
+      await createTokenAndMarketItem(sellerSigner);
+
+      const updatedMarketItems = await market.fetchMarketItems();
+      expect(originalMarketItems.length + 3).to.eq(updatedMarketItems.length);
+
+    });
+    
+
+  })
+
   /**
    * Parse the transaction logs to get the tokenId returned from the function call
    * @param {*} transactionPromise 
@@ -177,9 +196,9 @@ describe("NFTMarket", function() {
     const createMarketItemPromise = market.connect(signer).createMarketItem(nftContractAddress, tokenId, auctionPrice);
     const itemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
 
-      return {
-        tokenId,
-        itemId
-      }
+    return {
+      tokenId,
+      itemId
+    }
   }
 })
