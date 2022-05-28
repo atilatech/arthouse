@@ -6,6 +6,7 @@ import { CONFIG_CHAINS } from '../config';
 import { Chain } from '../models/Chain';
 import { NFTMetadata } from '../models/NFT';
 import NFTCard from './NFTCard';
+import axios from 'axios';
 
 function NFTList({address, chainId, getAllTokensForContract = false} : {address: string, chainId: string, getAllTokensForContract?: boolean}) {
 
@@ -43,8 +44,15 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
         data = await Moralis.Web3API.account.getNFTs(options);
       }
 
-      const items = data.result!.filter(nft => nft.metadata).map((token) => {
-        const metadata = JSON.parse(token.metadata || "{}");
+      const items = await Promise.all(data.result!.map(async (token) => {
+        let metadata;
+        if (!token.metadata && token.token_uri) {
+          // Moralis doesn't fetch the metadata from URI immediately so we may have to manually fetch it ourselves
+          metadata = (await axios.get(token.token_uri)).data || {};
+          console.log({metadata});
+        } else {
+          metadata = JSON.parse(token.metadata || "{}");
+        }
         const { name, description, image } = metadata;
         // let price = token.price ? ethers.utils.formatUnits(token.price.toString(), 'ether') : "";
         let item: NFTMetadata = {
@@ -58,7 +66,7 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
           chainId: chainId,
         }
         return item
-      });
+      }));
 
       setNfts(items);
       setLoadingState('loaded');
