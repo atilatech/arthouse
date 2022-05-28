@@ -3,52 +3,78 @@
 //
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
-const hre = require("hardhat");
+// const hre = require("hardhat");
+const { task } = require("hardhat/config");
 const fs = require('fs');
+const { getAvailableChains, chainConfigFilePath } = require("./helpers");
 
-// enter the CHAIN ID you want to deploy to here
-// TODO make this a task so it can be passed as a command line argument
-//  - https://stackoverflow.com/questions/69111785/hardhat-run-with-parameters
-// - https://hardhat.org/guides/create-task.html
-const chainID = "4";
 
-async function main() {
+task("deploy:nft", "Deploys the NFT.sol contract")
+.addParam("chainId", "The Chain ID of the blockchain where this contract will be deployed.")
+.setAction(async function (taskArguments, hre) {
 
-  if (!chainID) {
-    console.error("Chain ID must be set in scripts/deploy.js");
-    process.exit(1)
+  const availableChains = getAvailableChains();
+  const { chainId } = taskArguments;
+
+  if (!(chainId in availableChains)) {
+    // characters at the beginning to make error print in a different color
+    // https://stackoverflow.com/a/41407246/5405197
+    let chainsForPrinting = {};
+    Object.values(availableChains).forEach(chain=>{chainsForPrinting[chain.CHAIN_ID]= `${chain.CHAIN_NAME} (${chain.NETWORK_NAME})`});
+    chainsForPrinting = JSON.stringify(chainsForPrinting, null, 4);
+
+    console.error("\x1b[31m%s\x1b[0m", `Invalid chainId: ${chainId}.\nPlease select one of the following:\n${chainsForPrinting}`);
+    process.exit(1);
   }
+  const NFT = await hre.ethers.getContractFactory("NFT");
+  const nft = await NFT.deploy();
+  await nft.deployed();
+
+  availableChains[chainId].NFT_ADDRESS = nft.address;
+  fs.writeFileSync(chainConfigFilePath, JSON.stringify(availableChains, null, 4));
+
+  const chainConfig = availableChains[chainId];
+  console.log("\x1b[32m%s\x1b[0m", `NFT deployed to ${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME}): ${chainConfig.NFT_ADDRESS}`);
+  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_ADDRESS}`);
+
+});
+
+task("deploy:market", "Deploys the Market.sol contract")
+.addParam("chainId", "The Chain ID of the blockchain where this contract will be deployed.")
+.setAction(async function (taskArguments, hre) {
+
+  const availableChains = getAvailableChains();
+  const { chainId } = taskArguments;
+
+  if (!(chainId in availableChains)) {
+    let chainsForPrinting = {};
+    Object.values(availableChains).forEach(chain=>{chainsForPrinting[chain.CHAIN_ID]= `${chain.CHAIN_NAME} (${chain.NETWORK_NAME})`});
+    chainsForPrinting = JSON.stringify(chainsForPrinting, null, 4);
+
+    console.error("\x1b[31m%s\x1b[0m", `Invalid chainId: ${chainId}.\nPlease select one of the following:\n${chainsForPrinting}`);
+    process.exit(1);
+  }
+
   const NFTMarket = await hre.ethers.getContractFactory("NFTMarket");
   const nftMarket = await NFTMarket.deploy();
   await nftMarket.deployed();
-  console.log("NFT_MARKETPLACE_ADDRESS deployed to:", nftMarket.address);
-
-  const NFT = await hre.ethers.getContractFactory("NFT");
-  const nft = await NFT.deploy(nftMarket.address);
-  await nft.deployed();
-  console.log("NFT_ADDRESS deployed to:", nft.address);
-
-  const chainConfigFilePath = './src/config-chains.json';
-  let chainConfigRaw = fs.readFileSync(chainConfigFilePath);
-
-  let chainConfig = JSON.parse(chainConfigRaw);
-
-  console.log("BEFORE", {chainConfig});
-
-  chainConfig[chainID].NFT_MARKETPLACE_ADDRESS = nftMarket.address;
-  chainConfig[chainID].NFT_ADDRESS = nft.address;
-
-  console.log("AFTER", {chainConfig});
-
-  fs.writeFileSync(chainConfigFilePath, JSON.stringify(chainConfig, null, 4))
-}
 
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+  availableChains[chainId].NFT_MARKETPLACE_ADDRESS = nftMarket.address;
+  fs.writeFileSync(chainConfigFilePath, JSON.stringify(availableChains, null, 4));
+
+  const chainConfig = availableChains[chainId];
+  console.log("\x1b[32m%s\x1b[0m", `NFTMarket deployed to ${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME}): ${chainConfig.NFT_MARKETPLACE_ADDRESS}`);
+  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_MARKETPLACE_ADDRESS}`);
+
+});
+
+task("deploy", "Deploys the Market.sol and NFT.sol contract")
+.addParam("chainId", "The Chain ID of the blockchain where this contract will be deployed.")
+.setAction(
+  async (taskArgs, hre) => {
+    await hre.run("deploy:market", taskArgs);
+    await hre.run("deploy:nft", taskArgs);
+  }
+);
+

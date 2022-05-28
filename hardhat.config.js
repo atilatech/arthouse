@@ -1,5 +1,7 @@
 /* hardhat.config.js */
-require("@nomiclabs/hardhat-waffle")
+require("@nomiclabs/hardhat-waffle");
+require("./scripts/deploy.js");
+
 const CONTRACT_DEPLOYMENT_WALLET_PRIVATE_KEY = process.env.CONTRACT_DEPLOYMENT_WALLET_PRIVATE_KEY;
 const rpcApiKeyMumbai = process.env.rpcApiKeyMumbai;
 
