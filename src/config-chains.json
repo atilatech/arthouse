@@ -24,8 +24,8 @@
     "97": {
         "NETWORK_NAME": "Testnet",
         "CHAIN_NAME": "Binance Smart Chain",
-        "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
-        "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",
+        "NFT_MARKETPLACE_ADDRESS": "0xc219B570Efe3a74620F89D884F3DA51e8ebcFfD4",
+        "NFT_ADDRESS": "0xa94EC56924E2E4dcCb48e4987fEadA4B646637a3",
         "IS_MAIN_NET": false,
         "LOGO_URL": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Binance-coin-bnb-logo.png/800px-Binance-coin-bnb-logo.png",
         "CHAIN_ID": "97",

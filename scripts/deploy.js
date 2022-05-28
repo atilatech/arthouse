@@ -37,12 +37,12 @@ task("deploy:nft", "Deploys the NFT.sol contract")
   const nft = await NFT.deploy();
   await nft.deployed();
 
-  availableChains[chainId].NFT_ADDRESS = nft.address;
+  availableChains[chainId].NFT_ADDRESS = nft.address.toLowerCase();
   fs.writeFileSync(chainConfigFilePath, JSON.stringify(availableChains, null, 4));
 
   const chainConfig = availableChains[chainId];
   console.log("\x1b[32m%s\x1b[0m", `NFT deployed to ${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME}): ${chainConfig.NFT_ADDRESS}`);
-  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_ADDRESS.toLowerCase()}`);
+  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_ADDRESS}`);
 
 });
 
@@ -73,12 +73,12 @@ task("deploy:market", "Deploys the Market.sol contract")
   await nftMarket.deployed();
 
 
-  availableChains[chainId].NFT_MARKETPLACE_ADDRESS = nftMarket.address;
+  availableChains[chainId].NFT_MARKETPLACE_ADDRESS = nftMarket.address.toLowerCase();
   fs.writeFileSync(chainConfigFilePath, JSON.stringify(availableChains, null, 4));
 
   const chainConfig = availableChains[chainId];
   console.log("\x1b[32m%s\x1b[0m", `NFTMarket deployed to ${chainConfig.CHAIN_NAME} (${chainConfig.NETWORK_NAME}): ${chainConfig.NFT_MARKETPLACE_ADDRESS}`);
-  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_MARKETPLACE_ADDRESS.toLowerCase()}`);
+  console.log("\x1b[32m%s\x1b[0m", `View in block explorer: ${chainConfig.BLOCK_EXPLORER_URL}/address/${chainConfig.NFT_MARKETPLACE_ADDRESS}`);
 
 });
 
