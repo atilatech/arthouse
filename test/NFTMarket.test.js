@@ -8,7 +8,6 @@ const auctionPrice = ethers.utils.parseUnits('1.5', 'ether');
 
 describe("NFTMarket", function() {
 
-  // todo find a way for Market, market, NFT, nft to be initialized as const
   let Market, market, NFT, nft, ownerSigner, sellerSigner, buyerSigner, otherSigners;
 
   before(async function() {
@@ -20,7 +19,8 @@ describe("NFTMarket", function() {
 
     /* deploy the NFT contract */
     NFT = await ethers.getContractFactory("NFT")
-    nft = await NFT.deploy(marketAddress)
+    nft = await NFT.deploy();
+    nft.setApprovalForAll(marketAddress, true);
     await nft.deployed()
     nftContractAddress = nft.address;
     /* Get users */
@@ -59,6 +59,45 @@ describe("NFTMarket", function() {
       expect(unsoldItems.length).to.equal(1);
   
     })
+    it("Should allow reselling an item multiple times", async function() {
+
+      /* create token */
+      const { itemId: originalItemId, tokenId } = await createTokenAndMarketItem(sellerSigner);
+  
+      /* execute sale of token to another user */
+      const [firstBuyerSigner, secondBuyerSigner, thirdBuyerSigner] = otherSigners;
+
+      // We could have done this in a for-loop but for the purpose of tests as documentation this might be more explicit and intuitive
+      let originalBalance = await nft.balanceOf(firstBuyerSigner.address);
+      await market.connect(firstBuyerSigner).createMarketSale(nftContractAddress, originalItemId, { value: auctionPrice});
+
+      // Other tests may change the balance so originalBalance might not initially be zero, 
+      // we  want to check that the balance increased by 1, instead of checking that it equals 1.
+      expect(originalBalance+1).to.eq(await nft.balanceOf(firstBuyerSigner.address));
+
+      /** New owner relists item */
+      nft.connect(firstBuyerSigner).setApprovalForAll(marketAddress, true);
+      let createMarketItemPromise = market.connect(firstBuyerSigner).createMarketItem(nftContractAddress, tokenId, auctionPrice);
+      let resaleItemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+
+      /** Second buyer buys relisted item */
+      originalBalance = await nft.balanceOf(secondBuyerSigner.address);
+      await market.connect(secondBuyerSigner).createMarketSale(nftContractAddress, resaleItemId, { value: auctionPrice});
+      expect(originalBalance+1).to.eq(await nft.balanceOf(secondBuyerSigner.address));
+
+      /** Repeat process of listing and buying item. This second buyer increases the auction price */
+      const resaleAuctionPrice = ethers.utils.parseUnits('2.25', 'ether');
+      nft.connect(secondBuyerSigner).setApprovalForAll(marketAddress, true);
+      createMarketItemPromise = market.connect(secondBuyerSigner).createMarketItem(nftContractAddress, tokenId, resaleAuctionPrice);
+      resaleItemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+
+      /** Second buyer buys relisted item */
+      originalBalance = await nft.balanceOf(thirdBuyerSigner.address);
+      await market.connect(thirdBuyerSigner).createMarketSale(nftContractAddress, resaleItemId, { value: resaleAuctionPrice});
+      expect(originalBalance+1).to.eq(await nft.balanceOf(thirdBuyerSigner.address));
+
+  
+    })
   })
 
   describe("withdrawCredits", function() {
@@ -74,24 +113,11 @@ describe("NFTMarket", function() {
       /* execute sale of token to another user */
       await market.connect(buyerSigner).createMarketSale(nftContractAddress, sellerItemId, { value: auctionPrice})
   
-      const expectedSalesFeeBasisPoints = 250;
-      const basisPointsTotal = 10000;
-      const salesFeeBasisPoints = await market.getSalesFeeBasisPoints(); // 2.5% in basis points (parts per 10,000) 250/100000
-  
       const sellerAddressCredit = await market.getAddressCredits(sellerSigner.address);
       const buyerAddressCredit = await market.getAddressCredits(buyerSigner.address);
       const marketOwnerAddressCredit = await market.getAddressCredits(ownerSigner.address);
   
-  
-      expect(sellerAddressCredit.add(marketOwnerAddressCredit)).to.equal(auctionPrice);
       expect(buyerAddressCredit).to.equal(0);
-      expect(salesFeeBasisPoints).to.equal(expectedSalesFeeBasisPoints);
-  
-  
-      const expectedMarketPayment = (auctionPrice.mul(expectedSalesFeeBasisPoints)).div(basisPointsTotal);
-      const expectedSellerPayment = auctionPrice.sub(expectedMarketPayment);
-      expect(expectedSellerPayment).to.equal(sellerAddressCredit);
-      expect(expectedMarketPayment).to.equal(marketOwnerAddressCredit);
   
       // changeEtherBalance ignores transaction fees by default:
       // https://ethereum-waffle.readthedocs.io/en/latest/matchers.html#change-ether-balance
@@ -145,8 +171,8 @@ describe("NFTMarket", function() {
       let unsoldItems = await market.fetchUnSoldMarketItems();
       const originalUnsoldItemsCount = unsoldItems.length;
 
-      const createMarketItemPromise = market.connect(sellerSigner).createMarketItem(nftContractAddress, sellerTokenId, auctionPrice);
-      await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+      await nft.connect(sellerSigner).setApprovalForAll(marketAddress, true);
+      await market.connect(sellerSigner).createMarketItem(nftContractAddress, sellerTokenId, auctionPrice);
 
       unsoldItems = await market.fetchUnSoldMarketItems();
 
@@ -192,6 +218,8 @@ describe("NFTMarket", function() {
 
     let createNFTPromise = nft.connect(signer).createToken("https://www.mytokenlocation.com");
     const tokenId = await getTokenIdOrItemIdFromTransaction(createNFTPromise);
+
+    await nft.connect(signer).setApprovalForAll(marketAddress, true);
 
     const createMarketItemPromise = market.connect(signer).createMarketItem(nftContractAddress, tokenId, auctionPrice);
     const itemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
