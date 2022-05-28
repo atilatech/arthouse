@@ -28,7 +28,7 @@ function About() {
                 const nftBlockExplorerUrl = `${chain.BLOCK_EXPLORER_URL}/${chain.CHAIN_NAME !== "Harmony" ? "token": "address"}/${chain.NFT_ADDRESS}`;
                     
                 return (
-                        <li className='my-2'>
+                        <li className='my-2' key={chain.CHAIN_ID}>
                             <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="center-block text-center">
                                 View {chain.getChainFullName()} NFT Contract on Block Explorer  <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={25} />
                             </a>

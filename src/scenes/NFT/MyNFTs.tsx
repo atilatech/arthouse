@@ -29,8 +29,6 @@ export default function MyNFTs() {
     setActiveChainId(event.target.value);
   }
 
-  console.log({CONFIG_CHAINS});
-
   return (
     <div className="MyNFTs card shadow container p-5">
       <h1 className='text-center'>My NFTs</h1>

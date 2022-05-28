@@ -247,7 +247,7 @@ function CreateNFT() {
         {selectedChains.map(selectedChainId => {
           const chain =  new Chain({...CONFIG_CHAINS[selectedChainId]});
           return (
-            <div>
+            <div key={chain.CHAIN_ID}>
               <Button className="center-block my-2" onClick={()=>createNFT(false, selectedChainId)}>
                 Mint on {' '} {chain.getChainFullName()}
                   <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={25} />
