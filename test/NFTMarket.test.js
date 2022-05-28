@@ -165,9 +165,10 @@ describe("NFTMarket", function() {
 
     });
 
-    it ("should allow relisting item", async function() {
+    it ("should allow relisting item after unlisting", async function() {
 
-      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, sellerItemId);
+      let { itemId } = await createTokenAndMarketItem(sellerSigner);
+      await market.connect(sellerSigner).unListMarketItem(nftContractAddress, itemId);
       let unsoldItems = await market.fetchUnSoldMarketItems();
       const originalUnsoldItemsCount = unsoldItems.length;
 
