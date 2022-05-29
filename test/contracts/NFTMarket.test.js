@@ -32,35 +32,43 @@ describe("NFTMarket", function() {
   })
 
   describe("createMarketSale", function() {
-    it("Should create and execute market sales", async function() {
 
-      /* create two tokens */
-      const { itemId: sellerItemId } = await createTokenAndMarketItem(sellerSigner);
-      await createTokenAndMarketItem(ownerSigner);
+    it("Should update the seller and contract token balances when listing item for sale", async function() {
+
+      let createNFTPromise = nft.connect(sellerSigner).createToken("https://www.mytokenlocation.com");
+      const tokenId = await getTokenIdOrItemIdFromTransaction(createNFTPromise);
+      await nft.connect(sellerSigner).setApprovalForAll(marketAddress, true);
   
-      /* execute sale of token to another user */
-      await market.connect(buyerSigner).createMarketSale(nftContractAddress, sellerItemId, { value: auctionPrice});
-  
-      // withdraw credits so that credit balance goes back to zero
-      await market.connect(sellerSigner).withdrawCredits();
-      await market.connect(ownerSigner).withdrawCredits();
-  
-      /* query for and return the unsold items */
-      let unsoldItems = await market.fetchUnSoldMarketItems()
-      unsoldItems = await Promise.all(unsoldItems.map(async i => {
-        const tokenUri = await nft.tokenURI(i.tokenId)
-        let item = {
-          price: i.price.toString(),
-          tokenId: i.tokenId.toString(),
-          seller: i.seller,
-          owner: i.owner,
-          tokenUri
-        }
-        return item
-      }));
-      expect(unsoldItems.length).to.equal(1);
+
+      await expect(() => market.connect(sellerSigner).createMarketItem(nftContractAddress, tokenId, auctionPrice),
+       "The seller token balance should decrease by 1 and the market balance should increase by 1")
+      .to.changeTokenBalances(nft, [sellerSigner, marketSigner], [-1, 1]);
   
     })
+
+    it("Should update the buyer and contract token balances when an item is sold", async function() {
+
+      let { tokenId } = await createTokenAndMarketItem(sellerSigner);
+      const { itemId } = await getMarketItemIdFromTokenId(tokenId);
+
+      await expect(() => market.connect(buyerSigner).createMarketSale(nftContractAddress, itemId, { value: auctionPrice}))
+      .to.changeTokenBalances(nft, [buyerSigner, marketSigner, sellerSigner], [1, -1, 0]);
+  
+    })
+
+    it("Should update the buyer and contract ether balances on sale", async function() {
+
+      let { tokenId } = await createTokenAndMarketItem(sellerSigner);
+      const { itemId } = await getMarketItemIdFromTokenId(tokenId);
+
+      const negativeAuctionPrice = ethers.utils.parseUnits(`-${auctionPriceInEth}`, 'ether');
+
+      await expect(() => market.connect(buyerSigner).createMarketSale(nftContractAddress, itemId, { value: auctionPrice}),
+      `The buyer's ether balance should decrease by the auction price: ${auctionPriceInEth} while the contract's ether balance increases by the auction price.`)
+      .to.changeEtherBalances([buyerSigner, marketSigner], [negativeAuctionPrice, auctionPrice]);
+  
+    })
+
     it("Should allow reselling an item multiple times", async function() {
 
       /* create token */
@@ -104,42 +112,6 @@ describe("NFTMarket", function() {
       await market.connect(thirdBuyerSigner).createMarketSale(nftContractAddress, resaleItem.itemId, { value: resaleAuctionPrice});
       expect(originalBalance+1).to.eq(await nft.balanceOf(thirdBuyerSigner.address));
 
-  
-    })
-
-    it("Should update the buyer and contract ether balances on sale", async function() {
-
-      let { tokenId } = await createTokenAndMarketItem(sellerSigner);
-      const { itemId } = await getMarketItemIdFromTokenId(tokenId);
-
-      const negativeAuctionPrice = ethers.utils.parseUnits(`-${auctionPriceInEth}`, 'ether');
-
-      await expect(() => market.connect(buyerSigner).createMarketSale(nftContractAddress, itemId, { value: auctionPrice}),
-      `The buyer's ether balance should decrease by the auction price: ${auctionPriceInEth} while the contract's ether balance increases by the auction price.`)
-      .to.changeEtherBalances([buyerSigner, marketSigner], [negativeAuctionPrice, auctionPrice]);
-  
-    })
-
-    it("Should update the seller and contract token balances when listing item for sale", async function() {
-
-      let createNFTPromise = nft.connect(sellerSigner).createToken("https://www.mytokenlocation.com");
-      const tokenId = await getTokenIdOrItemIdFromTransaction(createNFTPromise);
-      await nft.connect(sellerSigner).setApprovalForAll(marketAddress, true);
-  
-
-      await expect(() => market.connect(sellerSigner).createMarketItem(nftContractAddress, tokenId, auctionPrice),
-       "The seller token balance should decrease by 1 and the market balance should increase by 1")
-      .to.changeTokenBalances(nft, [sellerSigner, marketSigner], [-1, 1]);
-  
-    })
-
-    it("Should update the buyer and contract token balances when an item is sold", async function() {
-
-      let { tokenId } = await createTokenAndMarketItem(sellerSigner);
-      const { itemId } = await getMarketItemIdFromTokenId(tokenId);
-
-      await expect(() => market.connect(buyerSigner).createMarketSale(nftContractAddress, itemId, { value: auctionPrice}))
-      .to.changeTokenBalances(nft, [buyerSigner, marketSigner, sellerSigner], [1, -1, 0]);
   
     })
     
