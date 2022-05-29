@@ -7,7 +7,7 @@ import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
 import { Chain } from '../models/Chain';
 import CryptoPrice from './CryptoPrice';
 
-function AccountCredits() {
+function AccountSales() {
   
     const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner|null>(null);
     const [chainCredits, setChainCredits] = useState<{[chainId: string]: number}>({})
@@ -61,7 +61,12 @@ function AccountCredits() {
 
   return (
     <div>
-        <table>
+
+        <h1 className='text-center'>My Sales</h1>
+        <p className='text-center'>
+            Sales you've made on each chain.
+        </p>
+        <table className='table'>
             <thead>
                 <tr>
                     <th>
@@ -91,7 +96,7 @@ function AccountCredits() {
                                 Get Balance
                             </Button>    
                             <Button onClick={()=>withdrawCredits(chainId)}>
-                                Withdraw Credits
+                                Withdraw money to my Wallet
                             </Button>
                         </td>
                         <td>
@@ -107,4 +112,4 @@ function AccountCredits() {
   )
 }
 
-export default AccountCredits
+export default AccountSales
