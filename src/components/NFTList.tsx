@@ -15,19 +15,6 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
 
     const [nfts, setNfts] = useState<NFTMetadata[]>([]);
     const [loadingState, setLoadingState] = useState('not-loaded');
-    let signer: ethers.providers.JsonRpcSigner;
-  
-    // TODO put this into a helper function
-    const getSigner = async () => {
-      if(signer) {
-          return signer
-      } else {
-          const web3Modal = new Web3Modal()
-          const connection = await web3Modal.connect()
-          const provider = new ethers.providers.Web3Provider(connection)    
-          return provider.getSigner()
-      }
-  }
     /**
        * If we weant to pass a function to useEffect we must memoize the function to prevent an infinite loop re-render.
        * This is because functions change their reference each time a component is re-rendered.
@@ -86,7 +73,10 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
 
         try {
           // get the NFTs held by the Market smart contract and merge the listing details with the NFTs returned from the NFT Smart Contract
-          signer = await getSigner()
+          const web3Modal = new Web3Modal()
+          const connection = await web3Modal.connect()
+          const provider = new ethers.providers.Web3Provider(connection)    
+          const signer = provider.getSigner()
 
           let marketItems: {[key:string]: Partial<NFTMetadata>} = {};
           const marketContract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
