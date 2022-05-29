@@ -1,6 +1,7 @@
 import React from 'react'
 import { ALL_CONFIG_CHAINS } from '../../config'
 import { Chain } from '../../models/Chain';
+import About from '../About/About';
 
 function LandingPage() {
   return (
@@ -57,6 +58,9 @@ function LandingPage() {
                 </a>
             </p>
         </div>
+    </div>
+    <div className="card shadow mt-5 p-3">
+        <About />
     </div>
 
     </div>
