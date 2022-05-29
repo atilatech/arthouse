@@ -35,11 +35,11 @@ contract NFTMarket is ReentrancyGuard {
   mapping(address => uint) private credits;
 
   /**
-    Credit the address owner, using a "pull" payment strategy.
+    Credit the given address, using a "pull" payment strategy.
     https://fravoll.github.io/solidity-patterns/pull_over_push.html
     https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment 
   */
-  function allowForPull(address receiver, uint amount) private {
+  function _allowForPull(address receiver, uint amount) private {
       credits[receiver] += amount;
   }
 
@@ -144,13 +144,16 @@ contract NFTMarket is ReentrancyGuard {
     uint marketPayment = (price * salesFeeBasisPoints)/basisPointsTotal;
     uint sellerPayment = price - marketPayment;
 
-    allowForPull(seller, sellerPayment);
+    // use the pull payment strategy. See function documentation for _allowForPull for more information on how this works
+    // note: the funds go from the seller to the contract automatically due to msg.value 
+    // we don't need to call payable(address(this)).transfer(amount);
+    _allowForPull(seller, sellerPayment);
     IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
 
-    allowForPull(payable(owner), marketPayment);
+    _allowForPull(payable(owner), marketPayment);
   }
 
   /* Returns all market items */
