@@ -25,18 +25,11 @@ describe("NFT", function() {
     })
     it("Should update the balances", async function() {
 
-        let originalBalance = await nft.balanceOf(ownerSigner.address);
-        await nft.connect(ownerSigner).createToken(DEFAULT_URI);
+        await expect(() => nft.connect(ownerSigner).createToken(DEFAULT_URI))
+          .to.changeTokenBalance(nft, ownerSigner, 1);
 
-        // Other tests may change the balance so originalBalance might not initially be zero, 
-        // Therefore, want to check that the balance increased by 1, instead of checking that it equals 1.
-        expect(originalBalance.toNumber()+1).to.eq(await nft.balanceOf(ownerSigner.address));
-
-        originalBalance = await nft.balanceOf(secondNFTSigner.address);
-        await nft.connect(secondNFTSigner).createToken(DEFAULT_URI);
-
-        expect(originalBalance.toNumber()+1).to.eq(await nft.balanceOf(secondNFTSigner.address));
-
+        await expect(() => nft.connect(secondNFTSigner).createToken(DEFAULT_URI))
+          .to.changeTokenBalance(nft, secondNFTSigner, 1);
 
     })
   })
