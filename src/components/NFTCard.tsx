@@ -44,7 +44,6 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
         const nftContract = new ethers.Contract(activeChain.NFT_ADDRESS, NFT.abi, signer);
         
         const signerAddress = await signer.getAddress()
-        console.log("signer._address, activeChain.NFT_MARKETPLACE_ADDRESS", signerAddress, activeChain.NFT_MARKETPLACE_ADDRESS);
         const isApprovedForAll = await nftContract.isApprovedForAll(signerAddress, activeChain.NFT_MARKETPLACE_ADDRESS);
         
         if (!isApprovedForAll) {
@@ -62,13 +61,10 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
 
 
         const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
-        console.log({price, nft}, price.toString());
   
         const listTransactionPromise = await marketContract.createMarketItem(activeChain.NFT_ADDRESS, nft.tokenId, price);
         const listTransaction = await listTransactionPromise.wait();
-        console.log({listTransaction});
         } catch (error: any) {
-            console.log({error})
             setResponseMessage({
                 ...responseMessage,
                 listNFT: {
@@ -77,6 +73,37 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
                  }
                  });
         }
+    };
+
+
+
+    const buyNFT = async  () => {
+
+        try {
+
+        const price = ethers.utils.parseUnits('0.25', 'ether');
+        /* then list the item for sale on the marketplace */
+        signer = await getSigner()
+
+        const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
+        setResponseMessage({
+            ...responseMessage,
+            listNFT: {
+               type: "success",
+               message: "Succesfully purchased item",
+             }
+             });
+        await marketContract.createMarketSale(activeChain.NFT_ADDRESS, nft.itemId, { value: price});
+        } catch(error: any) {
+            setResponseMessage({
+                ...responseMessage,
+                listNFT: {
+                   type: "error",
+                   message: error?.data?.message||JSON.stringify(error),
+                 }
+                 });
+        }
+
     };
 
 
@@ -93,8 +120,11 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
         <hr/>
 
         <div className="actions">
-            <Button onClick={listNFT}>
-                Sell
+            <Button onClick={listNFT} className="mb-3">
+                List for Sale
+            </Button> <br/>
+            <Button onClick={buyNFT}>
+                Buy
             </Button>
 
 

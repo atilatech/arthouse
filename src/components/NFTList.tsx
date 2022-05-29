@@ -2,17 +2,32 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Row, Col, Spin } from 'antd';
 import Moralis from 'moralis';
 import { components } from 'moralis/types/generated/web3Api';
-import { CONFIG_CHAINS } from '../config';
+import { CONFIG_CHAINS, NULL_ADDRESS } from '../config';
 import { Chain } from '../models/Chain';
 import { NFTMetadata } from '../models/NFT';
 import NFTCard from './NFTCard';
 import axios from 'axios';
+import Web3Modal from 'web3modal';
+import { ethers } from 'ethers';
+import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
 
 function NFTList({address, chainId, getAllTokensForContract = false} : {address: string, chainId: string, getAllTokensForContract?: boolean}) {
 
     const [nfts, setNfts] = useState<NFTMetadata[]>([]);
     const [loadingState, setLoadingState] = useState('not-loaded');
+    let signer: ethers.providers.JsonRpcSigner;
   
+    // TODO put this into a helper function
+    const getSigner = async () => {
+      if(signer) {
+          return signer
+      } else {
+          const web3Modal = new Web3Modal()
+          const connection = await web3Modal.connect()
+          const provider = new ethers.providers.Web3Provider(connection)    
+          return provider.getSigner()
+      }
+  }
     /**
        * If we weant to pass a function to useEffect we must memoize the function to prevent an infinite loop re-render.
        * This is because functions change their reference each time a component is re-rendered.
@@ -44,12 +59,11 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
         data = await Moralis.Web3API.account.getNFTs(options);
       }
 
-      const items = await Promise.all(data.result!.map(async (token) => {
+      let items = await Promise.all(data.result!.map(async (token) => {
         let metadata;
         if (!token.metadata && token.token_uri) {
           // Moralis doesn't fetch the metadata from URI immediately so we may have to manually fetch it ourselves
           metadata = (await axios.get(token.token_uri)).data || {};
-          console.log({metadata});
         } else {
           metadata = JSON.parse(token.metadata || "{}");
         }
@@ -67,6 +81,43 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
         }
         return item
       }));
+
+      if(window.ethereum) {
+
+        try {
+          // get the NFTs held by the Market smart contract and merge the listing details with the NFTs returned from the NFT Smart Contract
+          signer = await getSigner()
+
+          let marketItems: {[key:string]: Partial<NFTMetadata>} = {};
+          const marketContract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
+          (await marketContract.fetchMarketItems())
+          .filter((token: any) => token.owner === NULL_ADDRESS)
+          .forEach((marketItem: NFTMetadata) => {
+            marketItems[marketItem.tokenId.toString()] = {
+              seller: marketItem.seller,
+              itemId: marketItem.itemId,
+              price: marketItem.price
+            }
+          });
+          items = items.map(item => {
+            if (!marketItems[item.tokenId]) {
+              return item
+            } else {
+              const marketItem = marketItems[item.tokenId];
+              return {
+                ...item,
+                seller: marketItem.seller,
+                itemId: marketItem.itemId,
+                price: marketItem.price
+              }
+            }
+          });
+
+        } 
+        catch (error) {
+          console.log({error});
+        }
+      }
 
       setNfts(items);
       setLoadingState('loaded');
