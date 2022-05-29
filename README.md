@@ -73,16 +73,12 @@ The backend for this project is a blockchain node. For development, you can run 
 
 1. Put your private keys for the account that will be deploying the smart contract in `.secrets`. This will NOT be included in your version control and run `source .secrets`.
 
-1. Go to `hardhat.config.js` and add the settings for your new chain
+1. Add the chain information to `src/config-chains.json`
     1. Get Chain ID from:
         1. https://chainlist.org/
     1. Get an RPC URL for your desired blockchain (TODO: where to get good RPC urls)
         1. Binance: https://docs.binance.org/smart-chain/developer/rpc.html (TODO: add other chains)
     1. Add the apikey to `.secrets`
-
-1. Add the chain information to `src/config-chains.json`
-
-1. Change the chainID in `scrpts/deploy.js`
 
 1. Get some tokens to pay the gas fees for deploying the smart contracts. On testnets you can use a faucet:
     1. Ethereum Rinkeby: https://rinkebyfaucet.com
@@ -93,14 +89,11 @@ The backend for this project is a blockchain node. For development, you can run 
 
 1. Load secrets to your environment variable `source .secrets`
 
-1. Deploy the smart contract: `npx hardhat run scripts/deploy.js --network [network]`
-    1. Celo Alfajores: `npx hardhat run scripts/deploy.js --network alfajores`
-    1. Polygon Mumbai: `npx hardhat run scripts/deploy.js --network mumbai`
-    1. Ethereum Rinkeby: `npx hardhat run scripts/deploy.js --network rinkeby`
-    1. Harmony Testnet: `npx hardhat run scripts/deploy.js --network harmonytestnet`
-    1. Binance Smart Chain Testnet: `npx hardhat run scripts/deploy.js --network bsctestnet`
-    1. Binance Smart Chain: `npx hardhat run scripts/deploy.js --network binance`
-    1. Binance Smart Chain: `npx hardhat run scripts/deploy.js --network polygon`
+1. Deploy the smart contract: `npx hardhat deploy --chain-id [chainId]`
+    1. If you want to deploy just the NFT or the Market without deploying everything run:
+        1.  `npx hardhat deploy:nft --chain-id [chainId]`
+        1.  `npx hardhat deploy:market --chain-id [chainId]`
+    1. For example to deploy to Rinkeby: `npx hardhat deploy --chain-id 4`
 
 1. Add the new chain information to `README.md`, see these commits below for examples of what to change:
     1. [Ethereum](https://github.com/atilatech/art-house/commit/d97572f9d730a3a469a712dec04fc3ea6dc97eb8)
