@@ -1,10 +1,17 @@
 .NFTCard {
     .description {
         white-space: break-spaces;
-        height: 375px;
+        height: 350px;
         overflow-y: auto;
     }
     .metadata {
         height: 150px;
+    }
+
+    .actions {
+        height: 200px;
+    }
+    button {
+        height: auto;
     }
 }

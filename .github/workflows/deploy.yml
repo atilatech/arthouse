@@ -1,4 +1,4 @@
-name: 'Netlify Deploy'
+name: 'Test and Deploy'
 
 on:
   pull_request:
@@ -8,23 +8,54 @@ on:
 env:
   REACT_APP_MORALIS_SERVER_URL: ${{ secrets.REACT_APP_MORALIS_SERVER_URL }}
   REACT_APP_MORALIS_APP_ID: ${{ secrets.REACT_APP_MORALIS_APP_ID }}
+  CONTRACT_DEPLOYMENT_WALLET_PRIVATE_KEY: ${{ secrets.CONTRACT_DEPLOYMENT_WALLET_PRIVATE_KEY }}
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - run: yarn
+  test:
+    needs: setup
+    name: 'Test Smart Contracts'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+      - run: yarn add hardhat
+      - name: Run Hardhat tests
+        run: npx hardhat test
   deploy:
+    needs: test
     name: 'Deploy'
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - run: yarn
+      - run: NODE_ENV="production" yarn
       - run: CI="" yarn build
-      - name: Deploy to netlify
+      - name: Deploy to netlify prod environment
+        if: ${{ github.ref == 'refs/heads/master' }}
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=./build --prod -m "${{github.ref_name}} ${{github.sha}}"
+      - name: Deploy to netlify test environment
+        if: ${{ github.ref != 'refs/heads/master' }}
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_TEST }}
         with:
           args: deploy --dir=./build --prod -m "${{github.ref_name}} ${{github.sha}}"

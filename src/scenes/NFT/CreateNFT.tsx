@@ -8,8 +8,7 @@ import {
     CONFIG_CHAINS
   } from '../../config';
 
-import NFT from '../../artifacts/contracts/NFT.sol/NFT.json'
-import Market from '../../artifacts/contracts/Market.sol/NFTMarket.json'
+import NFT from '../../artifacts/contracts/NFT.sol/NFT.json';
 import { Alert, AlertProps, Button, Col, Input, Row, Select, Spin } from 'antd'
 import './CreateNFT.scss';
 import NFTCard from '../../components/NFTCard';
@@ -78,9 +77,9 @@ function CreateNFT() {
 
   };
 
-  async function createNFT(listNFT=true, activeChainId: string) {
+  async function createNFT(activeChainId: string) {
     try {
-      mintAndListNFT(listNFT, activeChainId);
+      _createNFT(activeChainId);
     } catch {
       setError(JSON.stringify(error));
     }
@@ -90,7 +89,7 @@ function CreateNFT() {
     setSelectedChains(value);
   }
 
-  async function mintAndListNFT(listNFT= true, activeChainId: string) {
+  async function _createNFT(activeChainId: string) {
 
     const activeChain = new Chain({...CONFIG_CHAINS[activeChainId]});
     const url = await getNFTMetadataUrl();
@@ -126,7 +125,6 @@ function CreateNFT() {
 
       
       const NFT_ADDRESS = activeChain.NFT_ADDRESS;
-      const NFT_MARKETPLACE_ADDRESS = activeChain.NFT_MARKETPLACE_ADDRESS;
 
       /* next, create the item */
       const updatedcreateNFTResponseMessage = {...createNFTResponseMessage};
@@ -138,32 +136,18 @@ function CreateNFT() {
       setCreateNFTResponseMessage(updatedcreateNFTResponseMessage);
       try {
 
-        let contract = new ethers.Contract(NFT_ADDRESS, NFT.abi, signer)
-        let mintTransactionPromise = await contract.createToken(url)
+        let nftContract = new ethers.Contract(NFT_ADDRESS, NFT.abi, signer)
+        let mintTransactionPromise = await nftContract.createToken(url)
         let mintTransaction = await mintTransactionPromise.wait()
         let event = mintTransaction.events[0]
         let value = event.args[2]
-        let tokenId = value.toNumber()
-        let listTransaction;
+        let tokenId = value.toNumber();
   
         console.log({mintTransaction, url});
-  
-        if (listNFT) {
-  
-          const price = ethers.utils.parseUnits(formInput.price.toString(), 'ether');
-          /* then list the item for sale on the marketplace */
-          contract = new ethers.Contract(NFT_MARKETPLACE_ADDRESS, Market.abi, signer)
-          let listingPrice = await contract.getListingPrice()
-          listingPrice = listingPrice.toString()
-    
-          const listTransactionPromise = await contract.createMarketItem(NFT_ADDRESS, tokenId, price, { value: listingPrice })
-          listTransaction = await listTransactionPromise.wait()
-        }
-        const { name, description, price: nftPrice } = formInput
+        const { name, description } = formInput
         const createdNFT: NFTMetadata = {
           name,
           description,
-          price: nftPrice.toString(),
           image: fileUrl || "",
           // url,
           tokenId,
@@ -171,7 +155,6 @@ function CreateNFT() {
           chainId: activeChain.CHAIN_ID,
           // chain: activeChain,
           // mintTransaction,
-          seller: listTransaction?.to || "",
         }
   
         const updatedCreatedNFTs = [...createdNFTs];
@@ -247,8 +230,8 @@ function CreateNFT() {
         {selectedChains.map(selectedChainId => {
           const chain =  new Chain({...CONFIG_CHAINS[selectedChainId]});
           return (
-            <div>
-              <Button className="center-block my-2" onClick={()=>createNFT(false, selectedChainId)}>
+            <div key={chain.CHAIN_ID}>
+              <Button className="center-block my-2" onClick={()=>createNFT(selectedChainId)}>
                 Mint on {' '} {chain.getChainFullName()}
                   <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={25} />
               </Button>

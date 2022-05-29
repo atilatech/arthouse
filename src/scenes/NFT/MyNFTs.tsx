@@ -6,6 +6,7 @@ import { Radio, RadioChangeEvent } from 'antd';
 import { CONFIG_CHAINS, MORALIS_SUPPORTED_CHAINS } from '../../config';
 import { Chain } from '../../models/Chain';
 import NFTList from '../../components/NFTList';
+import AccountSales from '../../components/AccountSales';
 
 export default function MyNFTs() {
   const [activeChainId, setActiveChainId] = useState(Object.keys(CONFIG_CHAINS)[0]);
@@ -29,29 +30,35 @@ export default function MyNFTs() {
     setActiveChainId(event.target.value);
   }
 
-  console.log({CONFIG_CHAINS});
-
   return (
     <div className="MyNFTs card shadow container p-5">
-      <h1 className='text-center'>My NFTs</h1>
-      <Radio.Group onChange={onChangeActiveChainId} value={activeChainId} optionType="button" className="my-3">
-      {
-        MORALIS_SUPPORTED_CHAINS
-        .filter(chainId =>Object.keys(CONFIG_CHAINS).includes(chainId))
-        .map(chainId => {
-          const chain = new Chain({...CONFIG_CHAINS[chainId]});
-          return (
-              <Radio.Button value={chain.CHAIN_ID} key={chain.CHAIN_ID}>
-                {chain.getChainFullName()}
-              </Radio.Button> 
-            )
+
+      <div className="card shadow container p-3 m-3">
+        <AccountSales />
+      </div>
+
+      <div className="card shadow container p-3 m-3">
+        <h1 className='text-center'>My NFTs</h1>
+        <Radio.Group onChange={onChangeActiveChainId} value={activeChainId} optionType="button" className="my-3">
+        {
+          MORALIS_SUPPORTED_CHAINS
+          .filter(chainId =>Object.keys(CONFIG_CHAINS).includes(chainId))
+          .map(chainId => {
+            const chain = new Chain({...CONFIG_CHAINS[chainId]});
+            return (
+                <Radio.Button value={chain.CHAIN_ID} key={chain.CHAIN_ID}>
+                  {chain.getChainFullName()}
+                </Radio.Button> 
+              )
+          }
+            
+          )
         }
-          
-        )
-      }
-      </Radio.Group>
-      
-      <NFTList address={activeAddress} chainId={activeChainId} />
+        </Radio.Group>
+        
+        <NFTList address={activeAddress} chainId={activeChainId} />
+
+      </div>
     </div>
   )
 }

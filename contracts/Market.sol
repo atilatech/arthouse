@@ -14,7 +14,8 @@ contract NFTMarket is ReentrancyGuard {
   Counters.Counter private _itemsSold;
 
   address payable owner;
-  uint256 listingPrice = 0.025 ether;
+  uint256 private salesFeeBasisPoints = 250; // 2.5% in basis points (parts per 10,000) 250/100000
+  uint256 private basisPointsTotal = 10000;
 
   constructor() {
     owner = payable(msg.sender);
@@ -31,6 +32,35 @@ contract NFTMarket is ReentrancyGuard {
   }
 
   mapping(uint256 => MarketItem) private idToMarketItem;
+  mapping(address => uint) private credits;
+
+  /**
+    Credit the given address, using a "pull" payment strategy.
+    https://fravoll.github.io/solidity-patterns/pull_over_push.html
+    https://docs.openzeppelin.com/contracts/2.x/api/payment#PullPayment 
+  */
+  function _allowForPull(address receiver, uint amount) private {
+      credits[receiver] += amount;
+  }
+
+  function withdrawCredits() public {
+      uint amount = credits[msg.sender];
+
+      require(amount > 0, "There are no credits in this recipient address");
+      require(address(this).balance >= amount, "There are no credits in this contract address");
+
+      credits[msg.sender] = 0;
+
+      payable(msg.sender).transfer(amount);
+  }
+
+  function getAddressCredits(address receiver) public view returns (uint) {
+    return credits[receiver];
+  }
+
+  function getSalesFeeBasisPoints() public view returns (uint) {
+    return salesFeeBasisPoints;
+  }
 
   event MarketItemCreated (
     uint indexed itemId,
@@ -42,19 +72,13 @@ contract NFTMarket is ReentrancyGuard {
     bool sold
   );
 
-  /* Returns the listing price of the contract */
-  function getListingPrice() public view returns (uint256) {
-    return listingPrice;
-  }
-
   /* Places an item for sale on the marketplace */
   function createMarketItem(
     address nftContract,
     uint256 tokenId,
     uint256 price
-  ) public payable nonReentrant {
+  ) public payable nonReentrant returns (uint) {
     require(price > 0, "Price must be at least 1 wei");
-    require(msg.value == listingPrice, "Price must be equal to listing price");
 
     _itemIds.increment();
     uint256 itemId = _itemIds.current();
@@ -80,6 +104,21 @@ contract NFTMarket is ReentrancyGuard {
       price,
       false
     );
+
+    return itemId;
+  }
+
+  /* Unlists an item previously listed for sale and transfer back to the seller */
+  function unListMarketItem(
+    address nftContract,
+    uint256 itemId
+  ) public payable nonReentrant {
+
+    require(msg.sender == idToMarketItem[itemId].seller, "Only seller may unlist an item");
+    uint tokenId = idToMarketItem[itemId].tokenId;
+    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+    idToMarketItem[itemId].owner = payable(msg.sender);
+
   }
 
   /* Creates the sale of a marketplace item */
@@ -90,29 +129,66 @@ contract NFTMarket is ReentrancyGuard {
     ) public payable nonReentrant {
     uint price = idToMarketItem[itemId].price;
     uint tokenId = idToMarketItem[itemId].tokenId;
+
+    // uses the check-effects-interactions design patter. Check if sale can be made. Do the effects of the sale, then perform the sale interactions.
+    // pay marketplace last
+    // https://fravoll.github.io/solidity-patterns/checks_effects_interactions.html
+
+    require(idToMarketItem[itemId].owner == address(0), "This item is not available for sale");
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
-    idToMarketItem[itemId].seller.transfer(msg.value);
+    address seller = idToMarketItem[itemId].seller;
+    // use basis points and multiply first before dividng because solidity does not support decimals
+    // https://ethereum.stackexchange.com/a/55702/92254
+    // https://stackoverflow.com/a/53775815/5405197
+    uint marketPayment = (price * salesFeeBasisPoints)/basisPointsTotal;
+    uint sellerPayment = price - marketPayment;
+
+    // use the pull payment strategy. See function documentation for _allowForPull for more information on how this works
+    // note: the funds go from the seller to the contract automatically due to msg.value 
+    // we don't need to call payable(address(this)).transfer(amount);
+    _allowForPull(seller, sellerPayment);
     IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
-    payable(owner).transfer(listingPrice);
+
+    _allowForPull(payable(owner), marketPayment);
+  }
+
+  /* Returns all market items */
+  function fetchMarketItems() public view returns (MarketItem[] memory) {
+    uint itemCount = _itemIds.current();
+    uint currentIndex = 0;
+
+    MarketItem[] memory items = new MarketItem[](itemCount);
+    for (uint i = 0; i < itemCount; i++) {
+      uint currentId = i + 1;
+      MarketItem storage currentItem = idToMarketItem[currentId];
+      items[currentIndex] = currentItem;
+      currentIndex += 1;
+    }
+    return items;
   }
 
   /* Returns all unsold market items */
-  function fetchMarketItems() public view returns (MarketItem[] memory) {
+  function fetchUnSoldMarketItems() public view returns (MarketItem[] memory) {
     uint itemCount = _itemIds.current();
-    uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
+    uint unsoldItemCount = 0;
     uint currentIndex = 0;
+
+    for (uint i = 0; i < itemCount; i++) {
+      if (!idToMarketItem[i + 1].sold && idToMarketItem[i + 1].owner == address(0)) {
+        unsoldItemCount += 1;
+      }
+    }
 
     MarketItem[] memory items = new MarketItem[](unsoldItemCount);
     for (uint i = 0; i < itemCount; i++) {
-      if (idToMarketItem[i + 1].owner == address(0)) {
-        uint currentId = i + 1;
+      uint currentId = i + 1;
+      if (idToMarketItem[currentId].owner == address(0)) {
         MarketItem storage currentItem = idToMarketItem[currentId];
         items[currentIndex] = currentItem;
-        currentIndex += 1;
       }
     }
     return items;

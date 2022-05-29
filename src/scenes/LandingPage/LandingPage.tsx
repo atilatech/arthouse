@@ -58,7 +58,6 @@ function LandingPage() {
             </p>
         </div>
     </div>
-
     </div>
   )
 }

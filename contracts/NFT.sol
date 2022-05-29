@@ -11,19 +11,19 @@ import "hardhat/console.sol";
 contract NFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
-    address contractAddress;
 
-    constructor(address marketplaceAddress) ERC721("Atila NFT", "ATILANFT") {
-        contractAddress = marketplaceAddress;
-    }
+    event NFTMinted (
+        uint256 indexed tokenId,
+        string tokenURI
+    );
+    constructor() ERC721("Atila NFT", "ATILANFT") {}
 
     function createToken(string memory tokenURI) public returns (uint) {
         _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
-
-        _mint(msg.sender, newItemId);
-        _setTokenURI(newItemId, tokenURI);
-        setApprovalForAll(contractAddress, true);
-        return newItemId;
+        uint256 newTokenId = _tokenIds.current();
+        _mint(msg.sender, newTokenId);
+        _setTokenURI(newTokenId, tokenURI);
+        emit NFTMinted(newTokenId, tokenURI);
+        return newTokenId;
     }
 }

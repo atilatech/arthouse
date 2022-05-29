@@ -1,9 +1,8 @@
+const { hardHatSettings } = require("./scripts/helpers.js");
+
 /* hardhat.config.js */
-require("@nomiclabs/hardhat-waffle")
-const privateKey = process.env.privateKey;
-const rpcApiKeyMumbai = process.env.rpcApiKeyMumbai;
-const rpcApiKeyAlfajores= process.env.rpcApiKeyAlfajores;
-const rpcApiKeyRinkeby= process.env.rpcApiKeyRinkeby;
+require("@nomiclabs/hardhat-waffle");
+require("./scripts/deploy.js");
 
 module.exports = {
   solidity: {
@@ -19,44 +18,5 @@ module.exports = {
     artifacts: './src/artifacts',
   },
   defaultNetwork: "hardhat",
-  networks: {
-    hardhat: {
-      chainId: 1337
-    },
-    mumbai: {
-      url: `https://polygon-mumbai.infura.io/v3/${rpcApiKeyMumbai}`,
-      accounts: [`0x${privateKey}`],
-      chainId: 80001
-    },
-    alfajores: {
-      url: `https://alfajores-forno.celo-testnet.org`,
-      accounts: [`0x${privateKey}`],
-      chainId: 44787
-    },
-    rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${rpcApiKeyMumbai}`,
-      accounts: [`0x${privateKey}`],
-      chainId: 4
-    },
-    harmonytestnet: {
-      url: `https://api.s0.b.hmny.io`,
-      accounts: [`0x${privateKey}`],
-      chainId: 1666700000
-    },
-    bsctestnet: {
-      url: `https://data-seed-prebsc-1-s1.binance.org:8545`,
-      accounts: [`0x${privateKey}`],
-      chainId: 97
-    },
-    binance: {
-      url: `https://bsc-dataseed.binance.org`,
-      accounts: [`0x${privateKey}`],
-      chainId: 56
-    },
-    polygon: {
-      url: `https://polygon-rpc.com`,
-      accounts: [`0x${privateKey}`],
-      chainId: 137
-    }
-  },
+  networks: hardHatSettings.networks,
 }
