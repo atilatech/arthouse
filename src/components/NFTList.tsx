@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Row, Col, Spin } from 'antd';
 import Moralis from 'moralis';
 import { components } from 'moralis/types/generated/web3Api';
-import { CONFIG_CHAINS, NULL_ADDRESS } from '../config';
+import { CONFIG_CHAINS } from '../config';
 import { Chain } from '../models/Chain';
 import { NFTMetadata } from '../models/NFT';
 import NFTCard from './NFTCard';
@@ -81,7 +81,7 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
           let marketItems: {[key:string]: Partial<NFTMetadata>} = {};
           const marketContract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
           (await marketContract.fetchMarketItems())
-          .filter((token: any) => token.owner === NULL_ADDRESS)
+          .filter((token: any) => token.owner === chainConfig.NFT_MARKETPLACE_ADDRESS)
           .forEach((marketItem: NFTMetadata) => {
             marketItems[marketItem.tokenId.toString()] = {
               seller: marketItem.seller,

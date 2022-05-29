@@ -88,7 +88,7 @@ contract NFTMarket is ReentrancyGuard {
       nftContract,
       tokenId,
       payable(msg.sender),
-      payable(address(0)),
+      payable(address(this)),
       price,
       false
     );
@@ -100,7 +100,7 @@ contract NFTMarket is ReentrancyGuard {
       nftContract,
       tokenId,
       msg.sender,
-      address(0),
+      address(this),
       price,
       false
     );
@@ -134,7 +134,7 @@ contract NFTMarket is ReentrancyGuard {
     // pay marketplace last
     // https://fravoll.github.io/solidity-patterns/checks_effects_interactions.html
 
-    require(idToMarketItem[itemId].owner == address(0), "This item is not available for sale");
+    require(idToMarketItem[itemId].owner == address(this), "This item is not available for sale");
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
     address seller = idToMarketItem[itemId].seller;
@@ -178,7 +178,7 @@ contract NFTMarket is ReentrancyGuard {
     uint currentIndex = 0;
 
     for (uint i = 0; i < itemCount; i++) {
-      if (!idToMarketItem[i + 1].sold && idToMarketItem[i + 1].owner == address(0)) {
+      if (!idToMarketItem[i + 1].sold && idToMarketItem[i + 1].owner == address(this)) {
         unsoldItemCount += 1;
       }
     }
@@ -186,7 +186,7 @@ contract NFTMarket is ReentrancyGuard {
     MarketItem[] memory items = new MarketItem[](unsoldItemCount);
     for (uint i = 0; i < itemCount; i++) {
       uint currentId = i + 1;
-      if (idToMarketItem[currentId].owner == address(0)) {
+      if (idToMarketItem[currentId].owner == address(this)) {
         MarketItem storage currentItem = idToMarketItem[currentId];
         items[currentIndex] = currentItem;
       }
