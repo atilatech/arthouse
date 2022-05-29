@@ -1,7 +1,7 @@
 import React from 'react'
 import NotionPage from '../../components/NotionPage'
 import ResponsiveEmbed from '../../components/ResponsiveEmbed';
-import SmarContractsInfo from './SmarContractsInfo';
+import SmartContractsInfo from './SmartContractsInfo';
 
 function About() {
   return (
@@ -15,7 +15,7 @@ function About() {
         </div>
 
         <div className="section card shadow m-5 p-5">
-            <SmarContractsInfo />
+            <SmartContractsInfo />
         </div>
 
         <div className="section card shadow m-5 p-5">
