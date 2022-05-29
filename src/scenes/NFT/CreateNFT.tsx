@@ -77,9 +77,9 @@ function CreateNFT() {
 
   };
 
-  async function createNFT(listNFT=true, activeChainId: string) {
+  async function createNFT(activeChainId: string) {
     try {
-      mintAndListNFT(listNFT, activeChainId);
+      _createNFT(activeChainId);
     } catch {
       setError(JSON.stringify(error));
     }
@@ -89,7 +89,7 @@ function CreateNFT() {
     setSelectedChains(value);
   }
 
-  async function mintAndListNFT(listNFT= true, activeChainId: string) {
+  async function _createNFT(activeChainId: string) {
 
     const activeChain = new Chain({...CONFIG_CHAINS[activeChainId]});
     const url = await getNFTMetadataUrl();
@@ -144,11 +144,10 @@ function CreateNFT() {
         let tokenId = value.toNumber();
   
         console.log({mintTransaction, url});
-        const { name, description, price: nftPrice } = formInput
+        const { name, description } = formInput
         const createdNFT: NFTMetadata = {
           name,
           description,
-          price: nftPrice.toString(),
           image: fileUrl || "",
           // url,
           tokenId,
@@ -232,7 +231,7 @@ function CreateNFT() {
           const chain =  new Chain({...CONFIG_CHAINS[selectedChainId]});
           return (
             <div key={chain.CHAIN_ID}>
-              <Button className="center-block my-2" onClick={()=>createNFT(false, selectedChainId)}>
+              <Button className="center-block my-2" onClick={()=>createNFT(selectedChainId)}>
                 Mint on {' '} {chain.getChainFullName()}
                   <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={25} />
               </Button>

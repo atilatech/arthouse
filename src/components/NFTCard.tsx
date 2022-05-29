@@ -96,7 +96,7 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
         }
         try {
 
-        const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
+        
         /* then list the item for sale on the marketplace */
         signer = await getSigner()
 
@@ -109,6 +109,8 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
              }
              });
         const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
+        const { price } = nft;
+
         await marketContract.createMarketSale(activeChain.NFT_ADDRESS, nft.itemId, { value: price});
         setResponseMessage({
             ...responseMessage,
