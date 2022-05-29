@@ -6,8 +6,9 @@ import { NFTMetadata } from '../models/NFT';
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 
 import "./NFTCard.scss";
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import Web3Modal from 'web3modal';
+import CryptoPrice from './CryptoPrice';
 
 function NFTCard({nft}: {nft: NFTMetadata}) {
 
@@ -62,8 +63,7 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
 
         const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
   
-        const listTransactionPromise = await marketContract.createMarketItem(activeChain.NFT_ADDRESS, nft.tokenId, price);
-        const listTransaction = await listTransactionPromise.wait();
+        await marketContract.createMarketItem(activeChain.NFT_ADDRESS, nft.tokenId, price);
         } catch (error: any) {
             setResponseMessage({
                 ...responseMessage,
@@ -85,21 +85,29 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
         /* then list the item for sale on the marketplace */
         signer = await getSigner()
 
-        const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
         setResponseMessage({
             ...responseMessage,
-            listNFT: {
+            buyNFT: {
+               type: "info",
+               message: "Completing purchase",
+               loading: true,
+             }
+             });
+        const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
+        await marketContract.createMarketSale(activeChain.NFT_ADDRESS, nft.itemId, { value: price});
+        setResponseMessage({
+            ...responseMessage,
+            buyNFT: {
                type: "success",
                message: "Succesfully purchased item",
              }
              });
-        await marketContract.createMarketSale(activeChain.NFT_ADDRESS, nft.itemId, { value: price});
         } catch(error: any) {
             setResponseMessage({
                 ...responseMessage,
-                listNFT: {
+                buyNFT: {
                    type: "error",
-                   message: error?.data?.message||JSON.stringify(error),
+                   message: error.message || error?.data?.message||JSON.stringify(error),
                  }
                  });
         }
@@ -123,9 +131,13 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
             <Button onClick={listNFT} className="mb-3">
                 List for Sale
             </Button> <br/>
-            <Button onClick={buyNFT}>
-                Buy
-            </Button>
+
+            {nft.price && 
+            
+                <Button onClick={buyNFT}>
+                    Buy <CryptoPrice cryptoPrice={nft.price as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
+                </Button>
+            }
 
 
             {Object.values(responseMessage).filter(response=>response.message).map(response => (

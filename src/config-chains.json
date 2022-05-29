@@ -2,6 +2,7 @@
     "4": {
         "NETWORK_NAME": "Rinkeby",
         "CHAIN_NAME": "Ethereum",
+        "CURRENCY_SYMBOL": "ETH",
         "NFT_MARKETPLACE_ADDRESS": "0xB4dA4a126EE2F9951b9010c0BAA506A73572C131",
         "NFT_ADDRESS": "0x85507f8Ba4dd432D6eb1d0E221aFe893F1035369",
         "IS_MAIN_NET": false,
@@ -13,6 +14,7 @@
     "56": {
         "NETWORK_NAME": "Mainnet",
         "CHAIN_NAME": "Binance Smart Chain",
+        "CURRENCY_SYMBOL": "BNB",
         "NFT_MARKETPLACE_ADDRESS": "0x9863F06D4f22F01c853eAc3d3BfEf26Af7e70Bd8",
         "NFT_ADDRESS": "0x84521fF6d5D97325258bab11f9ac1abF7ebF8C86",
         "IS_MAIN_NET": true,
@@ -24,6 +26,7 @@
     "97": {
         "NETWORK_NAME": "Testnet",
         "CHAIN_NAME": "Binance Smart Chain",
+        "CURRENCY_SYMBOL": "BNB",
         "NFT_MARKETPLACE_ADDRESS": "0xc219B570Efe3a74620F89D884F3DA51e8ebcFfD4",
         "NFT_ADDRESS": "0xa94EC56924E2E4dcCb48e4987fEadA4B646637a3",
         "IS_MAIN_NET": false,
@@ -35,6 +38,7 @@
     "137": {
         "NETWORK_NAME": "Mainnet",
         "CHAIN_NAME": "Polygon",
+        "CURRENCY_SYMBOL": "MATIC",
         "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
         "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",
         "IS_MAIN_NET": true,
@@ -57,6 +61,7 @@
     "80001": {
         "NETWORK_NAME": "Mumbai",
         "CHAIN_NAME": "Polygon",
+        "CURRENCY_SYMBOL": "MATIC",
         "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
         "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",
         "IS_MAIN_NET": false,

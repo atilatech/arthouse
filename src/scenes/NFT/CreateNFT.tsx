@@ -125,7 +125,6 @@ function CreateNFT() {
 
       
       const NFT_ADDRESS = activeChain.NFT_ADDRESS;
-      const NFT_MARKETPLACE_ADDRESS = activeChain.NFT_MARKETPLACE_ADDRESS;
 
       /* next, create the item */
       const updatedcreateNFTResponseMessage = {...createNFTResponseMessage};

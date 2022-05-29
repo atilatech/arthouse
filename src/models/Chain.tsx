@@ -1,6 +1,7 @@
 export class Chain {
     NETWORK_NAME: string = "";
     CHAIN_NAME: string = "";
+    CURRENCY_SYMBOL: string = "";
     NFT_MARKETPLACE_ADDRESS: string = "";
     NFT_ADDRESS: string = "";
     IS_MAIN_NET: string = "";
