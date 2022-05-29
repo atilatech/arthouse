@@ -2,7 +2,7 @@ import React from 'react'
 import { ALL_CONFIG_CHAINS } from '../../config';
 import { Chain } from '../../models/Chain';
 
-function SmarContractsInfo() {
+function SmartContractsInfo() {
 
   return (
     <div>
@@ -49,4 +49,4 @@ function SmarContractsInfo() {
   )
 }
 
-export default SmarContractsInfo
+export default SmartContractsInfo
