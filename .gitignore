@@ -37,3 +37,4 @@ cache
 
 # Smart Contract Artifacts
 src/artifacts/build-info/
+*.dbg.json
