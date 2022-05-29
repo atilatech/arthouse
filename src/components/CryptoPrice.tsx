@@ -23,7 +23,7 @@ export const formatCurrency = (input : number, currency = "USD", convertToIntege
 
 function CryptoPrice({cryptoPrice, currencySymbol}: {cryptoPrice: BigNumber, currencySymbol: string}) {
   
-  const cryptoPriceFormatted = ethers.utils.formatEther(cryptoPrice);
+  const cryptoPriceFormatted = formatCurrency(Number.parseFloat(ethers.utils.formatEther(cryptoPrice)), currencySymbol); 
   let usdPriceFormatted = "";
   if (currencySymbol in CRYPTO_EXCHANGE_RATES_TO_USD) {
     const cryptoPriceInDecimal = Number.parseFloat(ethers.utils.formatEther(cryptoPrice)) * CRYPTO_EXCHANGE_RATES_TO_USD[currencySymbol]
@@ -33,7 +33,7 @@ function CryptoPrice({cryptoPrice, currencySymbol}: {cryptoPrice: BigNumber, cur
 
   return (
     <div>
-      {`${cryptoPriceFormatted} ${currencySymbol}`} {usdPriceFormatted && <label>({usdPriceFormatted})</label>}
+      {cryptoPriceFormatted} {usdPriceFormatted && <label>({usdPriceFormatted})</label>}
     </div>
   )
 }

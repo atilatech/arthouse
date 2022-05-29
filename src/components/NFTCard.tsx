@@ -9,9 +9,12 @@ import "./NFTCard.scss";
 import { BigNumber, ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import CryptoPrice from './CryptoPrice';
+import CryptoPriceEdit from './CryptoPriceEdit';
 
 function NFTCard({nft}: {nft: NFTMetadata}) {
 
+    const [listPrice, setListPrice] = useState(0);
+    const [showEditListPrice, setShowEditListPrice] = useState(false);
     const { chainId } = nft;
     let signer: ethers.providers.JsonRpcSigner;
     const [responseMessage, setResponseMessage] = useState<{[key: string]: {message: string, type: AlertProps["type"], loading?: boolean}}>({});
@@ -37,8 +40,10 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
     const listNFT = async  () => {
 
         try {
-
-        const price = ethers.utils.parseUnits('0.25', 'ether');
+        
+        const price = ethers.utils.parseUnits(listPrice.toString(), 'ether');
+        
+        console.log({ listPrice, price });
         /* then list the item for sale on the marketplace */
         signer = await getSigner()
 
@@ -76,12 +81,22 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
     };
 
 
-
     const buyNFT = async  () => {
 
+        if (!nft.price) {
+            setResponseMessage({
+                ...responseMessage,
+                buyNFT: {
+                   type: "error",
+                   message: "This NFT does not have a price. It's unavailable for purchase.",
+                   loading: true,
+                 }
+                 });
+                 return;
+        }
         try {
 
-        const price = ethers.utils.parseUnits('0.25', 'ether');
+        const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
         /* then list the item for sale on the marketplace */
         signer = await getSigner()
 
@@ -128,11 +143,28 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
         <hr/>
 
         <div className="actions">
-            <Button onClick={listNFT} className="mb-3">
-                List for Sale
-            </Button> <br/>
+            <>
+            {showEditListPrice ? 
+            <>
+                <CryptoPriceEdit currencySymbol={activeChain.CURRENCY_SYMBOL} onPriceChange={({cryptoPrice}) => {
+                    console.log({cryptoPrice});
+                    if(cryptoPrice) {
+                        setListPrice(cryptoPrice);
+                    }
+                }} />
+                <Button onClick={listNFT} className="mb-3">
+                    List for Sale
+                </Button>
+            </>
+            :
+                <Button onClick={()=>setShowEditListPrice(true)} className="mb-3">
+                    List for Sale
+                </Button>
+            }
+             <br/>
+            </>
 
-            {nft.price && 
+            {nft.price && BigNumber.from(nft.price).gt(0) && 
             
                 <Button onClick={buyNFT}>
                     Buy <CryptoPrice cryptoPrice={nft.price as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
