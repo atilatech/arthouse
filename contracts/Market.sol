@@ -93,8 +93,6 @@ contract NFTMarket is ReentrancyGuard {
       false
     );
 
-    IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
-
     emit MarketItemCreated(
       itemId,
       nftContract,
@@ -105,6 +103,8 @@ contract NFTMarket is ReentrancyGuard {
       false
     );
 
+
+    IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
     return itemId;
   }
 
@@ -116,8 +116,8 @@ contract NFTMarket is ReentrancyGuard {
 
     require(msg.sender == idToMarketItem[itemId].seller, "Only seller may unlist an item");
     uint tokenId = idToMarketItem[itemId].tokenId;
-    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);
+    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
 
   }
 
@@ -131,7 +131,7 @@ contract NFTMarket is ReentrancyGuard {
     uint tokenId = idToMarketItem[itemId].tokenId;
 
     // uses the check-effects-interactions design patter. Check if sale can be made. Do the effects of the sale, then perform the sale interactions.
-    // pay marketplace last
+    // make external transfer call last.
     // https://fravoll.github.io/solidity-patterns/checks_effects_interactions.html
 
     require(idToMarketItem[itemId].owner == address(this), "This item is not available for sale");
@@ -148,12 +148,12 @@ contract NFTMarket is ReentrancyGuard {
     // note: the funds go from the seller to the contract automatically due to msg.value 
     // we don't need to call payable(address(this)).transfer(amount);
     _allowForPull(seller, sellerPayment);
-    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
-
     _allowForPull(payable(owner), marketPayment);
+
+    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
   }
 
   /* Returns all market items */
