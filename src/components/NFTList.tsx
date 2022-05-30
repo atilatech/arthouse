@@ -81,7 +81,12 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
           let marketItems: {[key:string]: Partial<NFTMetadata>} = {};
           const marketContract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
           (await marketContract.fetchMarketItems())
-          .filter((token: any) => token.owner === chainConfig.NFT_MARKETPLACE_ADDRESS)
+          // convert to uppercase because some strings in token.lower were lowercase while some strings were uppercase
+          // see: https://stackoverflow.com/a/2140644/5405197
+          // for why we do toUpperCase() instead of toLowerCase() see 
+          // https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2015/code-quality/ca1308-normalize-strings-to-uppercase?view=vs-2015&redirectedfrom=MSDN
+          // The answer is that when going between different locales uppercase preserves the reverseible mapping better Locale1 -> Locale2 -> Locale1
+          .filter((token: any) => token?.owner?.toUpperCase() === chainConfig.NFT_MARKETPLACE_ADDRESS.toUpperCase())
           .forEach((marketItem: NFTMetadata) => {
             marketItems[marketItem.tokenId.toString()] = {
               seller: marketItem.seller,

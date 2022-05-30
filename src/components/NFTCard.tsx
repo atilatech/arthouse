@@ -169,7 +169,7 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
              <br/>
             </>
 
-            {nft.price && BigNumber.from(nft.price).gt(0) && 
+            {nft.price && nft.price.gt(0) && 
             
                 <Button onClick={buyNFT}>
                     Buy <CryptoPrice cryptoPrice={nft.price as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
