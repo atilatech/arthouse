@@ -41,9 +41,6 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
 
         try {
         
-        const price = ethers.utils.parseUnits(listPrice.toString(), 'ether');
-        
-        console.log({ listPrice, price });
         /* then list the item for sale on the marketplace */
         signer = await getSigner()
 
@@ -65,10 +62,9 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
             await nftContract.setApprovalForAll(activeChain.NFT_MARKETPLACE_ADDRESS, true);
         }
 
-
         const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
   
-        await marketContract.createMarketItem(activeChain.NFT_ADDRESS, nft.tokenId, price);
+        await marketContract.createMarketItem(activeChain.NFT_ADDRESS, nft.tokenId, listPrice);
         } catch (error: any) {
             setResponseMessage({
                 ...responseMessage,
