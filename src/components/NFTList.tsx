@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Row, Col, Spin } from 'antd';
 import Moralis from 'moralis';
 import { components } from 'moralis/types/generated/web3Api';
-import { CONFIG_CHAINS, NULL_ADDRESS } from '../config';
+import { CONFIG_CHAINS } from '../config';
 import { Chain } from '../models/Chain';
 import { NFTMetadata } from '../models/NFT';
 import NFTCard from './NFTCard';
@@ -81,7 +81,12 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
           let marketItems: {[key:string]: Partial<NFTMetadata>} = {};
           const marketContract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
           (await marketContract.fetchMarketItems())
-          .filter((token: any) => token.owner === NULL_ADDRESS)
+          // convert to uppercase because some strings in token.lower were lowercase while some strings were uppercase
+          // see: https://stackoverflow.com/a/2140644/5405197
+          // for why we do toUpperCase() instead of toLowerCase() see 
+          // https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2015/code-quality/ca1308-normalize-strings-to-uppercase?view=vs-2015&redirectedfrom=MSDN
+          // The answer is that when going between different locales uppercase preserves the reverseible mapping better Locale1 -> Locale2 -> Locale1
+          .filter((token: any) => token?.owner?.toUpperCase() === chainConfig.NFT_MARKETPLACE_ADDRESS.toUpperCase())
           .forEach((marketItem: NFTMetadata) => {
             marketItems[marketItem.tokenId.toString()] = {
               seller: marketItem.seller,

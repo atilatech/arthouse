@@ -88,23 +88,23 @@ contract NFTMarket is ReentrancyGuard {
       nftContract,
       tokenId,
       payable(msg.sender),
-      payable(address(0)),
+      payable(address(this)),
       price,
       false
     );
-
-    IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
     emit MarketItemCreated(
       itemId,
       nftContract,
       tokenId,
       msg.sender,
-      address(0),
+      address(this),
       price,
       false
     );
 
+
+    IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
     return itemId;
   }
 
@@ -116,8 +116,8 @@ contract NFTMarket is ReentrancyGuard {
 
     require(msg.sender == idToMarketItem[itemId].seller, "Only seller may unlist an item");
     uint tokenId = idToMarketItem[itemId].tokenId;
-    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);
+    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
 
   }
 
@@ -131,10 +131,10 @@ contract NFTMarket is ReentrancyGuard {
     uint tokenId = idToMarketItem[itemId].tokenId;
 
     // uses the check-effects-interactions design patter. Check if sale can be made. Do the effects of the sale, then perform the sale interactions.
-    // pay marketplace last
+    // make external transfer call last.
     // https://fravoll.github.io/solidity-patterns/checks_effects_interactions.html
 
-    require(idToMarketItem[itemId].owner == address(0), "This item is not available for sale");
+    require(idToMarketItem[itemId].owner == address(this), "This item is not available for sale");
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
     address seller = idToMarketItem[itemId].seller;
@@ -148,12 +148,12 @@ contract NFTMarket is ReentrancyGuard {
     // note: the funds go from the seller to the contract automatically due to msg.value 
     // we don't need to call payable(address(this)).transfer(amount);
     _allowForPull(seller, sellerPayment);
-    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
-
     _allowForPull(payable(owner), marketPayment);
+
+    IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
   }
 
   /* Returns all market items */
@@ -178,7 +178,7 @@ contract NFTMarket is ReentrancyGuard {
     uint currentIndex = 0;
 
     for (uint i = 0; i < itemCount; i++) {
-      if (!idToMarketItem[i + 1].sold && idToMarketItem[i + 1].owner == address(0)) {
+      if (!idToMarketItem[i + 1].sold && idToMarketItem[i + 1].owner == address(this)) {
         unsoldItemCount += 1;
       }
     }
@@ -186,7 +186,7 @@ contract NFTMarket is ReentrancyGuard {
     MarketItem[] memory items = new MarketItem[](unsoldItemCount);
     for (uint i = 0; i < itemCount; i++) {
       uint currentId = i + 1;
-      if (idToMarketItem[currentId].owner == address(0)) {
+      if (idToMarketItem[currentId].owner == address(this)) {
         MarketItem storage currentItem = idToMarketItem[currentId];
         items[currentIndex] = currentItem;
       }

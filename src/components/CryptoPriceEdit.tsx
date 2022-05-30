@@ -1,8 +1,9 @@
 import { InputNumber } from 'antd';
+import { BigNumber, ethers } from 'ethers';
 import React, { useState } from 'react'
 import { CRYPTO_EXCHANGE_RATES_TO_USD } from './CryptoPrice';
 
-function CryptoPriceEdit({currencySymbol, onPriceChange}: { currencySymbol: string, onPriceChange?: ({cryptoPrice, fiatPrice}: {cryptoPrice?: number, fiatPrice?: number}) => void}) {
+function CryptoPriceEdit({currencySymbol, onPriceChange}: { currencySymbol: string, onPriceChange?: ({cryptoPrice, fiatPrice}: {cryptoPrice?: BigNumber, fiatPrice?: number}) => void}) {
 
   const [cryptoPrice, setCryptoPrice] = useState(0);
   const [fiatPrice, setFiatPrice] = useState(0);
@@ -37,10 +38,10 @@ function CryptoPriceEdit({currencySymbol, onPriceChange}: { currencySymbol: stri
         setFiatPrice(changedFiatPrice);
     }
 
-    console.log({changedCryptoPrice, changedFiatPrice});
-
     if (onPriceChange) {
-        onPriceChange({cryptoPrice: changedCryptoPrice, fiatPrice: changedFiatPrice})
+        // set to fixed decimal places to prevent underlow errors
+        // see: https://stackoverflow.com/a/72428872/5405197
+        onPriceChange({cryptoPrice: ethers.utils.parseUnits(changedCryptoPrice?.toFixed(6) || (0).toString(), 'ether'), fiatPrice: changedFiatPrice})
     }
     
   }

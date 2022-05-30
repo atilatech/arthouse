@@ -13,7 +13,7 @@ import CryptoPriceEdit from './CryptoPriceEdit';
 
 function NFTCard({nft}: {nft: NFTMetadata}) {
 
-    const [listPrice, setListPrice] = useState(0);
+    const [listPrice, setListPrice] = useState<BigNumber>(BigNumber.from(0));
     const [showEditListPrice, setShowEditListPrice] = useState(false);
     const { chainId } = nft;
     let signer: ethers.providers.JsonRpcSigner;
@@ -41,9 +41,6 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
 
         try {
         
-        const price = ethers.utils.parseUnits(listPrice.toString(), 'ether');
-        
-        console.log({ listPrice, price });
         /* then list the item for sale on the marketplace */
         signer = await getSigner()
 
@@ -61,14 +58,21 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
                 "You can always unlist it in the future and have the NFT transferred back to you.",
                 }
             });
-
+            // todo because we don't hide listNFT for non-owners, a user may call setApprovalForAll and then end up not being able to list the token
+            // we should make sure the user is the owner of this token or hide this button if not owner 
             await nftContract.setApprovalForAll(activeChain.NFT_MARKETPLACE_ADDRESS, true);
         }
 
-
         const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
   
-        await marketContract.createMarketItem(activeChain.NFT_ADDRESS, nft.tokenId, price);
+        await marketContract.createMarketItem(activeChain.NFT_ADDRESS, nft.tokenId, listPrice);
+        setResponseMessage({
+            ...responseMessage,
+            listNFT: {
+               type: "success",
+               message: "Succesfully listed market item for sale",
+             }
+             });
         } catch (error: any) {
             setResponseMessage({
                 ...responseMessage,
@@ -149,7 +153,6 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
             {showEditListPrice ? 
             <>
                 <CryptoPriceEdit currencySymbol={activeChain.CURRENCY_SYMBOL} onPriceChange={({cryptoPrice}) => {
-                    console.log({cryptoPrice});
                     if(cryptoPrice) {
                         setListPrice(cryptoPrice);
                     }
@@ -166,7 +169,7 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
              <br/>
             </>
 
-            {nft.price && BigNumber.from(nft.price).gt(0) && 
+            {nft.price && nft.price.gt(0) && 
             
                 <Button onClick={buyNFT}>
                     Buy <CryptoPrice cryptoPrice={nft.price as BigNumber} currencySymbol={activeChain.CURRENCY_SYMBOL} />
