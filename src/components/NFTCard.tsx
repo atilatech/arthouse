@@ -66,6 +66,13 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
         const marketContract = new ethers.Contract(activeChain.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
   
         await marketContract.createMarketItem(activeChain.NFT_ADDRESS, nft.tokenId, listPrice);
+        setResponseMessage({
+            ...responseMessage,
+            listNFT: {
+               type: "success",
+               message: "Succesfully listed market item for sale",
+             }
+             });
         } catch (error: any) {
             setResponseMessage({
                 ...responseMessage,
