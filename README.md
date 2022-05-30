@@ -93,7 +93,10 @@ The backend for this project is a blockchain node. For development, you can run 
     1. If you want to deploy just the NFT or the Market without deploying everything run:
         1.  `npx hardhat deploy:nft --chain-id [chainId]`
         1.  `npx hardhat deploy:market --chain-id [chainId]`
-    1. For example to deploy to Rinkeby: `npx hardhat deploy --chain-id 4`
+    1. Here are some examples:
+    1. Ethereum Rinkeby: `npx hardhat deploy --chain-id 4`
+    1. Binance Smart Chain Testnet: `npx hardhat deploy --chain-id 97`
+    1. Polygon Mumbai: `npx hardhat deploy --chain-id 80001`
 
 1. Add the new chain information to `README.md`, see these commits below for examples of what to change:
     1. [Ethereum](https://github.com/atilatech/art-house/commit/d97572f9d730a3a469a712dec04fc3ea6dc97eb8)
