@@ -98,6 +98,11 @@ The backend for this project is a blockchain node. For development, you can run 
     1. Binance Smart Chain Testnet: `npx hardhat deploy --chain-id 97`
     1. Polygon Mumbai: `npx hardhat deploy --chain-id 80001`
 
+If the deploy script is not working you can also us the default hardhat deployment script. Make sure to update the CHAIN ID variable:
+TODO add a check that chainID matches the passed in network
+ 
+`npx hardhat run --network polygon scripts/deploy-hardhat.js`
+
 1. Add the new chain information to `README.md`, see these commits below for examples of what to change:
     1. [Ethereum](https://github.com/atilatech/art-house/commit/d97572f9d730a3a469a712dec04fc3ea6dc97eb8)
     1. [Binance](https://github.com/atilatech/art-house/commit/274ff640c116d6637add521e7eae7fe9de2fbe92)
