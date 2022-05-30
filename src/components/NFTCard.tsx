@@ -146,7 +146,6 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
             {showEditListPrice ? 
             <>
                 <CryptoPriceEdit currencySymbol={activeChain.CURRENCY_SYMBOL} onPriceChange={({cryptoPrice}) => {
-                    console.log({cryptoPrice});
                     if(cryptoPrice) {
                         setListPrice(cryptoPrice);
                     }
