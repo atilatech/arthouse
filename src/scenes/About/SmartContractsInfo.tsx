@@ -22,8 +22,8 @@ function SmartContractsInfo() {
                 {Object.values(ALL_CONFIG_CHAINS).map((chain: Chain) => {
 
                 chain = new Chain({...chain});
-                const nftBlockExplorerUrl = `${chain.BLOCK_EXPLORER_URL}/${chain.CHAIN_NAME !== "Harmony" ? "token": "address"}/${chain.NFT_ADDRESS}`;
-                const nftMartplaceBlockExplorerUrl = `${chain.BLOCK_EXPLORER_URL}/${chain.CHAIN_NAME !== "Harmony" ? "token": "address"}/${chain.NFT_ADDRESS}`;
+                const nftBlockExplorerUrl = `${chain.BLOCK_EXPLORER_URL}/${["Harmony","Celo"].includes(chain.CHAIN_NAME) ? "address" : "token"}/${chain.NFT_ADDRESS}`;
+                const nftMartplaceBlockExplorerUrl = `${chain.BLOCK_EXPLORER_URL}/address/${chain.NFT_MARKETPLACE_ADDRESS}`;
                     
                 return (
                         <li className='my-2' key={chain.CHAIN_ID}>
