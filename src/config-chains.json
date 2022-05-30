@@ -50,8 +50,8 @@
     "44787": {
         "NETWORK_NAME": "Alfajores",
         "CHAIN_NAME": "Celo",
-        "NFT_MARKETPLACE_ADDRESS": "0x290541B82B151cDC05eA1aF04fe74f6d7633ccDC",
-        "NFT_ADDRESS": "0x5216962D1308AA3de2e89c969dacc1B2F798EaB5",
+        "NFT_MARKETPLACE_ADDRESS": "0xF638ec8262a2DB3e42fc3780474400435Fdb7DcF",
+        "NFT_ADDRESS": "0x5fBc39092373b0e1c125C0e29c01E12045d3fe81",
         "IS_MAIN_NET": false,
         "LOGO_URL": "https://docs.celo.org/img/color-logo.png",
         "CHAIN_ID": "44787",
@@ -73,8 +73,8 @@
     "1666700000": {
         "NETWORK_NAME": "Testnet",
         "CHAIN_NAME": "Harmony",
-        "NFT_MARKETPLACE_ADDRESS": "0xe12C5D6F03938B530bbBA220a971dC2C3759f923",
-        "NFT_ADDRESS": "0x544FEc06fdfB423606d1C705D3105867B8Ff8148",
+        "NFT_MARKETPLACE_ADDRESS": "0x069c4aF106A56e05030d51141551D50bd994a345",
+        "NFT_ADDRESS": "0x4ad4ab97820137e75Ef98FC29Ee0e9077130E905",
         "IS_MAIN_NET": false,
         "LOGO_URL": "https://s2.coinmarketcap.com/static/img/coins/200x200/3945.png",
         "CHAIN_ID": "1666700000",
