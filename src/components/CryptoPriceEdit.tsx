@@ -1,8 +1,9 @@
 import { InputNumber } from 'antd';
+import { BigNumber } from 'ethers';
 import React, { useState } from 'react'
 import { CRYPTO_EXCHANGE_RATES_TO_USD } from './CryptoPrice';
 
-function CryptoPriceEdit({currencySymbol, onPriceChange}: { currencySymbol: string, onPriceChange?: ({cryptoPrice, fiatPrice}: {cryptoPrice?: number, fiatPrice?: number}) => void}) {
+function CryptoPriceEdit({currencySymbol, onPriceChange}: { currencySymbol: string, onPriceChange?: ({cryptoPrice, fiatPrice}: {cryptoPrice?: BigNumber, fiatPrice?: BigNumber}) => void}) {
 
   const [cryptoPrice, setCryptoPrice] = useState(0);
   const [fiatPrice, setFiatPrice] = useState(0);
@@ -40,7 +41,7 @@ function CryptoPriceEdit({currencySymbol, onPriceChange}: { currencySymbol: stri
     console.log({changedCryptoPrice, changedFiatPrice});
 
     if (onPriceChange) {
-        onPriceChange({cryptoPrice: changedCryptoPrice, fiatPrice: changedFiatPrice})
+        onPriceChange({cryptoPrice: BigNumber.from(changedCryptoPrice), fiatPrice: BigNumber.from(changedFiatPrice)})
     }
     
   }

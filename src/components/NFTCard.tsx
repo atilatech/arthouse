@@ -13,7 +13,7 @@ import CryptoPriceEdit from './CryptoPriceEdit';
 
 function NFTCard({nft}: {nft: NFTMetadata}) {
 
-    const [listPrice, setListPrice] = useState(0);
+    const [listPrice, setListPrice] = useState<BigNumber>(BigNumber.from(0));
     const [showEditListPrice, setShowEditListPrice] = useState(false);
     const { chainId } = nft;
     let signer: ethers.providers.JsonRpcSigner;
