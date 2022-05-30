@@ -58,7 +58,8 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
                 "You can always unlist it in the future and have the NFT transferred back to you.",
                 }
             });
-
+            // todo because we don't hide listNFT for non-owners, a user may call setApprovalForAll and then end up not being able to list the token
+            // we should make sure the user is the owner of this token or hide this button if not owner 
             await nftContract.setApprovalForAll(activeChain.NFT_MARKETPLACE_ADDRESS, true);
         }
 
