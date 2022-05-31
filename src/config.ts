@@ -19,11 +19,4 @@ Object.values(ALL_CONFIG_CHAINS)
 export const REACT_APP_MORALIS_SERVER_URL = process.env.REACT_APP_MORALIS_SERVER_URL;
 export const REACT_APP_MORALIS_APP_ID = process.env.REACT_APP_MORALIS_APP_ID;
 
-
 export const MORALIS_SUPPORTED_CHAINS = ["4", "80001", "97", "56", "137"];
-
-
-// TODO change this to a dictionary where each marketplace is a key with a SUPPORTED_CHAINS key
-export const OPENSEA_SUPPORTED_CHAINS = ["4", "80001", "97"];
-export const RARIBLE_SUPPORTED_CHAINS = ["4"];
-export const LOOKSRARE_SUPPORTED_CHAINS = ["4"];

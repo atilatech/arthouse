@@ -12,7 +12,7 @@ function LandingPage() {
             </h1>
             <hr/>
             <div className="text-left">
-                Arthouse is a multi-chain NFT platform. Create NFTs on multiple blockchains. <br/>
+                Arthouse is an NFT platform that allows you to create, buy and sell NFTs on multiple blockchains. <br/>
 
                 <hr/>
                 <h2>

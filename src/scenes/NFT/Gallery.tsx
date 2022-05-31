@@ -29,9 +29,9 @@ export default function Gallery() {
           .map(chainId => {
             const chain = new Chain({...CONFIG_CHAINS[chainId]});
             return (
-            <Radio.Button value={chain.CHAIN_ID} key={chainId}>
-              {chain.getChainFullName()}
-            </Radio.Button> 
+              <Radio.Button value={chain.CHAIN_ID} key={chainId}>
+                <Chain.ChainDisplay chain={chain} showLogo={false}/>
+              </Radio.Button> 
               )
           }
             

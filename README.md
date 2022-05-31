@@ -1,31 +1,32 @@
 # Art House
 
-A marketplace for creating an NFT and deploying it to multiple blockchains in one click.
-
-
+Arthouse is an NFT platform that allows you to create, buy and sell NFTs on multiple blockchains.
 
 - https://art.atila.ca
 
 ## Quickstart
 
-This project consists of a React frontend and a blockchain backend.
-
-`yarn install`
-
+1. `yarn install`
 1. `yarn start`
 1. Go to http://localhost:3000/
+
 1. Click on Create NFT
 1. Make sure that you can see the created NFT in NFT gallery
 
 To build the project: `yarn build`
 
+Here's a [step-by-step tutorial on how to build your own arthouse](https://atila.ca/blog/tomiwa/how-to-build-a-multi-chain-nft-marketplace-on-ethereum-polygon-and-binance-smart-chain-using-solidity-react-hardhat-and-ethersjs/).
+
 ## How it Works
 
 Arthouse can do 4 things:
+
 1. Mint an NFT
 1. List an NFT for sale
 1. Buy an NFT
 1. Unlist an NFT
+
+### NFT Process 
 
 1. Everytime a new NFT is minted it gets deployed to the provided smart contract on the relevant chain ID in `config-chains.json`
 1. When it gets listed for sale, approval is given by the account to the Market contract, the NFT is transferred to the address of the contract which will list the item for sale.
