@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Alert, AlertProps, Button, Spin, Tag } from 'antd';
 import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
-import { CONFIG_CHAINS, LOOKSRARE_SUPPORTED_CHAINS, OPENSEA_SUPPORTED_CHAINS, RARIBLE_SUPPORTED_CHAINS } from '../config';
+import { CONFIG_CHAINS } from '../config';
 import { NFTMetadata } from '../models/NFT';
 import NFT from '../artifacts/contracts/NFT.sol/NFT.json'
 
@@ -10,6 +10,7 @@ import { BigNumber, ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import CryptoPrice from './CryptoPrice';
 import CryptoPriceEdit from './CryptoPriceEdit';
+import { MarketplaceDisplay } from '../models/Marketplace';
 
 function NFTCard({nft}: {nft: NFTMetadata}) {
 
@@ -21,10 +22,6 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
 
     const activeChain = CONFIG_CHAINS[chainId];
     const nftBlockExplorerUrl = `${activeChain.BLOCK_EXPLORER_URL}/${activeChain.CHAIN_NAME !== "Harmony" ? "token": "address"}/${activeChain.NFT_ADDRESS}?a=${nft.tokenId}`;
-
-    const openSeaUrl = OPENSEA_SUPPORTED_CHAINS.includes(chainId) ? `https://${activeChain.IS_MAIN_NET? "" : "testnets."}opensea.io/assets/${activeChain.NETWORK_NAME.toLowerCase()}/${activeChain.NFT_ADDRESS}/${nft.tokenId}`: "";
-    const raribleUrl = RARIBLE_SUPPORTED_CHAINS.includes(chainId) ? `https://${activeChain.IS_MAIN_NET? "" : "rinkeby."}rarible.com/token/${activeChain.NFT_ADDRESS.toLowerCase()}:${nft.tokenId}`: "";
-    const looksrareUrl = LOOKSRARE_SUPPORTED_CHAINS.includes(chainId) ? `https://${activeChain.IS_MAIN_NET? "" : "rinkeby."}looksrare.org/collections/${activeChain.NFT_ADDRESS.toLowerCase()}/${nft.tokenId}`: "";
 
     const getSigner = async () => {
         if(signer) {
@@ -201,35 +198,9 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
             <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="ml-1">
                 View NFT on Block Explorer
             </a>
-            {/* TODO make this code less repetitve, iterate over a dictionary/list of NFT marketplaces */}
-            {openSeaUrl && 
-                <>
-                    <br/>
-                    <a href={openSeaUrl} target="_blank" rel="noreferrer" className="ml-1">
-                        View NFT on OpenSea
-                    </a>
-                </>
-            }
-            {raribleUrl && 
-                <>
-                    <br/>
-                    <a href={raribleUrl} target="_blank" rel="noreferrer" className="ml-1">
-                        View NFT on Rarible
-                    </a>
-                </>
-            }
-            {looksrareUrl && 
-                <>
-                    <br/>
-                    <a href={looksrareUrl} target="_blank" rel="noreferrer" className="ml-1">
-                        View NFT on Looks Rare
-                    </a>
-                </>
-            }
+            <MarketplaceDisplay.ListedMarketplaces chain={activeChain} nft={nft} />
         </div>
         </div>
-        {/* TODO: add support for buying and selling NFTs */}
-        {/* <Button className="center block" onClick={() => buyNft(nft)}>Buy</Button> */}
         </div>
     )
 }
