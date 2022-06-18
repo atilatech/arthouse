@@ -19,9 +19,17 @@ contract NFT is ERC721URIStorage {
     constructor() ERC721("Atila NFT", "ATILANFT") {}
 
     function createToken(string memory tokenURI) public returns (uint) {
+        return _createToken(tokenURI, msg.sender);
+    }
+
+    function createTokenOnBehalfOf(string memory tokenURI, address destinationAddress) public returns (uint) {
+        return _createToken(tokenURI, destinationAddress);
+    }
+
+    function _createToken(string memory tokenURI, address destinationAddress) private returns (uint) {
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
-        _mint(msg.sender, newTokenId);
+        _mint(destinationAddress, newTokenId);
         _setTokenURI(newTokenId, tokenURI);
         emit NFTMinted(newTokenId, tokenURI);
         return newTokenId;

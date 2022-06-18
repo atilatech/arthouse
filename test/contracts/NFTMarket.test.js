@@ -1,6 +1,9 @@
 // import ethers is not mandatory since its globally available but adding here to make it more explicity and intuitive
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+// In order to avoid any potential cyclical dependencies,
+// We establish the convention that NFTMarket can import from NFT but not vice versa.
+const { getNumberFromTransactionResponse } = require("./NFT.test");
 
 const { BigNumber } = ethers;
 
@@ -36,7 +39,7 @@ describe("NFTMarket", function() {
     it("Should update the seller and contract token balances when listing item for sale", async function() {
 
       let createNFTPromise = nft.connect(sellerSigner).createToken("https://www.mytokenlocation.com");
-      const tokenId = await getTokenIdOrItemIdFromTransaction(createNFTPromise);
+      const tokenId = await getNumberFromTransactionResponse(createNFTPromise);
       await nft.connect(sellerSigner).setApprovalForAll(marketAddress, true);
   
 
@@ -215,20 +218,6 @@ describe("NFTMarket", function() {
 
   })
 
-  /**
-   * Parse the transaction logs to get the tokenId returned from the function call
-   * @param {*} transactionPromise 
-   * @returns 
-   */
-  async function getTokenIdOrItemIdFromTransaction(transactionPromise) {
-    transactionPromise = await transactionPromise;
-    const transaction = await transactionPromise.wait()
-    const event = transaction.events[0];
-    let value = event.topics[3]
-    value = BigNumber.from(value)
-    // We usually shouldn't convert BigNumber toNumber() but this is okay since we don't expect the tokenId or itemId to be very large in our tests
-    return value.toNumber()
-  }
 
   /**
    * Reading the itemId from the transaction result is causing potential race conditions where tests pass in isolation
@@ -246,12 +235,12 @@ describe("NFTMarket", function() {
   async function createTokenAndMarketItem(signer) {
 
     let createNFTPromise = nft.connect(signer).createToken("https://www.mytokenlocation.com");
-    const tokenId = await getTokenIdOrItemIdFromTransaction(createNFTPromise);
+    const tokenId = await getNumberFromTransactionResponse(createNFTPromise);
 
     await nft.connect(signer).setApprovalForAll(marketAddress, true);
 
     const createMarketItemPromise = market.connect(signer).createMarketItem(nftContractAddress, tokenId, auctionPrice);
-    const itemId = await getTokenIdOrItemIdFromTransaction(createMarketItemPromise);
+    const itemId = await getNumberFromTransactionResponse(createMarketItemPromise);
 
     return {
       tokenId,
