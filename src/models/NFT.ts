@@ -4,8 +4,10 @@ export interface NFTMetadata {
     name: string,
     image: string,
     description: string,
-    tokenId: string,
-    chainId: string,
+    // following properties only exist if the NFT has been minted
+    chainId?: string,
+    tokenId?: string,
+    tokenURI?: string,
     // following properties only exist if the NFT is listed for sale
     price?: BigNumber,
     seller?: string,
