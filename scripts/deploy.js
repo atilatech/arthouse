@@ -29,7 +29,6 @@ task("deploy:nft", "Deploys the NFT.sol contract")
   const account = getAccount(chainId);
   const provider = getProvider(chainId);
   const gasPrice = await provider.getGasPrice();
-  console.log({gasPrice});
   let NFT;
   if (account) {
     NFT = await hre.ethers.getContractFactory("NFT", account);
@@ -68,7 +67,6 @@ task("deploy:market", "Deploys the Market.sol contract")
   const account = getAccount(chainId);
   const provider = getProvider(chainId);
   const gasPrice = await provider.getGasPrice();
-  console.log({gasPrice});
   let NFTMarket;
   if (account) {
     NFTMarket = await hre.ethers.getContractFactory("NFTMarket", account);

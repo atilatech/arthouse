@@ -28,7 +28,7 @@
         "CHAIN_NAME": "Binance Smart Chain",
         "CURRENCY_SYMBOL": "BNB",
         "NFT_MARKETPLACE_ADDRESS": "0x69987ab30add91fa5ef87c9e3572e8e5a787cbbf",
-        "NFT_ADDRESS": "0xe7fd27ac1571c82e6f33533fc2fd1e1aa3a122bf",
+        "NFT_ADDRESS": "0xd52d9f6f4e89aa19266fd2b0de1fe81b6e5d1762",
         "IS_MAIN_NET": false,
         "LOGO_URL": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Binance-coin-bnb-logo.png/800px-Binance-coin-bnb-logo.png",
         "CHAIN_ID": "97",

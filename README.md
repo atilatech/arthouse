@@ -94,6 +94,17 @@ TODO add a check that chainID matches the passed in network
     1. [Polygon](https://github.com/atilatech/art-house/commit/a211ac1bc50d52ffd266b5eb5fd47bf4b232d366)
     1. [Celo](https://github.com/atilatech/art-house/commit/af8ab520fe80c3a148e45a963ead9270e2710a80)
 
+### Verifying Smart Contract on Etherscan (BSCScan, PolygonScan etc.)
+
+1. Get Etherscan API Key: https://etherscan.io/myapikey
+    1. Similar process for BSC Scan, PolygonScan etc
+1. Set environment variable in `.secrets`: `export ETHERSCAN_API_KEY=""`
+1. `npx hardhat verify --network rinkeby [smart_contract_address_you_just deployed]`
+    1. Example: `npx hardhat verify --network rinkeby 0x5f3cc650c751fa194f0d1537ecfbb55a2c40a995`
+    1. To see a list of other networks: `npx hardhat verify --list-networks`
+
+Note: That the `hardhat.config.js` expects the network name to be camelcase e.g. `bscTestnet: BSCSCAN_API_KEY`,
+but when you run the command it should be all lowercase: `npx hardhat verify --network bscTestnet [ADDRESS]`
 ### Adding a New Chain
 
 1. Add the chain information to `src/config-chains.json`
