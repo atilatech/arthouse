@@ -67,12 +67,34 @@ The backend for this project is a blockchain node. For development, you can run 
 
 1. Run smart contract deployment script: `npx hardhat run scripts/deploy.js --network localhost`
 
-
-### Deploying to live Testnet or Mainnet
-
-### Adding a New Chain
+### Deploying to Testnet or Mainnet
 
 1. Put your private keys for the account that will be deploying the smart contract in `.secrets`. This will NOT be included in your version control and run `source .secrets`.
+
+1. Load secrets to your environment variable `source .secrets`
+
+1. Deploy the smart contract: `npx hardhat deploy --chain-id [chainId]`
+    1. If you want to deploy just the NFT or the Market without deploying everything run:
+        1.  `npx hardhat deploy:nft --chain-id [chainId]`
+        1.  `npx hardhat deploy:market --chain-id [chainId]`
+    1. Here are some examples:
+    1. Ethereum Rinkeby: `npx hardhat deploy --chain-id 4`
+    1. Ethereum Rinkeby NFT only: `npx hardhat deploy:nft --chain-id 4`
+    1. Binance Smart Chain Testnet: `npx hardhat deploy --chain-id 97`
+    1. Polygon Mumbai: `npx hardhat deploy --chain-id 80001`
+
+If the deploy script is not working you can also us the default hardhat deployment script. Make sure to update the CHAIN ID variable:
+TODO add a check that chainID matches the passed in network
+ 
+`npx hardhat run --network polygon scripts/deploy-hardhat.js`
+
+1. Add the new chain information to `README.md`, see these commits below for examples of what to change:
+    1. [Ethereum](https://github.com/atilatech/art-house/commit/d97572f9d730a3a469a712dec04fc3ea6dc97eb8)
+    1. [Binance](https://github.com/atilatech/art-house/commit/274ff640c116d6637add521e7eae7fe9de2fbe92)
+    1. [Polygon](https://github.com/atilatech/art-house/commit/a211ac1bc50d52ffd266b5eb5fd47bf4b232d366)
+    1. [Celo](https://github.com/atilatech/art-house/commit/af8ab520fe80c3a148e45a963ead9270e2710a80)
+
+### Adding a New Chain
 
 1. Add the chain information to `src/config-chains.json`
     1. Get Chain ID from:
@@ -87,28 +109,6 @@ The backend for this project is a blockchain node. For development, you can run 
     1. Polygon: https://faucet.polygon.technology
     1. Celo: https://celo.org/developers/faucet
     1. Harmony: https://faucet.pops.one
-
-1. Load secrets to your environment variable `source .secrets`
-
-1. Deploy the smart contract: `npx hardhat deploy --chain-id [chainId]`
-    1. If you want to deploy just the NFT or the Market without deploying everything run:
-        1.  `npx hardhat deploy:nft --chain-id [chainId]`
-        1.  `npx hardhat deploy:market --chain-id [chainId]`
-    1. Here are some examples:
-    1. Ethereum Rinkeby: `npx hardhat deploy --chain-id 4`
-    1. Binance Smart Chain Testnet: `npx hardhat deploy --chain-id 97`
-    1. Polygon Mumbai: `npx hardhat deploy --chain-id 80001`
-
-If the deploy script is not working you can also us the default hardhat deployment script. Make sure to update the CHAIN ID variable:
-TODO add a check that chainID matches the passed in network
- 
-`npx hardhat run --network polygon scripts/deploy-hardhat.js`
-
-1. Add the new chain information to `README.md`, see these commits below for examples of what to change:
-    1. [Ethereum](https://github.com/atilatech/art-house/commit/d97572f9d730a3a469a712dec04fc3ea6dc97eb8)
-    1. [Binance](https://github.com/atilatech/art-house/commit/274ff640c116d6637add521e7eae7fe9de2fbe92)
-    1. [Polygon](https://github.com/atilatech/art-house/commit/a211ac1bc50d52ffd266b5eb5fd47bf4b232d366)
-    1. [Celo](https://github.com/atilatech/art-house/commit/af8ab520fe80c3a148e45a963ead9270e2710a80)
 
 ### Smart Contract Addresses
 

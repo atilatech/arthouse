@@ -1,8 +1,10 @@
-const { hardHatSettings } = require("./scripts/helpers.js");
-
 /* hardhat.config.js */
 require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-etherscan");
 require("./scripts/deploy.js");
+
+const { hardHatSettings } = require("./scripts/helpers.js");
+const { ETHERSCAN_API_KEY } = process.env;
 
 module.exports = {
   solidity: {
@@ -19,4 +21,10 @@ module.exports = {
   },
   defaultNetwork: "hardhat",
   networks: hardHatSettings.networks,
+  etherscan: {
+    apiKey: {
+        mainnet: ETHERSCAN_API_KEY,
+        rinkeby: ETHERSCAN_API_KEY,
+    }
+  }
 }
