@@ -88,17 +88,17 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
           // The answer is that when going between different locales uppercase preserves the reverseible mapping better Locale1 -> Locale2 -> Locale1
           .filter((token: any) => token?.owner?.toUpperCase() === chainConfig.NFT_MARKETPLACE_ADDRESS.toUpperCase())
           .forEach((marketItem: NFTMetadata) => {
-            marketItems[marketItem.tokenId.toString()] = {
+            marketItems[marketItem.tokenId!.toString()] = {
               seller: marketItem.seller,
               itemId: marketItem.itemId,
               price: marketItem.price
             }
           });
           items = items.map(item => {
-            if (!marketItems[item.tokenId]) {
+            if (!marketItems[item.tokenId!]) {
               return item
             } else {
-              const marketItem = marketItems[item.tokenId];
+              const marketItem = marketItems[item.tokenId!];
               return {
                 ...item,
                 seller: marketItem.seller,
