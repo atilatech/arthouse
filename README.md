@@ -71,6 +71,19 @@ The backend for this project is a blockchain node. For development, you can run 
 
 1. Put your private keys for the account that will be deploying the smart contract in `.secrets`. This will NOT be included in your version control and run `source .secrets`.
 
+1. Add the chain information to `src/config-chains.json`
+    1. Get Chain ID from:
+        1. https://chainlist.org/
+    1. Get an RPC URL for your desired blockchain (TODO: where to get good RPC urls)
+        1. Binance: https://docs.binance.org/smart-chain/developer/rpc.html (TODO: add other chains)
+    1. Add the apikey to `.secrets`
+
+1. Get some tokens to pay the gas fees for deploying the smart contracts. On testnets you can use a faucet:
+    1. Ethereum Rinkeby: https://rinkebyfaucet.com
+    1. Binance: https://testnet.binance.org/faucet-smart
+    1. Polygon: https://faucet.polygon.technology
+    1. Celo: https://celo.org/developers/faucet
+
 1. Load secrets to your environment variable `source .secrets`
 
 1. Deploy the smart contract: `npx hardhat deploy --chain-id [chainId]`
@@ -128,7 +141,6 @@ but when you run the command it should be all lowercase: `npx hardhat verify --n
 - [View  Binance Smart Chain (Testnet)  NFT Contract on Block Explorer](https://testnet.bscscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
 - [View  Polygon (Mumbai)  NFT Contract on Block Explorer](https://mumbai.polygonscan.com/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
 - [View  Celo (Alfajores)  NFT Contract on Block Explorer](https://alfajores-blockscout.celo-testnet.org/token/0x5216962D1308AA3de2e89c969dacc1B2F798EaB5)
-- [View Harmony (Testnet) NFT Contract on Block Explorer](https://explorer.pops.one/address/0x544FEc06fdfB423606d1C705D3105867B8Ff8148)
 
 #### Troubleshooting
 
@@ -190,16 +202,6 @@ New RPC URL: https://rpc-mumbai.matic.today
 Chain ID: 80001
 Currency Symbol: Matic
 Block Explorer URL: https://mumbai.polygonscan.com/
-```
-
-[Harmony Testnet](https://docs.tranquil.finance/user-guides/how-to-use-the-testnet-app)
-
-```
-Network Name: Harmony Testnet
-RPC URL: https://api.s0.b.hmny.io
-Chain ID: 1666700000
-Currency Symbol: ONE
-Block Explorer URL: https://explorer.pops.one/
 ```
 
 ## Running Tests

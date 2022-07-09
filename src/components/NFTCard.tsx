@@ -20,7 +20,7 @@ function NFTCard({nft}: {nft: NFTMetadata}) {
     let signer: ethers.providers.JsonRpcSigner;
     const [responseMessage, setResponseMessage] = useState<{[key: string]: {message: string, type: AlertProps["type"], loading?: boolean}}>({});
 
-    const activeChain = CONFIG_CHAINS[chainId];
+    const activeChain = CONFIG_CHAINS[chainId!];
     const nftBlockExplorerUrl = `${activeChain.BLOCK_EXPLORER_URL}/${activeChain.CHAIN_NAME !== "Harmony" ? "token": "address"}/${activeChain.NFT_ADDRESS}?a=${nft.tokenId}`;
 
     const getSigner = async () => {

@@ -69,27 +69,5 @@
         "CHAIN_ID": "80001",
         "BLOCK_EXPLORER_URL": "https://mumbai.polygonscan.com",
         "RPC_PROVIDER_URL": "https://matic-mumbai.chainstacklabs.com"
-    },
-    "1666700000": {
-        "NETWORK_NAME": "Testnet",
-        "CHAIN_NAME": "Harmony",
-        "NFT_MARKETPLACE_ADDRESS": "0x069c4aF106A56e05030d51141551D50bd994a345",
-        "NFT_ADDRESS": "0x4ad4ab97820137e75Ef98FC29Ee0e9077130E905",
-        "IS_MAIN_NET": false,
-        "LOGO_URL": "https://s2.coinmarketcap.com/static/img/coins/200x200/3945.png",
-        "CHAIN_ID": "1666700000",
-        "BLOCK_EXPLORER_URL": "https://explorer.pops.one",
-        "RPC_PROVIDER_URL": "https://api.s0.b.hmny.io"
-    },
-    "localhost": {
-        "NETWORK_NAME": "Localhost",
-        "CHAIN_NAME": "Ethereum",
-        "NFT_MARKETPLACE_ADDRESS": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "NFT_ADDRESS": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        "IS_MAIN_NET": false,
-        "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
-        "CHAIN_ID": "localhost",
-        "BLOCK_EXPLORER_URL": "https://rinkeby.etherscan.io",
-        "RPC_PROVIDER_URL": ""
     }
 }
