@@ -137,13 +137,33 @@ function CreateNFT() {
     const nftRequest: NFTMetadata = {
       name, description, owner, image: fileUrl!, chainId: activeChainId, address: activeChain.NFT_ADDRESS
     }
+    const updatedcreateNFTResponseMessage = {...createNFTResponseMessage};
+      updatedcreateNFTResponseMessage[activeChain.CHAIN_ID] = {
+        message: `Minting NFT on ${activeChain.getChainFullName()}`,
+        type: "info",
+        loading: true,
+      };
 
-    ArthouseAPIService.createNFTs([nftRequest])
+    ArthouseAPIService.createNFTs({nfts: [{nft: nftRequest}]})
       .then((res: any) => {
         console.log({res});
+        setCreateNFTResponseMessage({
+          ...updatedcreateNFTResponseMessage,
+           [activeChain.CHAIN_ID]: {
+             type: "success",
+             message: `Finished creating NFT on ${activeChain.getChainFullName()}`,
+           }
+           });
       })
       .catch((error: any) => {
         console.log({error});
+        setCreateNFTResponseMessage({
+          ...updatedcreateNFTResponseMessage,
+           [activeChain.CHAIN_ID]: {
+             type: "error",
+             message: error?.response?.data?.error || JSON.stringify(error.message),
+           }
+           });
       })
     
   }
