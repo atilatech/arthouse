@@ -7,9 +7,6 @@ import { Chain } from '../models/Chain';
 import { NFTMetadata } from '../models/NFT';
 import NFTCard from './NFTCard';
 import axios from 'axios';
-import Web3Modal from 'web3modal';
-import { ethers } from 'ethers';
-import Market from '../artifacts/contracts/Market.sol/NFTMarket.json'
 
 function NFTList({address, chainId, getAllTokensForContract = false} : {address: string, chainId: string, getAllTokensForContract?: boolean}) {
 
@@ -68,51 +65,6 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
         }
         return item
       }));
-
-      if(window.ethereum) {
-
-        try {
-          // get the NFTs held by the Market smart contract and merge the listing details with the NFTs returned from the NFT Smart Contract
-          const web3Modal = new Web3Modal()
-          const connection = await web3Modal.connect()
-          const provider = new ethers.providers.Web3Provider(connection)    
-          const signer = provider.getSigner()
-
-          let marketItems: {[key:string]: Partial<NFTMetadata>} = {};
-          const marketContract = new ethers.Contract(chainConfig.NFT_MARKETPLACE_ADDRESS, Market.abi, signer);
-          (await marketContract.fetchMarketItems())
-          // convert to uppercase because some strings in token.lower were lowercase while some strings were uppercase
-          // see: https://stackoverflow.com/a/2140644/5405197
-          // for why we do toUpperCase() instead of toLowerCase() see 
-          // https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-studio-2015/code-quality/ca1308-normalize-strings-to-uppercase?view=vs-2015&redirectedfrom=MSDN
-          // The answer is that when going between different locales uppercase preserves the reverseible mapping better Locale1 -> Locale2 -> Locale1
-          .filter((token: any) => token?.owner?.toUpperCase() === chainConfig.NFT_MARKETPLACE_ADDRESS.toUpperCase())
-          .forEach((marketItem: NFTMetadata) => {
-            marketItems[marketItem.tokenId!.toString()] = {
-              seller: marketItem.seller,
-              itemId: marketItem.itemId,
-              price: marketItem.price
-            }
-          });
-          items = items.map(item => {
-            if (!marketItems[item.tokenId!]) {
-              return item
-            } else {
-              const marketItem = marketItems[item.tokenId!];
-              return {
-                ...item,
-                seller: marketItem.seller,
-                itemId: marketItem.itemId,
-                price: marketItem.price
-              }
-            }
-          });
-
-        } 
-        catch (error) {
-          console.log({error});
-        }
-      }
 
       setNfts(items);
       setLoadingState('loaded');
