@@ -1,6 +1,6 @@
 # Art House
 
-Arthouse is an NFT platform that allows you to create, buy and sell NFTs on multiple blockchains.
+Arthouse is an NFT platform that allows you to easily create NFTs.
 
 - https://art.atila.ca
 
