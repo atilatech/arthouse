@@ -14,6 +14,7 @@ import {
   REACT_APP_MORALIS_SERVER_URL} from './config';
 
 import Moralis from 'moralis';
+import Settings from './scenes/Settings/Settings';
 
 // TODO move this too App.tsx so it doesn't have to call oral
 Moralis.start({ serverUrl: REACT_APP_MORALIS_SERVER_URL, appId: REACT_APP_MORALIS_APP_ID });
@@ -28,6 +29,7 @@ function App() {
             <Route exact path="/create" component={CreateNFT} />
             <Route exact path="/about" component={About} />
             <Route exact path="/my-nfts" component={MyNFTs} />
+            <Route exact path="/settings" component={Settings} />
             <Footer />
         </div>
       </Router>
