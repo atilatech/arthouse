@@ -2,18 +2,25 @@ import { Radio, RadioChangeEvent } from 'antd'
 import React, { useState } from 'react'
 import { prettifyString } from '../../utils/TextUtils';
 
+export const API_KEY = "api_key";
+export const CLIENT_SIGNER = "client_signer";
+
 export const CREATION_MODES = [
     {
-        value: "api_key",
+        value: API_KEY,
     },
     {
-        value: "client_signer",
+        value: CLIENT_SIGNER,
     },
 ];
 
+export function getCreationMode() {
+    return localStorage.getItem('creationMode') || CREATION_MODES[0].value;
+}
+
 function Settings() {
 
-    const currentCreationMode = localStorage.getItem('creationMode') || CREATION_MODES[0].value;
+  const currentCreationMode = getCreationMode();
   const [creationMode, setCreationMode] = useState(currentCreationMode);
 
   const onChangeCreationMode = (event: RadioChangeEvent) => {

@@ -9,14 +9,17 @@
         "LOGO_URL": "https://styles.redditmedia.com/t5_2zf9m/styles/communityIcon_hebckbd64w811.png",
         "CHAIN_ID": "4",
         "BLOCK_EXPLORER_URL": "https://rinkeby.etherscan.io",
-        "RPC_PROVIDER_URL": "https://rinkeby.infura.io/v3/59b59e23bb7c44d799b5db4a1b83e4ee"
+        "RPC_PROVIDER_URL": "https://rinkeby.infura.io/v3/59b59e23bb7c44d799b5db4a1b83e4ee",
+        "FAUCET_URLS": [
+            "https://rinkebyfaucet.com"
+        ]
     },
     "56": {
         "NETWORK_NAME": "Mainnet",
         "CHAIN_NAME": "Binance Smart Chain",
         "CURRENCY_SYMBOL": "BNB",
         "NFT_MARKETPLACE_ADDRESS": "0x093ded22697313310c4fcdd1a75edf8facba8f90",
-        "NFT_ADDRESS": "0x090d4622ae91acdcfb7354872a934f4e8a1e21a9",
+        "NFT_ADDRESS": "0x06c6a25884c36156b3d0105283d9724018b034b0",
         "IS_MAIN_NET": true,
         "LOGO_URL": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Binance-coin-bnb-logo.png/800px-Binance-coin-bnb-logo.png",
         "CHAIN_ID": "56",
@@ -28,19 +31,22 @@
         "CHAIN_NAME": "Binance Smart Chain",
         "CURRENCY_SYMBOL": "BNB",
         "NFT_MARKETPLACE_ADDRESS": "0x69987ab30add91fa5ef87c9e3572e8e5a787cbbf",
-        "NFT_ADDRESS": "0xd52d9f6f4e89aa19266fd2b0de1fe81b6e5d1762",
+        "NFT_ADDRESS": "0xcd93b4d2fc9ad6957b0f26775ae46a1f05485a3a",
         "IS_MAIN_NET": false,
         "LOGO_URL": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Binance-coin-bnb-logo.png/800px-Binance-coin-bnb-logo.png",
         "CHAIN_ID": "97",
         "BLOCK_EXPLORER_URL": "https://testnet.bscscan.com",
-        "RPC_PROVIDER_URL": "https://data-seed-prebsc-1-s1.binance.org:8545"
+        "RPC_PROVIDER_URL": "https://data-seed-prebsc-1-s1.binance.org:8545",
+        "FAUCET_URLS": [
+            "https://testnet.binance.org/faucet-smart"
+        ]
     },
     "137": {
         "NETWORK_NAME": "Mainnet",
         "CHAIN_NAME": "Polygon",
         "CURRENCY_SYMBOL": "MATIC",
         "NFT_MARKETPLACE_ADDRESS": "0xa94EC56924E2E4dcCb48e4987fEadA4B646637a3",
-        "NFT_ADDRESS": "0x4ad4ab97820137e75ef98fc29ee0e9077130e905",
+        "NFT_ADDRESS": "0x06c6a25884c36156b3d0105283d9724018b034b0",
         "IS_MAIN_NET": true,
         "LOGO_URL": "https://brandlogovector.com/wp-content/uploads/2021/12/Polygon-Crypto-Icon-Logo-Small.png",
         "CHAIN_ID": "137",

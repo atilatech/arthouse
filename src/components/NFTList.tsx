@@ -58,6 +58,7 @@ function NFTList({address, chainId, getAllTokensForContract = false} : {address:
           tokenId: token.token_id,
           // seller: token.seller,
           owner: (token as any).owner_of,
+          address,
           name,
           description,
           image,
