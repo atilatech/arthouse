@@ -1,6 +1,7 @@
 import { Radio, RadioChangeEvent } from 'antd'
 import React, { useState } from 'react'
 import { prettifyString } from '../../utils/TextUtils';
+import APIKeyCreditSettings from './APIKeyCreditsSettings';
 
 export const API_KEY = "api_key";
 export const CLIENT_SIGNER = "client_signer";
@@ -43,6 +44,10 @@ function Settings() {
                 ))}
             </Radio.Group>
 
+        </div>
+
+        <div>
+            <APIKeyCreditSettings />
         </div>
         
     </div>
