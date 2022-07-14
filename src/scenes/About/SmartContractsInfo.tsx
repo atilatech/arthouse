@@ -23,7 +23,6 @@ function SmartContractsInfo() {
 
                 chain = new Chain({...chain});
                 const nftBlockExplorerUrl = `${chain.BLOCK_EXPLORER_URL}/${["Harmony","Celo"].includes(chain.CHAIN_NAME) ? "address" : "token"}/${chain.NFT_ADDRESS}`;
-                const nftMartplaceBlockExplorerUrl = `${chain.BLOCK_EXPLORER_URL}/address/${chain.NFT_MARKETPLACE_ADDRESS}`;
                     
                 return (
                         <li className='my-2' key={chain.CHAIN_ID}>
@@ -33,12 +32,6 @@ function SmartContractsInfo() {
                                     <a href={nftBlockExplorerUrl} target="_blank" rel="noreferrer" className="center-block text-center">
                                         NFT Smart Contract on Block Explorer 
                                     </a>
-                                </li>
-                                <li>
-                                    <a href={nftMartplaceBlockExplorerUrl} target="_blank" rel="noreferrer" className="center-block text-center">
-                                        NFT Marketplace Smart Contract on Block Explorer 
-                                    </a>
-                                    
                                 </li>
                             </ol>
                         </li>

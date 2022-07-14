@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, withRouter } from 'react-router-dom'
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
@@ -9,13 +9,14 @@ import {
   } from '../../config';
 
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json';
-import { Alert, AlertProps, Button, Col, Input, Row, Select, Spin } from 'antd'
+import { Alert, AlertProps, Button, Col, Input, Radio, RadioChangeEvent, Row, Spin } from 'antd'
 import './CreateNFT.scss';
 import NFTCard from '../../components/NFTCard';
 import { NFTMetadata } from '../../models/NFT';
 import { Chain } from '../../models/Chain';
-
-const { Option } = Select;
+import { API_KEY, CLIENT_SIGNER, getCreationMode } from '../Settings/Settings';
+import ArthouseAPIService from '../../services/ArthouseAPIService';
+import { NOTIMP } from 'dns';
 
 const { TextArea } = Input;
 
@@ -24,13 +25,17 @@ const client = (ipfsHttpClient as any)(ipfsHostUrl);
 
 function CreateNFT() {
   
+  const creationMode = getCreationMode();
   const [fileUrl, setFileUrl] = useState<string|null>(null)
-  const [formInput, updateFormInput] = useState({ price: 0, name: '', description: '' })
+  const [formInput, updateFormInput] = useState({ owner: '', name: '', description: '' })
   const [error, setError] = useState("");
-  const [selectedChains, setSelectedChains] = useState(Object.values(CONFIG_CHAINS).map(config=>config.CHAIN_ID));
+  const [activeChainId, setActiveChainId] = useState(Object.values(CONFIG_CHAINS)[0].CHAIN_ID)
   const [createdNFTs, setCreatedNFTs] = useState<NFTMetadata[]>([]);
   const [nftMetadataUrl, setNftMetadataUrl] = useState("");
   const [createNFTResponseMessage, setCreateNFTResponseMessage] = useState<{[key: string]: {message: string, type: AlertProps["type"], loading?: boolean}}>({});
+
+
+  const activeChain =  new Chain({...CONFIG_CHAINS[activeChainId]});
 
   async function onChange(e: any) {
     const file = e.target.files[0];
@@ -77,33 +82,95 @@ function CreateNFT() {
 
   };
 
-  async function createNFT(activeChainId: string) {
+  useEffect(() => {
+    
+    if (window.ethereum) {
+      const getAddress = async () => {
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)    
+        const signer = provider.getSigner();
+        const owner = await signer.getAddress();
+        updateFormInput(previousFormInput => ({ ...previousFormInput, owner }));
+      }
+
+
+    getAddress()
+  }
+  
+  }, [])
+  
+
+  async function createNFT() {
+
     try {
-      _createNFT(activeChainId);
+      if(creationMode === API_KEY) {
+        createNFTWithAPIKey();
+      } else if(creationMode === CLIENT_SIGNER) {
+        const tokenUri = await getNFTMetadataUrl();
+
+        if (!tokenUri) {
+          setCreateNFTResponseMessage({
+            ...createNFTResponseMessage,
+            [activeChain.CHAIN_ID]: {
+              type: "error",
+              message: "Missing NFT url data. Try reuploading your NFT or refreshing the page.",
+            }
+            });
+            return
+        }
+        createNFTWithClientSigner(tokenUri);
+      }
+      
     } catch {
       setError(JSON.stringify(error));
     }
   }
 
-  function handleChangeSelectedChains(value: any) {
-    setSelectedChains(value);
+  const handleChangeSelectedChains = (event: RadioChangeEvent) => {
+    console.log('radio checked', event.target.value);
+    setActiveChainId(event.target.value);
+  };
+
+  async function createNFTWithAPIKey() {
+
+    const { name, description, owner } = formInput
+    const nftRequest: NFTMetadata = {
+      name, description, owner, image: fileUrl!, chainId: activeChainId, address: activeChain.NFT_ADDRESS
+    }
+    const updatedcreateNFTResponseMessage = {...createNFTResponseMessage};
+      updatedcreateNFTResponseMessage[activeChain.CHAIN_ID] = {
+        message: `Minting NFT on ${activeChain.getChainFullName()}`,
+        type: "info",
+        loading: true,
+      };
+
+    ArthouseAPIService.createNFTs({nfts: [{nft: nftRequest}]})
+      .then((res: any) => {
+        const { data: { nfts } } = res;
+        setCreatedNFTs(nfts.map((nftResponse: any) => nftResponse.nft));
+        setCreateNFTResponseMessage({
+          ...updatedcreateNFTResponseMessage,
+           [activeChain.CHAIN_ID]: {
+             type: "success",
+             message: `Finished creating NFT on ${activeChain.getChainFullName()}`,
+           }
+           });
+      })
+      .catch((error: any) => {
+        console.log({error});
+        setCreateNFTResponseMessage({
+          ...updatedcreateNFTResponseMessage,
+           [activeChain.CHAIN_ID]: {
+             type: "error",
+             message: error?.response?.data?.error || JSON.stringify(error.message),
+           }
+           });
+      })
+    
   }
 
-  async function _createNFT(activeChainId: string) {
-
-    const activeChain = new Chain({...CONFIG_CHAINS[activeChainId]});
-    const url = await getNFTMetadataUrl();
-
-    if (!url) {
-      setCreateNFTResponseMessage({
-        ...createNFTResponseMessage,
-         [activeChain.CHAIN_ID]: {
-           type: "error",
-           message: "Missing NFT url data. Try reuploading your NFT or refreshing the page.",
-         }
-         });
-        return
-    }
+  async function createNFTWithClientSigner(tokenUri: string) {
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
     const provider = new ethers.providers.Web3Provider(connection)    
@@ -123,7 +190,6 @@ function CreateNFT() {
         setError("");
       }
 
-      
       const NFT_ADDRESS = activeChain.NFT_ADDRESS;
 
       /* next, create the item */
@@ -137,21 +203,23 @@ function CreateNFT() {
       try {
 
         let nftContract = new ethers.Contract(NFT_ADDRESS, NFT.abi, signer)
-        let mintTransactionPromise = await nftContract.createToken(url)
+        let mintTransactionPromise = await nftContract.createToken(tokenUri)
         let mintTransaction = await mintTransactionPromise.wait()
         let event = mintTransaction.events[0]
         let value = event.args[2]
         let tokenId = value.toNumber();
   
-        console.log({mintTransaction, url});
-        const { name, description } = formInput
+        const { name, description } = formInput;
+
+        const owner = await signer.getAddress();
         const createdNFT: NFTMetadata = {
           name,
           description,
           image: fileUrl || "",
           // url,
           tokenId,
-          // tokenAddress: activeChain.NFT_ADDRESS,
+          owner,
+          address: activeChain.NFT_ADDRESS,
           chainId: activeChain.CHAIN_ID,
           // chain: activeChain,
           // mintTransaction,
@@ -190,6 +258,11 @@ function CreateNFT() {
           placeholder="Name"
           onChange={e => updateFormInput({ ...formInput, name: e.target.value })}
         />
+        {creationMode === API_KEY && 
+        <Input 
+          placeholder="Destination Address"
+          onChange={e => updateFormInput({ ...formInput, owner: e.target.value })}
+        />}
         <TextArea
           placeholder="Description"
           onChange={e => updateFormInput({ ...formInput, description: e.target.value })}
@@ -209,35 +282,19 @@ function CreateNFT() {
         <p>
           Create NFT on the following chains:
         </p>
-        <Select
-          mode="multiple"
-          allowClear
-          className="mb-3"
-          style={{ width: '100%' }}
-          placeholder="Select chains"
-          defaultValue={Object.values(CONFIG_CHAINS).map(configChain=>configChain.CHAIN_ID)}
-          onChange={handleChangeSelectedChains}
-          optionLabelProp="label"
-        >
-          {Object.values(CONFIG_CHAINS).map (chainConfig => (
-            <Option value={chainConfig.CHAIN_ID} label={chainConfig.CHAIN_NAME} key={chainConfig.CHAIN_ID}>
+        <Radio.Group onChange={handleChangeSelectedChains} value={activeChainId}>
+        {Object.values(CONFIG_CHAINS).map (chainConfig => (
+            <Radio value={chainConfig.CHAIN_ID} key={chainConfig.CHAIN_ID}>
               {chainConfig.CHAIN_NAME}
               <img src={chainConfig.LOGO_URL} alt={chainConfig.CHAIN_NAME} width={50} />
-            </Option>
+            </Radio>
           ))}
-        </Select>
-
-        {selectedChains.map(selectedChainId => {
-          const chain =  new Chain({...CONFIG_CHAINS[selectedChainId]});
-          return (
-            <div key={chain.CHAIN_ID}>
-              <Button className="center-block my-2" onClick={()=>createNFT(selectedChainId)}>
-                Mint on {' '} {chain.getChainFullName()}
-                  <img src={chain.LOGO_URL} alt={chain.CHAIN_NAME} width={25} />
-              </Button>
-            </div>
-          )
-        })}
+        </Radio.Group>
+        <hr/>
+        <Button className="center-block my-2" onClick={()=>createNFT()}>
+                Mint on {' '} {activeChain.getChainFullName()}
+                  <img src={activeChain.LOGO_URL} alt={activeChain.CHAIN_NAME} width={25} />
+        </Button>
 
         {Object.values(createNFTResponseMessage).filter(response=>response.message).map(response => (
          <>

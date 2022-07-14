@@ -6,7 +6,7 @@
 // const hre = require("hardhat");
 const { task } = require("hardhat/config");
 const fs = require('fs');
-const { getAvailableChains, chainConfigFilePath, getAccount } = require("./helpers");
+const { getAvailableChains, chainConfigFilePath, getAccount, getProvider } = require("./helpers");
 
 
 task("deploy:nft", "Deploys the NFT.sol contract")
@@ -27,6 +27,8 @@ task("deploy:nft", "Deploys the NFT.sol contract")
     process.exit(1);
   }
   const account = getAccount(chainId);
+  const provider = getProvider(chainId);
+  const gasPrice = await provider.getGasPrice();
   let NFT;
   if (account) {
     NFT = await hre.ethers.getContractFactory("NFT", account);
@@ -34,7 +36,7 @@ task("deploy:nft", "Deploys the NFT.sol contract")
     NFT = await hre.ethers.getContractFactory("NFT");
   }
   
-  const nft = await NFT.deploy();
+  const nft = await NFT.deploy({gasPrice});
   await nft.deployed();
 
   availableChains[chainId].NFT_ADDRESS = nft.address.toLowerCase();
@@ -63,13 +65,15 @@ task("deploy:market", "Deploys the Market.sol contract")
   }
 
   const account = getAccount(chainId);
+  const provider = getProvider(chainId);
+  const gasPrice = await provider.getGasPrice();
   let NFTMarket;
   if (account) {
     NFTMarket = await hre.ethers.getContractFactory("NFTMarket", account);
   } else {
     NFTMarket = await hre.ethers.getContractFactory("NFTMarket");
   }
-  const nftMarket = await NFTMarket.deploy();
+  const nftMarket = await NFTMarket.deploy({gasPrice});
   await nftMarket.deployed();
 
 

@@ -1,6 +1,6 @@
 const { ethers } = require("ethers");
 const fs = require('fs');
-const { CONTRACT_DEPLOYMENT_WALLET_PRIVATE_KEY, rpcApiKeyMumbai} = process.env;
+const { CONTRACT_DEPLOYMENT_WALLET_PRIVATE_KEY, INFURA_API_KEY} = process.env;
 
 const chainConfigFilePath = './src/config-chains.json';
 // Helper method for fetching a connection provider to the Ethereum network
@@ -14,7 +14,7 @@ function getAvailableChains() {
 const hardHatSettings = {
     networks: {
         mumbai: {
-          url: `https://polygon-mumbai.infura.io/v3/${rpcApiKeyMumbai}`,
+          url: `https://polygon-mumbai.infura.io/v3/${INFURA_API_KEY}`,
           accounts: [`0x${CONTRACT_DEPLOYMENT_WALLET_PRIVATE_KEY}`],
           chainId: 80001
         },
@@ -24,7 +24,7 @@ const hardHatSettings = {
           chainId: 44787
         },
         rinkeby: {
-          url: `https://rinkeby.infura.io/v3/${rpcApiKeyMumbai}`,
+          url: `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`,
           accounts: [`0x${CONTRACT_DEPLOYMENT_WALLET_PRIVATE_KEY}`],
           chainId: 4
         },

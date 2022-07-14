@@ -6,7 +6,6 @@ import { Radio, RadioChangeEvent } from 'antd';
 import { CONFIG_CHAINS, MORALIS_SUPPORTED_CHAINS } from '../../config';
 import { Chain } from '../../models/Chain';
 import NFTList from '../../components/NFTList';
-import AccountSales from '../../components/AccountSales';
 
 export default function MyNFTs() {
   const [activeChainId, setActiveChainId] = useState(Object.keys(CONFIG_CHAINS)[0]);
@@ -32,10 +31,6 @@ export default function MyNFTs() {
 
   return (
     <div className="MyNFTs card shadow container p-5">
-
-      <div className="card shadow container p-3 m-3">
-        <AccountSales />
-      </div>
 
       <div className="card shadow container p-3 m-3">
         <h1 className='text-center'>My NFTs</h1>
