@@ -16,6 +16,7 @@ import { NFTMetadata } from '../../models/NFT';
 import { Chain } from '../../models/Chain';
 import { API_KEY, CLIENT_SIGNER, getCreationMode } from '../Settings/Settings';
 import ArthouseAPIService from '../../services/ArthouseAPIService';
+import { NOTIMP } from 'dns';
 
 const { TextArea } = Input;
 
@@ -146,7 +147,8 @@ function CreateNFT() {
 
     ArthouseAPIService.createNFTs({nfts: [{nft: nftRequest}]})
       .then((res: any) => {
-        console.log({res});
+        const { data: { nfts } } = res;
+        setCreatedNFTs(nfts.map((nftResponse: any) => nftResponse.nft));
         setCreateNFTResponseMessage({
           ...updatedcreateNFTResponseMessage,
            [activeChain.CHAIN_ID]: {
