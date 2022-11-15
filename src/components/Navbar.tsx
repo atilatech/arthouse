@@ -22,6 +22,10 @@ function Navbar() {
         {
             key: "about",
             label: "About",
+        },
+        {
+            key: "settings",
+            label: "Settings",
         }
     ];
 
